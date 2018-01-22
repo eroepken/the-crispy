@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Send the challenge back for this app.
 Route::match(['get', 'post'], '/crispy-verify', function() {
     if (request('token') != env('VERIFICATION_TOKEN')) {
         return response()->json(['text' => 'An error occurred.']);
@@ -23,7 +24,19 @@ Route::match(['get', 'post'], '/crispy-verify', function() {
     return response()->json(['challenge' => request('challenge')]);
 });
 
-Route::match(['get', 'post'], '/lmgtfy', function() {
+// Catch all.
+Route::match(['get', 'post'], '/crispy', function() {
+
+    $request = request()->json();
+    if ($request['type'] == 'app_mention' ||
+        ($request['type'] == 'message' && preg_match('/^Crispy/', $request['text']))) {
+        return response('You rang?');
+    }
+
+});
+
+// Currently disabled.
+/*Route::match(['get', 'post'], '/lmgtfy', function() {
 
     if (request('token') != env('VERIFICATION_TOKEN')) {
         return response()->json(['text' => 'An error occurred.']);
@@ -45,8 +58,4 @@ Route::match(['get', 'post'], '/lmgtfy', function() {
     ];
 
     return response()->json($response);
-});
-
-Route::match(['get', 'post'], '/cah', function() {
-
-});
+});*/
