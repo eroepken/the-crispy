@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\BotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +55,8 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
                 'ts' => $response_ts
             ];
 
-            return response()->json($response);
+            BotController::send($response);
+
             break;
 
         default:
