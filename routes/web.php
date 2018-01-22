@@ -36,12 +36,10 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
     Log::debug($request);
 
     switch($event['type']) {
-        case 'message':
+//        case 'message':
         case 'app_mention':
-            Log::debug('Message received.');
-            Log::debug($event);
 
-            /*if ($request['type'] == 'event_callback') {
+            if ($request['type'] == 'event_callback') {
                 $response_ts = $event['event_ts'];
             } else {
                 $response_ts = $event['thread_ts'];
@@ -51,9 +49,9 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
                 'text' => 'You rang?',
                 'channel' => $event['channel'],
                 'ts' => $response_ts
-            ];*/
+            ];
 
-//            BotController::send($response);
+            BotController::send($response);
 
             break;
 

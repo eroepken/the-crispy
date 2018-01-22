@@ -18,7 +18,7 @@ class BotController extends Controller
             RequestOptions::JSON => $message
         ]);
 
-        Log::debug($response);
+//        Log::debug($response);
 
     }
 }
