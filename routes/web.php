@@ -33,7 +33,7 @@ Route::match(['get', 'post'], '/lmgtfy', function() {
 
     $response = [
         'response_type' => 'in_channel',
-        'text' => '<' . $target_user . '> http://lmgtfy.com/?q=' . urlencode($query_text),
+        'text' => '<' . $target_user . '> http://lmgtfy.com/?q=' . urlencode(trim($query_text)),
     ];
 
     return response()->json($response);
