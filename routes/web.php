@@ -23,21 +23,19 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
 
     $event = $request = json_decode(request()->getContent(), true);
 
-    if ($request['type'] == 'event_callback') {
+    if ($request['type'] == 'url_verification') {
+        if ($request['token'] != env('VERIFICATION_TOKEN')) {
+            return response()->json(['text' => 'An error occurred.']);
+        }
+
+        return response()->json(['challenge' => $event['challenge']]);
+    } elseif ($request['type'] == 'event_callback') {
         $event = $request['event'];
     }
 
     Log::debug($request);
 
-    switch($request['type']) {
-        case 'url_verification':
-            if ($request['token'] != env('VERIFICATION_TOKEN')) {
-                return response()->json(['text' => 'An error occurred.']);
-            }
-
-            return response()->json(['challenge' => $event['challenge']]);
-            break;
-
+    switch($event['type']) {
         case 'message':
         case 'app_mention':
             if ($request['type'] == 'event_callback') {
