@@ -34,10 +34,12 @@ Route::match(['get', 'post'], '/crispy', function() {
                 break;
             }
         case 'app_mention':
-            return response()->json([
-                'thread_ts' => request()->json('ts'),
-                'text' => 'You rang?'
-            ]);
+            $response = [
+                'text' => 'You rang?',
+                'ts' => request()->json('thread_ts')
+            ];
+
+            return response()->json($response);
             break;
 
         default:
