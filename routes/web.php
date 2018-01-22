@@ -16,11 +16,6 @@ Route::get('/', function () {
 });
 
 Route::match(['get', 'post'], '/lmgtfy', function() {
-
-    if (request('token') != env('SLASH_COMMAND_TOKEN')) {
-        return response()->json(['text' => 'An error occurred.']);
-    }
-
     $query_text = request('text');
 
     preg_match('/\@[\w\d\-\_]+/', $query_text, $matches);
@@ -37,4 +32,8 @@ Route::match(['get', 'post'], '/lmgtfy', function() {
     ];
 
     return response()->json($response);
+});
+
+Route::match(['get', 'post'], '/cah', function() {
+
 });
