@@ -18,20 +18,30 @@ Route::get('/', function () {
 // Catch all for events.
 Route::match(['get', 'post'], '/crispy', function() {
 
-    if (request('type') == 'url_verification') {
-        if (request('token') != env('VERIFICATION_TOKEN')) {
-            return response()->json(['text' => 'An error occurred.']);
-        }
+    $type = request()->json('type');
 
-        return response()->json(['challenge' => request('challenge')]);
-    }
+    switch($type) {
+        case 'url_verification':
+            if (request()->json('token') != env('VERIFICATION_TOKEN')) {
+                return response()->json(['text' => 'An error occurred.']);
+            }
 
-    if (request('type') == 'app_mention' ||
-        (request('type') == 'message' && preg_match('/^Crispy/', request('text')))) {
-        return response()->json([
-            'thread_ts' => request('ts'),
-            'text' => 'You rang?'
-        ]);
+            return response()->json(['challenge' => request()->json('challenge')]);
+            break;
+
+        case 'message':
+            if (!preg_match('/^Crispy/', request('text'))) {
+                break;
+            }
+        case 'app_mention':
+            return response()->json([
+                'thread_ts' => request()->json('ts'),
+                'text' => 'You rang?'
+            ]);
+            break;
+
+        default:
+            break;
     }
 
 });
