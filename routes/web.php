@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\BotController;
-use GuzzleHttp\Client as Guzzle;
-use GuzzleHttp\RequestOptions;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,11 +23,11 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
 
     $event = $request = json_decode(request()->getContent(), true);
 
-    Log::debug($request);
-
     if ($request['type'] == 'event_callback') {
         $event = $request['event'];
     }
+
+    Log::debug($request);
 
     switch($request['type']) {
         case 'url_verification':
@@ -41,9 +39,6 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
             break;
 
         case 'message':
-            if (!preg_match('/^Crispy/', request('text'))) {
-                break;
-            }
         case 'app_mention':
             if ($request['type'] == 'event_callback') {
                 $response_ts = $event['event_ts'];
@@ -57,14 +52,7 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
                 'ts' => $response_ts
             ];
 
-            Log::debug('Sending response');
-
-            $client = new Guzzle();
-            $response = $client->post(env('INCOMING_WEBHOOK_URL'), [
-                RequestOptions::JSON => $response
-            ]);
-
-            Log::debug($response);
+            BotController::send($response);
 
             break;
 
