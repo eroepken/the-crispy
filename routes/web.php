@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::match(['get', 'post'], '/lmgtfy', function() {
 
     if (request('token') != env('SLASH_COMMAND_TOKEN')) {
-        return json_encode(['text' => 'An error occurred.']);
+        return response()->json(['text' => 'An error occurred.']);
     }
 
     $query_text = request('text');
