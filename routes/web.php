@@ -30,7 +30,10 @@ Route::match(['get', 'post'], '/crispy', function() {
     $request = request()->json();
     if ($request['type'] == 'app_mention' ||
         ($request['type'] == 'message' && preg_match('/^Crispy/', $request['text']))) {
-        return response('You rang?');
+        return response()->json([
+            'thread_ts' => $request['ts'],
+            'text' => 'You rang?'
+        ]);
     }
 
 });
