@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::match(['get', 'post'], '/crispy-verify', function() {
+    return response()->json(['challenge' => request('challenge')]);
+});
+
 Route::match(['get', 'post'], '/lmgtfy', function() {
 
     if (request('token') != env('SLASH_COMMAND_TOKEN')) {
