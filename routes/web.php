@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\BotController;
+use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\RequestOptions;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +57,14 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
                 'ts' => $response_ts
             ];
 
-            BotController::send($response);
+            Log::debug('Sending response');
+
+            $client = new Guzzle();
+            $response = $client->post(env('INCOMING_WEBHOOK_URL'), [
+                RequestOptions::JSON => $response
+            ]);
+
+            Log::debug($response);
 
             break;
 
