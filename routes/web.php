@@ -50,7 +50,7 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
                 'ts' => $response_ts
             ];
 
-            BotController::send($response);
+//            BotController::send($response);
 
             break;
 
