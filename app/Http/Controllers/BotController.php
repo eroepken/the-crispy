@@ -10,7 +10,7 @@ class BotController extends Controller
 {
     public static function send($message) {
 
-        $client = new Client();
+        $client = new Guzzle();
         $client->post(env('INCOMING_WEBHOOK_URL'), [
             RequestOptions::JSON => $message
         ]);
