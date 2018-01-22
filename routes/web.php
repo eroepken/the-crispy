@@ -16,17 +16,21 @@ Route::get('/', function () {
 });
 
 // Catch all for events.
-Route::match(['get', 'post'], '/crispy', function() {
+Route::match(['get', 'post'], '/crispy', function(Request $request) {
 
-    $type = request()->json('type');
+    $event = $request = json_decode(request()->getContent(), true);
 
-    switch($type) {
+    if ($request['type'] == 'event_callback') {
+        $event = $request['event'];
+    }
+
+    switch($event['type']) {
         case 'url_verification':
-            if (request()->json('token') != env('VERIFICATION_TOKEN')) {
+            if ($event['token'] != env('VERIFICATION_TOKEN')) {
                 return response()->json(['text' => 'An error occurred.']);
             }
 
-            return response()->json(['challenge' => request()->json('challenge')]);
+            return response()->json(['challenge' => $event['challenge']]);
             break;
 
         case 'message':
@@ -34,9 +38,16 @@ Route::match(['get', 'post'], '/crispy', function() {
                 break;
             }
         case 'app_mention':
+            if ($request['type'] == 'event_callback') {
+                $response_ts = $event['event_ts'];
+            } else {
+                $response_ts = $event['thread_ts'];
+            }
+
             $response = [
                 'text' => 'You rang?',
-                'ts' => request()->json('thread_ts')
+                'channel' => $event['channel'],
+                'ts' => $response_ts
             ];
 
             return response()->json($response);
