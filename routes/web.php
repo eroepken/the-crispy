@@ -16,12 +16,16 @@ Route::get('/', function () {
 });
 
 Route::match(['get', 'post'], '/crispy-verify', function() {
+    if (request('token') != env('VERIFICATION_TOKEN')) {
+        return response()->json(['text' => 'An error occurred.']);
+    }
+
     return response()->json(['challenge' => request('challenge')]);
 });
 
 Route::match(['get', 'post'], '/lmgtfy', function() {
 
-    if (request('token') != env('SLASH_COMMAND_TOKEN')) {
+    if (request('token') != env('VERIFICATION_TOKEN')) {
         return response()->json(['text' => 'An error occurred.']);
     }
 
