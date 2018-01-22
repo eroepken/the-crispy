@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,13 +22,15 @@ Route::match(['get', 'post'], '/crispy', function(Request $request) {
 
     $event = $request = json_decode(request()->getContent(), true);
 
+    Log::debug($request);
+
     if ($request['type'] == 'event_callback') {
         $event = $request['event'];
     }
 
-    switch($event['type']) {
+    switch($request['type']) {
         case 'url_verification':
-            if ($event['token'] != env('VERIFICATION_TOKEN')) {
+            if ($request['token'] != env('VERIFICATION_TOKEN')) {
                 return response()->json(['text' => 'An error occurred.']);
             }
 
