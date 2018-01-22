@@ -18,15 +18,16 @@ Route::get('/', function () {
 // Catch all for events.
 Route::match(['get', 'post'], '/crispy', function() {
 
-    if (request('challenge')) {
-        if (request('token') != env('VERIFICATION_TOKEN')) {
+    $request = request()->json();
+
+    if ($request['type'] == 'url_verification') {
+        if ($request['token'] != env('VERIFICATION_TOKEN')) {
             return response()->json(['text' => 'An error occurred.']);
         }
 
         return response()->json(['challenge' => request('challenge')]);
     }
 
-    $request = request()->json();
     if ($request['type'] == 'app_mention' ||
         ($request['type'] == 'message' && preg_match('/^Crispy/', $request['text']))) {
         return response()->json([
