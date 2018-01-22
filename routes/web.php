@@ -15,17 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Send the challenge back for this app.
-Route::match(['get', 'post'], '/crispy-verify', function() {
-    if (request('token') != env('VERIFICATION_TOKEN')) {
-        return response()->json(['text' => 'An error occurred.']);
-    }
-
-    return response()->json(['challenge' => request('challenge')]);
-});
-
-// Catch all.
+// Catch all for events.
 Route::match(['get', 'post'], '/crispy', function() {
+
+    if (request('challenge')) {
+        if (request('token') != env('VERIFICATION_TOKEN')) {
+            return response()->json(['text' => 'An error occurred.']);
+        }
+
+        return response()->json(['challenge' => request('challenge')]);
+    }
 
     $request = request()->json();
     if ($request['type'] == 'app_mention' ||
