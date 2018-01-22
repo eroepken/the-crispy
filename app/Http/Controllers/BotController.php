@@ -13,10 +13,10 @@ class BotController extends Controller
 
         Log::debug('Sending response');
 
-        $client = new Guzzle();
-        $response = $client->post(env('INCOMING_WEBHOOK_URL'), [
-            RequestOptions::JSON => $message
-        ]);
+//        $client = new Guzzle();
+//        $response = $client->post(env('INCOMING_WEBHOOK_URL'), [
+//            RequestOptions::JSON => $message
+//        ]);
 
         Log::debug($response);
 
