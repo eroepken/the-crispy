@@ -24,11 +24,6 @@ Route::match(['get', 'post'], '/crispy-verify', function() {
 });
 
 Route::match(['get', 'post'], '/lmgtfy', function() {
-
-    if (request('token') != env('VERIFICATION_TOKEN')) {
-        return response()->json(['text' => 'An error occurred.']);
-    }
-
     $query_text = request('text');
 
     preg_match('/\@[\w\d\-\_]+/', $query_text, $matches);
