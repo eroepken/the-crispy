@@ -4,6 +4,7 @@ namespace App\Bots;
 
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 
@@ -51,6 +52,9 @@ class SlackBot
      * @param $method
      */
     private function hearRoute($text, $callbackResponse, $method) {
+
+        Log::debug($text);
+        Log::debug($method);
 
         // Catch all for events.
         Route::post('/crispy', function() use($text, $callbackResponse, $method) {
