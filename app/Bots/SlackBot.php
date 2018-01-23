@@ -112,8 +112,6 @@ class SlackBot
      * @param $message
      */
     private function send($response) {
-        dd($response);
-
         $this->webhook->post($this->webhook_url, [
             RequestOptions::JSON => $response
         ]);
