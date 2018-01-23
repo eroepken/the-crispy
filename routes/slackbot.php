@@ -1,6 +1,7 @@
 <?php
 
 use App\Bots\SlackBot;
+use Illuminate\Support\Facades\Route;
 
 $slackbot = App::make('App\Bots\SlackBot');
 
@@ -11,8 +12,3 @@ $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
 $slackbot->hearsMention('(CAH|cards against humanity)', function(SlackBot $bot) {
     $bot->reply('Let\'s play!');
 });
-
-//dd($slackbot);
-//$slackbot->connection->hears('hello', function (BotMan $bot) {
-//    $bot->reply('Hello yourself.');
-//});

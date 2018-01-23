@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 use App\Bots\SlackBot;
 
 class SlackBotProvider extends ServiceProvider
@@ -14,7 +15,23 @@ class SlackBotProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Catch all for events.
+        Route::post('/crispy', function() {
+
+            // Add the challenge listener.
+            $request = json_decode(request()->getContent(), true);
+
+            if ($request['type'] == 'url_verification') {
+                if ($request['token'] != config('services.slack.token')) {
+                    return response()->json(['text' => 'An error occurred.']);
+                }
+
+                return response()->json(['challenge' => $request->event['challenge']]);
+            }
+
+            // Also add the slack commands.
+            $this->slackBotCommands();
+        });
     }
 
     /**
@@ -27,5 +44,16 @@ class SlackBotProvider extends ServiceProvider
         $this->app->singleton(Slackbot::class, function() {
             return new SlackBot();
         });
+    }
+
+    public function map() {
+//        $this->mapSlackBotCommands();
+    }
+
+    /**
+     * Include the routes for the Slack bot.
+     */
+    protected function slackBotCommands() {
+        require base_path('routes/slackbot.php');
     }
 }

@@ -53,42 +53,22 @@ class SlackBot
      */
     private function hearRoute($text, $callbackResponse, $method) {
 
-        // Catch all for events.
-        Route::post('/crispy', function() use($text, $callbackResponse, $method) {
+        $event = $this->getEvent();
 
-            $event = $request = json_decode(request()->getContent(), true);
-
-            if ($request['type'] == 'event_callback') {
-                $event = $request['event'];
-            }
-
-            $this->request = $request;
-            $this->event = $event;
-
-            $this->challengeListener();
-
-            switch($method) {
+        if (preg_match_all('/' . $text . '/i', $event['text'])) {
+            switch ($method) {
                 case 'message':
                 case 'app_mention':
-
-                    Log::debug($text);
-                    Log::debug($method);
-                    Log::debug($event);
-
-                    if (preg_match_all('/' . $text . '/i', $event['text'])) {
-                        // Call the function callback.
-                        $callbackResponse($this);
-                    }
-
+                    // Call the function callback.
+                    $callbackResponse($this);
                     break;
 
                 default:
                     break;
             }
+        }
 
-            return response('false');
-
-        });
+        return response('false');
     }
 
     /**
@@ -97,9 +77,11 @@ class SlackBot
      * @param $text
      */
     public function reply($text) {
+        $event = $this->getEvent();
+
         $response = [
             'text' => $text,
-            'channel' => $this->event['channel']
+            'channel' => $event['channel']
         ];
 
         $this->send($response);
@@ -111,33 +93,14 @@ class SlackBot
      * @param $text
      */
     public function replyInThread($text) {
-        if ($this->request['type'] == 'event_callback') {
-            $response_ts = $this->event['event_ts'];
-        } else {
-            $response_ts = $this->event['thread_ts'];
-        }
+        $event = $this->getEvent();
 
         $response = [
             'text' => $text,
-            'ts' => $response_ts
+            'ts' => $event['event_ts']
         ];
 
         $this->send($response);
-    }
-
-    /**
-     * Send the challenge back when it's requested.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function challengeListener() {
-        if ($this->request['type'] == 'url_verification') {
-            if ($this->request['token'] != $this->token) {
-                return response()->json(['text' => 'An error occurred.']);
-            }
-
-            return response()->json(['challenge' => $this->event['challenge']]);
-        }
     }
 
     /**
@@ -151,5 +114,27 @@ class SlackBot
         $this->webhook->post($this->webhook_url, [
             RequestOptions::JSON => $response
         ]);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getRequest() {
+        return json_decode(request()->getContent(), true);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getEvent() {
+        $request = $this->getRequest();
+
+        if (request('type') == 'event_callback') {
+            $event = $request->event;
+        } else {
+            $event = $request;
+        }
+
+        return $event;
     }
 }
