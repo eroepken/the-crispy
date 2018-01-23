@@ -98,9 +98,11 @@ class SlackBot
     public function replyInThread($text) {
         $event = $this->getEvent();
 
+        Log::debug($event);
+
         $response = [
             'text' => $text,
-            'ts' => $event['event_ts']
+            'thread_ts' => $event['ts']
         ];
 
         $this->send($response);
