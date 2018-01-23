@@ -56,6 +56,9 @@ class SlackBot
         $event = $this->getEvent();
 
         if (preg_match_all('/' . $text . '/i', $event['text'])) {
+            Log::debug($text);
+            Log::debug($event);
+
             switch ($method) {
                 case 'message':
                 case 'app_mention':
