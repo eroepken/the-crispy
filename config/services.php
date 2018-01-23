@@ -35,4 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'slack' => [
+        'token' => env('VERIFICATION_TOKEN'),
+        'webhook_url' => env('INCOMING_WEBHOOK_URL'),
+        'client_secret' => env('CLIENT_SECRET'),
+        'client_id' => env('CLIENT_ID')
+    ]
+
 ];

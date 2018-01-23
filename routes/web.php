@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\BotController;
 
 /*
@@ -16,49 +15,6 @@ use App\Http\Controllers\BotController;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
-// Catch all for events.
-Route::match(['get', 'post'], '/crispy', function(Request $request) {
-
-    $event = $request = json_decode(request()->getContent(), true);
-
-    if ($request['type'] == 'url_verification') {
-        if ($request['token'] != env('VERIFICATION_TOKEN')) {
-            return response()->json(['text' => 'An error occurred.']);
-        }
-
-        return response()->json(['challenge' => $event['challenge']]);
-    } elseif ($request['type'] == 'event_callback') {
-        $event = $request['event'];
-    }
-
-    Log::debug($request);
-
-    switch($event['type']) {
-//        case 'message':
-        case 'app_mention':
-
-            if ($request['type'] == 'event_callback') {
-                $response_ts = $event['event_ts'];
-            } else {
-                $response_ts = $event['thread_ts'];
-            }
-
-            $response = [
-                'text' => 'You rang?',
-                'channel' => $event['channel'],
-                'ts' => $response_ts
-            ];
-
-            BotController::send($response);
-
-            break;
-
-        default:
-            break;
-    }
-
 });
 
 // Currently disabled.

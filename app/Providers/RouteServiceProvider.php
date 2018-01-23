@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapSlackBotCommands();
     }
 
     /**
@@ -69,5 +69,12 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Include the routes for the Slack bot.
+     */
+    protected function mapSlackBotCommands() {
+        require base_path('routes/slackbot.php');
     }
 }
