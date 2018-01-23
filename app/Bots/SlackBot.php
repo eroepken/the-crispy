@@ -53,9 +53,6 @@ class SlackBot
      */
     private function hearRoute($text, $callbackResponse, $method) {
 
-        Log::debug($text);
-        Log::debug($method);
-
         // Catch all for events.
         Route::post('/crispy', function() use($text, $callbackResponse, $method) {
 
@@ -73,6 +70,10 @@ class SlackBot
             switch($method) {
                 case 'message':
                 case 'app_mention':
+
+                    Log::debug($text);
+                    Log::debug($method);
+                    Log::debug($event);
 
                     if (preg_match_all('/' . $text . '/i', $event['text'])) {
                         // Call the function callback.
