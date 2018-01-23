@@ -26,7 +26,7 @@ class SlackBotProvider extends ServiceProvider
                     return response()->json(['text' => 'An error occurred.']);
                 }
 
-                return response()->json(['challenge' => $request->event['challenge']]);
+                return response()->json(['challenge' => $request['challenge']]);
             }
 
             // Also add the slack commands.

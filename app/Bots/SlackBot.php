@@ -130,7 +130,7 @@ class SlackBot
         $request = $this->getRequest();
 
         if (request('type') == 'event_callback') {
-            $event = $request->event;
+            $event = $request['event'];
         } else {
             $event = $request;
         }
