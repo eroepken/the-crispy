@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Bots\SlackBot;
 
 class CAHGame extends Model
 {
@@ -14,7 +15,7 @@ class CAHGame extends Model
      * CAHGame constructor.
      * @param $bot
      */
-    public function __construct($bot) {
+    public function __construct(SlackBot $bot) {
         parent::__construct();
 
         $this->bot = $bot;
@@ -27,10 +28,10 @@ class CAHGame extends Model
         Log::debug($event);
 
         // Get the users.
-        $bot->hears('(@[\w\d\-\_]+)*', function(SlackBot $bot, $users) {
-            Log::debug($users);
-            $bot->reply('Test');
-        });
+//        $bot->hears('(@[\w\d\-\_]+)*', function(SlackBot $bot, $users) {
+//            Log::debug($users);
+//            $bot->reply('Test');
+//        });
     }
 
     public function run() {
