@@ -130,6 +130,7 @@ class SlackBot
         $options = array_merge([
             'thread_ts' => $this->getThreadId()
         ], $options);
+        Log::debug($options);
         return $this->reply($text, $options);
     }
 
