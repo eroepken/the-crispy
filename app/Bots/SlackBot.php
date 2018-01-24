@@ -19,7 +19,7 @@ class SlackBot
 
     public function __construct() {
         $this->http_client = new Guzzle([
-                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
                 'base_uri' => 'https://slack.com/api/',
             ]);
 //        $this->webhook_url = config('services.slack.webhook_url');
@@ -121,7 +121,7 @@ class SlackBot
      */
     private function send($response, $method) {
         $this->http_client->post($method, [
-            RequestOptions::JSON => $response
+            RequestOptions::FORM_PARAMS => $response
         ]);
     }
 
