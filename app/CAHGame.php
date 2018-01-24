@@ -20,12 +20,15 @@ class CAHGame extends Model
 
         $this->bot = $bot;
 
+        $num_players_opts = [];
         for($i=4; $i<=10; $i++) {
             $num_players_opts[] = [
                 'text' => $i,
                 'value' => $i
             ];
         }
+
+        Log::debug($num_players_opts);
 
         $bot->replyInThread('How many players?', [
             "attachments" => [
