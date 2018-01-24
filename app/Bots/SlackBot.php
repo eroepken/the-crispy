@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 class SlackBot
 {
-    private $slack_api_url = 'https://slack.com/api/';
 
-    protected $webhook;
+    protected $http_client;
 //    protected $webhook_url;
     protected $verification_token;
     protected $bot_token;
@@ -19,7 +18,10 @@ class SlackBot
     protected $event;
 
     public function __construct() {
-        $this->webhook = new Guzzle();
+        $this->http_client = new Guzzle([
+                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+                'base_uri' => 'https://slack.com/api/',
+            ]);
 //        $this->webhook_url = config('services.slack.webhook_url');
         $this->verification_token = config('services.slack.verification_token');
         $this->bot_token = config('services.slack.bot_access_token');
@@ -118,7 +120,7 @@ class SlackBot
      * @param $message
      */
     private function send($response, $method) {
-        $this->webhook->post($this->slack_api_url . $method, [
+        $this->http_client->post($method, [
             RequestOptions::JSON => $response
         ]);
     }
