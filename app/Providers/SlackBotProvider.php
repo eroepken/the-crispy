@@ -18,12 +18,9 @@ class SlackBotProvider extends ServiceProvider
     {
         // Catch all for events.
         Route::post('/crispy', function() {
-
-            // Add the challenge listener.
             $request = json_decode(request()->getContent(), true);
 
-            Log::debug($request);
-
+            // Add the challenge listener.
             if ($request['type'] == 'url_verification') {
                 if ($request['token'] != config('services.slack.token')) {
                     return response()->json(['text' => 'An error occurred.']);
@@ -34,6 +31,13 @@ class SlackBotProvider extends ServiceProvider
 
             // Also add the slack commands.
             $this->slackBotCommands();
+        });
+
+        Route::post('/crispy-interactive', function() {
+            // Add the challenge listener.
+            $request = json_decode(request()->getContent(), true);
+
+            Log::debug($request);
         });
     }
 
