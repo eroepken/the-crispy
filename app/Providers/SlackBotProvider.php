@@ -22,9 +22,6 @@ class SlackBotProvider extends ServiceProvider
             // Add the challenge listener.
             $request = json_decode(request()->getContent(), true);
 
-            Log::debug('New request incoming:' . $request['type']);
-            Log::debug($request);
-
             if ($request['type'] == 'url_verification') {
                 if ($request['token'] != config('services.slack.token')) {
                     return response()->json(['text' => 'An error occurred.']);

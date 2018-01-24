@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 $slackbot = App::make('App\Bots\SlackBot');
 
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
-    $bot->reply('You rang?');
+    $bot->replyInThread('You rang?');
 });
 
 $slackbot->hearsMention('(CAH|cards against humanity)', function(SlackBot $bot) {
-    $bot->reply('Let\'s play!');
+    $bot->replyInThread('Let\'s play!');
 });
