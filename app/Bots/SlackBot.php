@@ -51,17 +51,27 @@ class SlackBot
     }
 
     /**
+     * @param $text
+     * @param $callbackResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function hearsInThread($text, $callbackResponse, $thread_id) {
+        return $this->hearRoute($text, $callbackResponse, 'message', $thread_id);
+    }
+
+    /**
      * Catcher for hear actions.
      * @param $text
      * @param $callbackResponse
      * @param $method
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    private function hearRoute($text, $callbackResponse, $method) {
+    private function hearRoute($text, $callbackResponse, $method, $thread_id = '') {
 
         $event = $this->getEvent();
 
-        if (preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
+        if (preg_match_all('/' . $text . '/i', $event['text'], $matches) &&
+            ((!empty($thread_id) && $this->getThreadId() == $thread_id) || empty($thread_id))) {
 
             switch ($method) {
                 case 'message':
