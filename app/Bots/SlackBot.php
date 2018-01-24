@@ -99,7 +99,11 @@ class SlackBot
 
         Log::debug($response);
 
-        return $this->send($response, $method);
+        $test = $this->send($response, $method);
+
+        Log::debug($test);
+
+        return $test;
     }
 
     /**
