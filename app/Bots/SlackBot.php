@@ -55,9 +55,9 @@ class SlackBot
      * @param $callbackResponse
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function hearsInThread($text, $callbackResponse, $thread_id) {
-        return $this->hearRoute($text, $callbackResponse, 'message', $thread_id);
-    }
+//    public function hearsInThread($text, $callbackResponse, $thread_id) {
+//        return $this->hearRoute($text, $callbackResponse, 'message', $thread_id);
+//    }
 
     /**
      * Catcher for hear actions.
@@ -66,26 +66,15 @@ class SlackBot
      * @param $method
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    private function hearRoute($text, $callbackResponse, $method, $thread_id = '') {
+    private function hearRoute($text, $callbackResponse, $method) {
 
         $event = $this->getEvent();
 
-        if (preg_match_all('/' . $text . '/i', $event['text'], $matches) &&
-            ((!empty($thread_id) && $this->getThreadId() == $thread_id) || empty($thread_id))) {
-
-            switch ($method) {
-                case 'message':
-                case 'app_mention':
-                    // Call the function callback.
-                    if (empty($matches)) {
-                        return $callbackResponse($this);
-                    } else {
-                        return $callbackResponse($this, $matches);
-                    }
-                    break;
-
-                default:
-                    break;
+        if (preg_match_all('/' . $text . '/i', $event['text'], $matches) && in_array($method, ['messages', 'app_mention'])) {
+            if (empty($matches)) {
+                return $callbackResponse($this);
+            } else {
+                return $callbackResponse($this, $matches);
             }
         }
 
@@ -118,17 +107,8 @@ class SlackBot
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function replyInThread($text, $options = []) {
-        $event = $this->getEvent();
-        $method = 'chat.postMessage';
-
-        $response = array_merge([
-            'token' => $this->bot_token,
-            'text' => $text,
-            'thread_ts' => $this->getThreadId(),
-            'channel' => $event['channel']
-        ], $options);
-
-        return $this->send($response, $method);
+        $options['thread_ts'] = $this->getThreadId();
+        return $this->reply($text, $options);
     }
 
     /**
