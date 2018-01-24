@@ -19,9 +19,9 @@ class SlackBot
 
     public function __construct() {
         $this->http_client = new Guzzle([
-                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
-                'base_uri' => 'https://slack.com/api/',
-            ]);
+            'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+            'base_uri' => 'https://slack.com/api/',
+        ]);
 //        $this->webhook_url = config('services.slack.webhook_url');
         $this->verification_token = config('services.slack.verification_token');
         $this->bot_token = config('services.slack.bot_access_token');
@@ -34,7 +34,7 @@ class SlackBot
      * @param $callbackResponse
      */
     public function hearsMention($text, $callbackResponse) {
-        $this->hearRoute($text, $callbackResponse, 'app_mention');
+        return $this->hearRoute($text, $callbackResponse, 'app_mention');
     }
 
     /**
@@ -44,7 +44,7 @@ class SlackBot
      * @param $callbackResponse
      */
     public function hears($text, $callbackResponse) {
-        $this->hearRoute($text, $callbackResponse, 'message');
+        return $this->hearRoute($text, $callbackResponse, 'message');
     }
 
     /**
@@ -64,7 +64,7 @@ class SlackBot
                 case 'message':
                 case 'app_mention':
                     // Call the function callback.
-                    $callbackResponse($this);
+                    return $callbackResponse($this);
                     break;
 
                 default:
@@ -90,7 +90,7 @@ class SlackBot
             'channel' => $event['channel']
         ];
 
-        $this->send($response, $method);
+        return $this->send($response, $method);
     }
 
     /**
@@ -105,13 +105,11 @@ class SlackBot
         $response = [
             'token' => $this->bot_token,
             'text' => $text,
-            'thread_ts' => (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'],
+            'thread_ts' => $this->getThreadId(),
             'channel' => $event['channel']
         ];
 
-        Log::debug($response);
-
-        $this->send($response, $method);
+        return $this->send($response, $method);
     }
 
     /**
@@ -120,7 +118,7 @@ class SlackBot
      * @param $message
      */
     private function send($response, $method) {
-        $this->http_client->post($method, [
+        return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $response
         ]);
     }
@@ -128,14 +126,14 @@ class SlackBot
     /**
      * @return mixed
      */
-    private function getRequest() {
+    public function getRequest() {
         return json_decode(request()->getContent(), true);
     }
 
     /**
      * @return mixed
      */
-    private function getEvent() {
+    public function getEvent() {
         $request = $this->getRequest();
 
         if (request('type') == 'event_callback') {
@@ -145,5 +143,10 @@ class SlackBot
         }
 
         return $event;
+    }
+
+    public function getThreadId() {
+        $event = $this->getEvent();
+        return (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'];
     }
 }
