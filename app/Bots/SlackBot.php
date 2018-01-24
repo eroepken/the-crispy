@@ -5,8 +5,6 @@ namespace App\Bots;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Request;
 
 class SlackBot
 {
@@ -56,8 +54,6 @@ class SlackBot
         $event = $this->getEvent();
 
         if (preg_match_all('/' . $text . '/i', $event['text'])) {
-            Log::debug($text);
-            Log::debug($event);
 
             switch ($method) {
                 case 'message':
@@ -98,12 +94,15 @@ class SlackBot
     public function replyInThread($text) {
         $event = $this->getEvent();
 
-        Log::debug($event);
-
         $response = [
+            'type' => 'message',
+            'subtype' => 'reply_broadcast',
             'text' => $text,
-            'thread_ts' => $event['ts']
+            'channel' => $event['channel'],
+            'thread_ts' => (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts']
         ];
+
+        Log::debug($response);
 
         $this->send($response);
     }

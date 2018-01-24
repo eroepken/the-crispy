@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Bots\SlackBot;
 
 class SlackBotProvider extends ServiceProvider
@@ -20,6 +21,8 @@ class SlackBotProvider extends ServiceProvider
 
             // Add the challenge listener.
             $request = json_decode(request()->getContent(), true);
+
+            Log::debug('New request incoming:' . $request['text']);
 
             if ($request['type'] == 'url_verification') {
                 if ($request['token'] != config('services.slack.token')) {
