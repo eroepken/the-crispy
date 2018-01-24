@@ -8,18 +8,21 @@ use Illuminate\Support\Facades\Log;
 
 class SlackBot
 {
+    private $slack_api_url = 'https://slack.com/api/';
 
     protected $webhook;
-    protected $webhook_url;
-    protected $token;
+//    protected $webhook_url;
+    protected $verification_token;
+    protected $bot_token;
 
     protected $request;
     protected $event;
 
     public function __construct() {
         $this->webhook = new Guzzle();
-        $this->webhook_url = config('services.slack.webhook_url');
-        $this->token = config('services.slack.token');
+//        $this->webhook_url = config('services.slack.webhook_url');
+        $this->verification_token = config('services.slack.verification_token');
+        $this->bot_token = config('services.slack.bot_access_token');
     }
 
     /**
@@ -77,13 +80,15 @@ class SlackBot
      */
     public function reply($text) {
         $event = $this->getEvent();
+        $method = 'chat.postMessage';
 
         $response = [
+            'token' => $this->bot_token,
             'text' => $text,
             'channel' => $event['channel']
         ];
 
-        $this->send($response);
+        $this->send($response, $method);
     }
 
     /**
@@ -93,18 +98,18 @@ class SlackBot
      */
     public function replyInThread($text) {
         $event = $this->getEvent();
+        $method = 'chat.postMessage';
 
         $response = [
-            'type' => 'message',
-            'subtype' => 'reply_broadcast',
+            'token' => $this->bot_token,
             'text' => $text,
-            'channel' => $event['channel'],
-            'thread_ts' => (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts']
+            'thread_ts' => (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'],
+            'channel' => $event['channel']
         ];
 
         Log::debug($response);
 
-        $this->send($response);
+        $this->send($response, $method);
     }
 
     /**
@@ -112,8 +117,8 @@ class SlackBot
      *
      * @param $message
      */
-    private function send($response) {
-        $this->webhook->post($this->webhook_url, [
+    private function send($response, $method) {
+        $this->webhook->post($this->slack_api_url . $method, [
             RequestOptions::JSON => $response
         ]);
     }

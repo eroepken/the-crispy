@@ -36,8 +36,9 @@ return [
     ],
 
     'slack' => [
-        'token' => env('VERIFICATION_TOKEN'),
+        'verification_token' => env('VERIFICATION_TOKEN'),
         'webhook_url' => env('INCOMING_WEBHOOK_URL'),
+        'bot_access_token' => env('BOT_OAUTH_ACCESS_TOKEN'),
         'client_secret' => env('CLIENT_SECRET'),
         'client_id' => env('CLIENT_ID')
     ]
