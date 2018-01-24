@@ -17,6 +17,9 @@ class SlackBot
     protected $request;
     protected $event;
 
+    /**
+     * SlackBot constructor.
+     */
     public function __construct() {
         $this->http_client = new Guzzle([
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
@@ -29,9 +32,9 @@ class SlackBot
 
     /**
      * When the SlackBot hears text with their name in it.
-     *
      * @param $text
      * @param $callbackResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function hearsMention($text, $callbackResponse) {
         return $this->hearRoute($text, $callbackResponse, 'app_mention');
@@ -39,9 +42,9 @@ class SlackBot
 
     /**
      * When the SlackBot hears certain text.
-     *
      * @param $text
      * @param $callbackResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function hears($text, $callbackResponse) {
         return $this->hearRoute($text, $callbackResponse, 'message');
@@ -49,22 +52,26 @@ class SlackBot
 
     /**
      * Catcher for hear actions.
-     *
      * @param $text
      * @param $callbackResponse
      * @param $method
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     private function hearRoute($text, $callbackResponse, $method) {
 
         $event = $this->getEvent();
 
-        if (preg_match_all('/' . $text . '/i', $event['text'])) {
+        if (preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
 
             switch ($method) {
                 case 'message':
                 case 'app_mention':
                     // Call the function callback.
-                    return $callbackResponse($this);
+                    if (empty($matches)) {
+                        return $callbackResponse($this);
+                    } else {
+                        return $callbackResponse($this, $matches);
+                    }
                     break;
 
                 default:
@@ -77,45 +84,48 @@ class SlackBot
 
     /**
      * Send a basic channel reply.
-     *
      * @param $text
+     * @param $options
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function reply($text) {
+    public function reply($text, $options = []) {
         $event = $this->getEvent();
         $method = 'chat.postMessage';
 
-        $response = [
+        $response = array_merge([
             'token' => $this->bot_token,
             'text' => $text,
             'channel' => $event['channel']
-        ];
+        ], $options);
 
         return $this->send($response, $method);
     }
 
     /**
      * Send the reply in the same thread.
-     *
      * @param $text
+     * @param $options
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text) {
+    public function replyInThread($text, $options = []) {
         $event = $this->getEvent();
         $method = 'chat.postMessage';
 
-        $response = [
+        $response = array_merge([
             'token' => $this->bot_token,
             'text' => $text,
             'thread_ts' => $this->getThreadId(),
             'channel' => $event['channel']
-        ];
+        ], $options);
 
         return $this->send($response, $method);
     }
 
     /**
      * Send the message Guzzle request to Slack.
-     *
-     * @param $message
+     * @param $response
+     * @param $method
+     * @return \Psr\Http\Message\ResponseInterface
      */
     private function send($response, $method) {
         return $this->http_client->post($method, [
@@ -124,6 +134,7 @@ class SlackBot
     }
 
     /**
+     * Get the whole request object to which the bot must respond.
      * @return mixed
      */
     public function getRequest() {
@@ -131,7 +142,8 @@ class SlackBot
     }
 
     /**
-     * @return mixed
+     * Get the event information to which the bot must respond.
+     * @return array
      */
     public function getEvent() {
         $request = $this->getRequest();
@@ -145,6 +157,10 @@ class SlackBot
         return $event;
     }
 
+    /**
+     * Get the ID for the thread where the bot must act.
+     * @return string
+     */
     public function getThreadId() {
         $event = $this->getEvent();
         return (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'];
