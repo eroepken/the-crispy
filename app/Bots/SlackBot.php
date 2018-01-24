@@ -93,8 +93,28 @@ class SlackBot
 
         $response = array_merge([
             'token' => $this->bot_token,
+            'channel' => $event['channel'],
+            'text' => $text
+        ], $options);
+
+        return $this->send($response, $method);
+    }
+
+    /**
+     * Send a basic channel reply.
+     * @param $text
+     * @param $options
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function replyEphemeral($text, $user, $options = []) {
+        $event = $this->getEvent();
+        $method = 'chat.postEphemeral';
+
+        $response = array_merge([
+            'token' => $this->bot_token,
+            'channel' => $event['channel'],
             'text' => $text,
-            'channel' => $event['channel']
+            'user' => $user
         ], $options);
 
         return $this->send($response, $method);
@@ -106,9 +126,24 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text, $options = []) {
-        $options['thread_ts'] = $this->getThreadId();
+    public function replyInThread($text) {
+        $options = [
+            'thread_ts' => $this->getThreadId()
+        ];
         return $this->reply($text, $options);
+    }
+
+    /**
+     * Send a basic channel reply.
+     * @param $text
+     * @param $options
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function replyEphemeralInThread($text, $user) {
+        $options = [
+            'thread_ts' => $this->getThreadId()
+        ];
+        return $this->replyEphemeral($text, $user, $options);
     }
 
     /**

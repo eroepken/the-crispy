@@ -23,6 +23,8 @@ class CAHGame extends Model
         $bot->replyInThread('Let\'s Play! Who is playing?');
         $event = $bot->getEvent();
 
+        $bot->replyEphemeralInThread('Oh hi. This is private.', $event['user']);
+
         $this->thread_id = $bot->getThreadId();
 
         Log::debug($event);
