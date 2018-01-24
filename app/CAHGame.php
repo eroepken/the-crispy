@@ -20,14 +20,56 @@ class CAHGame extends Model
 
         $this->bot = $bot;
 
-        $bot->replyInThread('Let\'s Play! Who is playing?');
-        $event = $bot->getEvent();
+        for($i=4; $i<=10; $i++) {
+            $num_players_opts[] = [
+                'text' => $i,
+                'value' => $i
+            ];
+        }
 
-        $bot->replyEphemeralInThread('Oh hi. This is private.', $event['user']);
+        $bot->replyInThread('How many players?', [
+            "attachments" => [
+                [
+                    'text' => 'Choose number of players to join.',
+                    'attachment_type' => 'default',
+                    'callback_id' => 'player_number_selection',
+                    'actions' => [
+                        [
+                            'name' => 'users_list',
+                            'text' => 'Pick the users',
+                            'type' => 'select',
+                            'options' => $num_players_opts
+                        ]
+                    ]
+                ]
+            ]
+        ]);
 
-        $this->thread_id = $bot->getThreadId();
 
-        Log::debug($event);
+//        $bot->replyInThread('Choose players', [
+//            "attachments" => [
+//                [
+//                    'text' => 'Choose users to play',
+//                    'attachment_type' => 'default',
+//                    'callback_id' => 'player_selection',
+//                    'actions' => [
+//                        [
+//                            'name' => 'users_list',
+//                            'text' => 'Pick the users',
+//                            'type' => 'select',
+//                            'data_source' => 'users'
+//                        ]
+//                    ]
+//                ]
+//            ]
+//        ]);
+//        $event = $bot->getEvent();
+//
+//        $bot->replyEphemeralInThread('Oh hi. This is private.', $event['user']);
+//
+//        $this->thread_id = $bot->getThreadId();
+
+//        Log::debug($event);
 
         // Get the users.
 //        $bot->hears('(@[\w\d\-\_]+)*', function(SlackBot $bot, $users) {

@@ -126,10 +126,10 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text) {
-        $options = [
+    public function replyInThread($text, $options = []) {
+        $options = array_merge([
             'thread_ts' => $this->getThreadId()
-        ];
+        ], $options);
         return $this->reply($text, $options);
     }
 
@@ -139,10 +139,10 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyEphemeralInThread($text, $user) {
-        $options = [
+    public function replyEphemeralInThread($text, $user, $options = []) {
+        $options = array_merge([
             'thread_ts' => $this->getThreadId()
-        ];
+        ], $options);
         return $this->replyEphemeral($text, $user, $options);
     }
 
