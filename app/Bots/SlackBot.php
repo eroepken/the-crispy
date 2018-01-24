@@ -97,11 +97,7 @@ class SlackBot
             'text' => $text
         ], $options);
 
-        Log::debug($response);
-
         $test = $this->send($response, $method);
-
-        Log::debug($test->getBody()->getContents());
 
         return $test;
     }
