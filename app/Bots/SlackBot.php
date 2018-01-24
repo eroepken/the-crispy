@@ -101,7 +101,7 @@ class SlackBot
 
         $test = $this->send($response, $method);
 
-        Log::debug($test);
+        Log::debug($test->getBody()->getContents());
 
         return $test;
     }
