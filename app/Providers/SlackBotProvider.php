@@ -37,6 +37,8 @@ class SlackBotProvider extends ServiceProvider
 //            $request = json_decode(request()->body->getContents(), true);
 
             $payload = json_decode(request('payload'));
+            Log::debug($payload);
+
             $callback = $payload->actions[0]->callback_id;
 
             if (function_exists($callback)) {
