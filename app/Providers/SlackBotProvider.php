@@ -58,7 +58,7 @@ class SlackBotProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(Slackbot::class, function() {
+        $this->app->singleton(SlackBot::class, function() {
             return new SlackBot();
         });
     }
