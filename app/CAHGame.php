@@ -29,10 +29,9 @@ class CAHGame extends Model
             ];
         }
 
-        $request = $bot->getRequest();
-        Log::debug($request);
+        $event = $bot->getEvent();
 
-        $bot->replyEphemeralInThread('How many players?', $request->user_id, [
+        $bot->replyEphemeralInThread('How many players?', $event['user'], [
             'attachments' => [
                 [
                     'text' => 'Choose number of players to join.',
