@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use App\Bots\SlackBot;
 
 class CAHGame extends Model
@@ -52,6 +53,12 @@ class CAHGame extends Model
         ]);
     }
 
+    public static function boot() {
+        Route::post('/cah-game', function() {
+
+        });
+    }
+
     public function run() {
 
     }
@@ -78,16 +85,16 @@ class CAHGame extends Model
 
         Log::debug($request);
 
-        $slackbot->replyToInteractive('Choose players', $request['response_url'], [
-            'attachments' => [
-                [
-                    'text' => 'Choose users to play',
-                    'attachment_type' => 'default',
-                    'callback_id' => '\App\CAHGame::setPlayers',
-                    'actions' => $actions,
-                ]
-            ]
-        ]);
+//        $slackbot->replyToInteractive('Choose players', $request['response_url'], [
+//            'attachments' => [
+//                [
+//                    'text' => 'Choose users to play',
+//                    'attachment_type' => 'default',
+//                    'callback_id' => '\App\CAHGame::setPlayers',
+//                    'actions' => $actions,
+//                ]
+//            ]
+//        ]);
     }
 
     public static function setPlayers($request) {

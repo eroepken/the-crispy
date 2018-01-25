@@ -11,7 +11,6 @@ class SlackBot
 
     protected $http_client;
     protected $webhook_client;
-//    protected $webhook_url;
     protected $verification_token;
     protected $bot_token;
 
@@ -31,7 +30,6 @@ class SlackBot
             'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
         ]);
 
-//        $this->webhook_url = config('services.slack.webhook_url');
         $this->verification_token = config('services.slack.verification_token');
         $this->bot_token = config('services.slack.bot_access_token');
     }
@@ -55,15 +53,6 @@ class SlackBot
     public function hears($text, $callbackResponse) {
         return $this->hearRoute($text, $callbackResponse, 'message');
     }
-
-    /**
-     * @param $text
-     * @param $callbackResponse
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-//    public function hearsInThread($text, $callbackResponse, $thread_id) {
-//        return $this->hearRoute($text, $callbackResponse, 'message', $thread_id);
-//    }
 
     /**
      * Catcher for hear actions.
