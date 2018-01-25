@@ -38,7 +38,7 @@ class CAHGame extends Model
                 [
                     'text' => 'Choose number of players to join.',
                     'attachment_type' => 'default',
-                    'callback_id' => 'player_number_selection',
+                    'callback_id' => 'CAHGame::setNumPlayers',
                     'actions' => [
                         [
                             'name' => 'users_list',
@@ -67,19 +67,22 @@ class CAHGame extends Model
 //        });
     }
 
+
+    public static function boot() {
+        require_once('cah_functions.php');
+    }
+
     public function run() {
 
     }
-}
 
-function player_number_selection($request) {
-    $bot = app('App\Bots\SlackBot');
+    public static function setNumPlayers($request) {
 
 //    Log::debug($request);
 
-    $num_users = $request['actions'][0]['selected_options'][0]['value'];
+        $num_users = $request['actions'][0]['selected_options'][0]['value'];
 
-    Log::debug($num_users);
+        Log::debug($num_users);
 
 //    $actions = [];
 //
@@ -92,7 +95,7 @@ function player_number_selection($request) {
 //        ];
 //    }
 //
-//    $bot->replyToInteractive('Choose players', [
+//    $this->bot->replyToInteractive('Choose players', [
 //        "attachments" => [
 //            [
 //                'text' => 'Choose users to play',
@@ -102,4 +105,5 @@ function player_number_selection($request) {
 //            ]
 //        ]
 //    ]);
+    }
 }
