@@ -37,10 +37,10 @@ class SlackBotProvider extends ServiceProvider
         Route::post('/crispy-interactive', function() {
             $request = json_decode(request()->getContent(), true);
 
-            $callback = $request->callback_id;
+            $callback = $request['payload']->callback_id;
 
             if (function_exists($callback)) {
-                $callback($request);
+                $callback($request['payload']);
             } else {
                 Log::error('Callback function not found.');
             }
