@@ -159,12 +159,12 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyEphemeralInThread($text, $user, $options = []) {
-        $options = array_merge([
-            'thread_ts' => $this->getThreadId()
-        ], $options);
-        return $this->replyEphemeral($text, $user, $options);
-    }
+//    public function replyEphemeralInThread($text, $user, $options = []) {
+//        $options = array_merge([
+//            'thread_ts' => $this->getThreadId()
+//        ], $options);
+//        return $this->replyEphemeral($text, $user, $options);
+//    }
 
     /**
      * Send the message Guzzle request to Slack.
