@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use App\Bots\SlackBot;
+use App\CAHGame;
 
 class SlackBotProvider extends ServiceProvider
 {
