@@ -148,6 +148,10 @@ class SlackBot
      * @param $url
      */
     public function replyToInteractive($text, $url, $options = []) {
+        if (isset($options['attachments'])) {
+            $options['attachments'] = json_encode($options['attachments']);
+        }
+
         return $this->http_client->post($url, array_merge([
             'text' => $text
         ], $options));
