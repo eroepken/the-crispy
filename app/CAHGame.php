@@ -75,27 +75,31 @@ class CAHGame extends Model
 function player_number_selection($request) {
     $bot = app('App\Bots\SlackBot');
 
-    Log::debug($request);
+//    Log::debug($request);
 
-    $actions = [];
+    $num_users = $request['actions'][0]['selected_options'][0]['value'];
 
-    for($i=0; $i<= $answers[0]->value; $i++) {
-        $actions[] = [
-            'name' => 'users_list',
-            'text' => 'Pick player #' . $i,
-            'type' => 'select',
-            'data_source' => 'users'
-        ];
-    }
+    Log::debug($num_users);
 
-    $bot->replyToInteractive('Choose players', [
-        "attachments" => [
-            [
-                'text' => 'Choose users to play',
-                'attachment_type' => 'default',
-                'callback_id' => 'player_selection',
-                'actions' => $actions,
-            ]
-        ]
-    ]);
+//    $actions = [];
+//
+//    for($i=0; $i<= $answers[0]->value; $i++) {
+//        $actions[] = [
+//            'name' => 'users_list',
+//            'text' => 'Pick player #' . $i,
+//            'type' => 'select',
+//            'data_source' => 'users'
+//        ];
+//    }
+//
+//    $bot->replyToInteractive('Choose players', [
+//        "attachments" => [
+//            [
+//                'text' => 'Choose users to play',
+//                'attachment_type' => 'default',
+//                'callback_id' => 'player_selection',
+//                'actions' => $actions,
+//            ]
+//        ]
+//    ]);
 }
