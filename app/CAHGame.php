@@ -78,8 +78,8 @@ class CAHGame extends Model
 
         Log::debug($request);
 
-        $slackbot->replyToInteractive('Choose players', $request['response_url'] [
-            "attachments" => [
+        $slackbot->replyToInteractive('Choose players', $request['response_url'], [
+            'attachments' => [
                 [
                     'text' => 'Choose users to play',
                     'attachment_type' => 'default',
