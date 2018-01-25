@@ -35,19 +35,17 @@ class SlackBotProvider extends ServiceProvider
         });
 
         Route::post('/crispy-interactive', function() {
-            $request = json_decode(request()->getContent(), true);
+            $payload = json_decode(request('payload'), true);
 
-            Log::debug(request());
+//            $callback = request('callback_id');
 
-            $callback = request('callback_id');
+            Log::debug($payload);
 
-            Log::debug($callback);
-
-            if (function_exists($callback)) {
-                $callback(request());
-            } else {
-                Log::error('Callback function not found.');
-            }
+//            if (function_exists($callback)) {
+//                $callback(request());
+//            } else {
+//                Log::error('Callback function not found.');
+//            }
         });
     }
 
