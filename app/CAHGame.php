@@ -67,11 +67,6 @@ class CAHGame extends Model
 //        });
     }
 
-
-    public static function boot() {
-        require_once('cah_functions.php');
-    }
-
     public function run() {
 
     }
@@ -95,7 +90,7 @@ class CAHGame extends Model
 //        ];
 //    }
 //
-//    $this->bot->replyToInteractive('Choose players', [
+//    self::$bot->replyToInteractive('Choose players', [
 //        "attachments" => [
 //            [
 //                'text' => 'Choose users to play',
