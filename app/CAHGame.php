@@ -78,16 +78,16 @@ class CAHGame extends Model
 
         Log::debug($request);
 
-//        $slackbot->replyToInteractive('Choose players', [
-//            "attachments" => [
-//                [
-//                    'text' => 'Choose users to play',
-//                    'attachment_type' => 'default',
-//                    'callback_id' => '\App\CAHGame::setPlayers',
-//                    'actions' => $actions,
-//                ]
-//            ]
-//        ]);
+        $slackbot->replyToInteractive('Choose players', $request['response_url'] [
+            "attachments" => [
+                [
+                    'text' => 'Choose users to play',
+                    'attachment_type' => 'default',
+                    'callback_id' => '\App\CAHGame::setPlayers',
+                    'actions' => $actions,
+                ]
+            ]
+        ]);
     }
 
     public static function setPlayers($request) {
