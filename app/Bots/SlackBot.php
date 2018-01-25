@@ -10,6 +10,7 @@ class SlackBot
 {
 
     protected $http_client;
+    protected $webhook_client;
 //    protected $webhook_url;
     protected $verification_token;
     protected $bot_token;
@@ -25,6 +26,11 @@ class SlackBot
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
             'base_uri' => 'https://slack.com/api/',
         ]);
+
+        $this->webhook_client = new Guzzle([
+            'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+        ]);
+
 //        $this->webhook_url = config('services.slack.webhook_url');
         $this->verification_token = config('services.slack.verification_token');
         $this->bot_token = config('services.slack.bot_access_token');
@@ -133,6 +139,18 @@ class SlackBot
             'thread_ts' => $this->getThreadId()
         ], $options);
         return $this->reply($text, $options);
+    }
+
+    /**
+     * Reply to an interactive message answer.
+     *
+     * @param $text
+     * @param $url
+     */
+    public function replyToInteractive($text, $url, $options = []) {
+        return $this->http_client->post($url, array_merge([
+            'text' => $text
+        ], $options));
     }
 
     /**

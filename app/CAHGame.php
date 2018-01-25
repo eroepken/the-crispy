@@ -10,6 +10,7 @@ class CAHGame extends Model
 {
     protected $thread_id;
     protected $bot;
+    protected $players;
 
     /**
      * CAHGame constructor.
@@ -28,7 +29,7 @@ class CAHGame extends Model
             ];
         }
 
-        $bot->replyInThread('How many players?', [
+        $bot->replyEphemeralInThread('How many players?', [
             'attachments' => [
                 [
                     'text' => 'Choose number of players to join.',
@@ -47,23 +48,6 @@ class CAHGame extends Model
         ]);
 
 
-//        $bot->replyInThread('Choose players', [
-//            "attachments" => [
-//                [
-//                    'text' => 'Choose users to play',
-//                    'attachment_type' => 'default',
-//                    'callback_id' => 'player_selection',
-//                    'actions' => [
-//                        [
-//                            'name' => 'users_list',
-//                            'text' => 'Pick the users',
-//                            'type' => 'select',
-//                            'data_source' => 'users'
-//                        ]
-//                    ]
-//                ]
-//            ]
-//        ]);
 //        $event = $bot->getEvent();
 //
 //        $bot->replyEphemeralInThread('Oh hi. This is private.', $event['user']);
@@ -78,8 +62,26 @@ class CAHGame extends Model
 //            $bot->reply('Test');
 //        });
     }
+}
 
-    public function run() {
+public function player_number_selection($answers, $channel, $thread_id) {
+    $bot = app('App\Bots\SlackBot');
 
-    }
+    $bot->replyToInteractive('Choose players', [
+        "attachments" => [
+            [
+                'text' => 'Choose users to play',
+                'attachment_type' => 'default',
+                'callback_id' => 'player_selection',
+                'actions' => [
+                    [
+                        'name' => 'users_list',
+                        'text' => 'Pick the users',
+                        'type' => 'select',
+                        'data_source' => 'users'
+                    ]
+                ]
+            ]
+        ]
+    ]);
 }
