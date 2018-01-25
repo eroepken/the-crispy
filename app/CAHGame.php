@@ -38,7 +38,7 @@ class CAHGame extends Model
                 [
                     'text' => 'Choose number of players to join.',
                     'attachment_type' => 'default',
-                    'callback_id' => 'CAHGame::setNumPlayers',
+                    'callback_id' => '\App\CAHGame::setNumPlayers',
                     'actions' => [
                         [
                             'name' => 'users_list',
