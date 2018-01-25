@@ -75,6 +75,8 @@ class CAHGame extends Model
 function player_number_selection($answers, $channel, $thread_id) {
     $bot = app('App\Bots\SlackBot');
 
+    Log::debug($answers);
+
     $actions = [];
 
     for($i=0; $i<= $answers[0]->value; $i++) {
