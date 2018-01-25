@@ -18,8 +18,7 @@ class SlackBotProvider extends ServiceProvider
     public function boot()
     {
         // Catch all for events.
-        Route::post('/crispy', function(Request $request) {
-            Log::debug($request);
+        Route::post('/crispy', function() {
             $request = json_decode(request()->getContent(), true);
 
             // Add the challenge listener.
@@ -35,7 +34,8 @@ class SlackBotProvider extends ServiceProvider
             $this->slackBotCommands();
         });
 
-        Route::post('/crispy-interactive', function(Request $request) {
+        Route::post('/crispy-interactive', function() {
+            $request = json_decode(request()->getContent(), true);
             Log::debug($request);
 
 //            $callback = $payload->actions[0]->callback_id;
