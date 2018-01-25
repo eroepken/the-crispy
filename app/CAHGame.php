@@ -61,7 +61,7 @@ class CAHGame extends Model
      * @param $request
      */
     public static function getNumPlayers($request) {
-        $slackbot = app('slackbot');
+        $slackbot = app('SlackBot');
 
         $num_users = $request['actions'][0]['selected_options'][0]['value'];
 
@@ -89,7 +89,7 @@ class CAHGame extends Model
     }
 
     public static function setPlayers($request) {
-        $slackbot = app('slackbot');
+        $slackbot = app('SlackBot');
 
         Log::debug($request);
     }
