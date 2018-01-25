@@ -31,6 +31,8 @@ class CAHGame extends Model
 
         $event = $bot->getEvent();
 
+        $bot->replyInThread('Asking <@' . $event['user'] . '> for number of players.');
+
         $bot->replyEphemeral('How many players?', $event['user'], [
             'attachments' => [
                 [

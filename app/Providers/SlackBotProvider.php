@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use App\Bots\SlackBot;
 
 class SlackBotProvider extends ServiceProvider
@@ -17,7 +18,8 @@ class SlackBotProvider extends ServiceProvider
     public function boot()
     {
         // Catch all for events.
-        Route::post('/crispy', function() {
+        Route::post('/crispy', function(Request $request) {
+            Log::debug($request);
             $request = json_decode(request()->getContent(), true);
 
             // Add the challenge listener.
@@ -33,8 +35,7 @@ class SlackBotProvider extends ServiceProvider
             $this->slackBotCommands();
         });
 
-        Route::post('/crispy-interactive', function() {
-            $request = json_decode(request()->getContent(), true);
+        Route::post('/crispy-interactive', function(Request $request) {
             Log::debug($request);
 
 //            $callback = $payload->actions[0]->callback_id;
