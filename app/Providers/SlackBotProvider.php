@@ -39,8 +39,16 @@ class SlackBotProvider extends ServiceProvider
 
             $callback = $payload['callback_id'];
 
-            if (function_exists($callback)) {
-                $callback($payload);
+            Log::debug($callback);
+
+            if (strpos($callback, '::') > 0) {
+                $callback = explode('::', $callback);
+            }
+
+            Log::debug($callback);
+
+            if (is_callable($callback)) {
+                call_user_func($callback, $payload);
             } else {
                 Log::error('Callback function not found.');
             }
