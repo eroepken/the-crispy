@@ -38,11 +38,11 @@ class CAHGame extends Model
                 [
                     'text' => 'Choose number of players to join.',
                     'attachment_type' => 'default',
-                    'callback_id' => '\App\CAHGame::setNumPlayers',
+                    'callback_id' => '\App\CAHGame::getNumPlayers',
                     'actions' => [
                         [
                             'name' => 'users_list',
-                            'text' => 'Pick the users',
+                            'text' => 'Choose number of players',
                             'type' => 'select',
                             'options' => $num_players_opts
                         ]
@@ -50,55 +50,47 @@ class CAHGame extends Model
                 ]
             ]
         ]);
-
-
-//        $event = $bot->getEvent();
-//
-//        $bot->replyEphemeralInThread('Oh hi. This is private.', $event['user']);
-//
-//        $this->thread_id = $bot->getThreadId();
-
-//        Log::debug($event);
-
-        // Get the users.
-//        $bot->hears('(@[\w\d\-\_]+)*', function(SlackBot $bot, $users) {
-//            Log::debug($users);
-//            $bot->reply('Test');
-//        });
     }
 
     public function run() {
 
     }
 
-    public static function setNumPlayers($request) {
-
-//    Log::debug($request);
+    /**
+     * Get the number of players so
+     * @param $request
+     */
+    public static function getNumPlayers($request) {
+        $slackbot = App::make('App\Bots\SlackBot');
 
         $num_users = $request['actions'][0]['selected_options'][0]['value'];
 
-        Log::debug($num_users);
+        $actions = [];
 
-//    $actions = [];
-//
-//    for($i=0; $i<= $answers[0]->value; $i++) {
-//        $actions[] = [
-//            'name' => 'users_list',
-//            'text' => 'Pick player #' . $i,
-//            'type' => 'select',
-//            'data_source' => 'users'
-//        ];
-//    }
-//
-//    self::$bot->replyToInteractive('Choose players', [
-//        "attachments" => [
-//            [
-//                'text' => 'Choose users to play',
-//                'attachment_type' => 'default',
-//                'callback_id' => 'player_selection',
-//                'actions' => $actions,
-//            ]
-//        ]
-//    ]);
+        for($i=0; $i<= $num_users; $i++) {
+            $actions[] = [
+                'name' => 'users_list',
+                'text' => 'Pick player #' . $i,
+                'type' => 'select',
+                'data_source' => 'users'
+            ];
+        }
+
+        $slackbot->replyToInteractive('Choose players', [
+            "attachments" => [
+                [
+                    'text' => 'Choose users to play',
+                    'attachment_type' => 'default',
+                    'callback_id' => '\App\CAHGame::setPlayers',
+                    'actions' => $actions,
+                ]
+            ]
+        ]);
+    }
+
+    public static function setPlayers($request) {
+        $slackbot = App::make('App\Bots\SlackBot');
+
+        Log::debug($request);
     }
 }
