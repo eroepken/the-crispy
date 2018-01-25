@@ -53,13 +53,6 @@ class CAHGame extends Model
         ]);
     }
 
-    public static function boot() {
-        Route::post('/cah-game', function() {
-            $request = json_decode(request()->getContent(), true);
-            Log::debug($request);
-        });
-    }
-
     /**
      * Get the number of players so
      * @param $request

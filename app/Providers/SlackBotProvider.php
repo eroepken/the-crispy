@@ -49,6 +49,11 @@ class SlackBotProvider extends ServiceProvider
                 Log::error('Callback function not found.');
             }
         });
+
+        Route::post('/cah-game', function() {
+            $request = json_decode(request()->getContent(), true);
+            Log::debug($request);
+        });
     }
 
     /**
