@@ -72,10 +72,10 @@ class CAHGame extends Model
     }
 }
 
-function player_number_selection($answers, $channel, $thread_id) {
+function player_number_selection($request) {
     $bot = app('App\Bots\SlackBot');
 
-    Log::debug($answers);
+    Log::debug($request);
 
     $actions = [];
 
