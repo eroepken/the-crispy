@@ -28,8 +28,6 @@ class CAHGame extends Model
             ];
         }
 
-
-
         $bot->replyInThread('How many players?', [
             'attachments' => [
                 [

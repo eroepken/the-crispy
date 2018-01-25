@@ -34,10 +34,9 @@ class SlackBotProvider extends ServiceProvider
         });
 
         Route::post('/crispy-interactive', function() {
-            // Add the challenge listener.
-            $request = json_decode(request()->getContent(), true);
+//            $request = json_decode(request()->body->getContents(), true);
 
-            Log::debug($request);
+            Log::debug(request());
         });
     }
 
