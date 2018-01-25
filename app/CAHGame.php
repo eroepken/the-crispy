@@ -62,6 +62,10 @@ class CAHGame extends Model
 //            $bot->reply('Test');
 //        });
     }
+
+    public function run() {
+
+    }
 }
 
 function player_number_selection($answers, $channel, $thread_id) {
