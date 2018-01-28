@@ -13,12 +13,20 @@ class CAHGame extends Model
 {
     use SoftDeletes;
 
+    // Properties only used by this class.
+    protected $bot;
+    protected $response_url;
+
+    // Fields to be entered in the DB.
+    public $thread_id;
+    public $players;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['id', 'thread_id', 'players'];
+    protected $fillable = ['thread_id', 'players'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -33,11 +41,6 @@ class CAHGame extends Model
      * @var string
      */
     protected $table = 'cah_games';
-
-    protected $thread_id;
-    protected $bot;
-    protected $players;
-    protected $response_url;
 
     // Minimum required number of players.
     const MIN_REQUIRED = 4;

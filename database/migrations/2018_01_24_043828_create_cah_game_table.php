@@ -16,8 +16,8 @@ class CreateCahGameTable extends Migration
     {
         Schema::create('cah_games', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('thread_id', 17);
-            $table->text('players');
+            $table->string('thread_id', 17)->nullable();
+            $table->text('players')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
