@@ -40,10 +40,13 @@ class CAHGame extends Model
          * Send a message to start the new game thread and get the thread ID back to store the game
          * in the database.
          */
-        $message = 'A new Cards Against Humanity game commences. Come on in and play ' . $players . '!';
+        $message = 'A new Cards Against Humanity game commences for ' . $players . '. Come on in and play!';
         // TODO: After confirming that this functionality actually works, make sure all players are unique.
         $message_sent = $this->bot->respondToURL($message, $this->response_url);
-        Log::debug($message_sent);
+
+        Log::debug($message_sent->getStatusCode());
+        Log::debug($message_sent->getReasonPhrase());
+        Log::debug($message_sent->body);
 
         // Send a dialog to the initiating user.
 
