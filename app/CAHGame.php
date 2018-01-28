@@ -64,13 +64,13 @@ class CAHGame extends Model
      * @param $response_url
      * @param $initiating_user
      */
-    public function __construct($players, $channel, $response_url, $initiating_user) {
+    public function __construct($players, $channel, $thread_id, $initiating_user) {
         parent::__construct();
 
         $this->bot = app()->make(SlackBot::class);
-        $this->response_url = $response_url;
-
+        $this->thread_id = $thread_id;
         $this->players = $players;
+        $this->initiating_user = $initiating_user;
 
         $players = join(' and ', array_filter(array_merge(array(join(', ', array_slice($players, 0, -1))), array_slice($players, -1)), 'strlen'));
 
@@ -91,7 +91,7 @@ class CAHGame extends Model
         $message_sent_body = json_decode($message_sent->getBody(), true);
         $this->thread_id = $message_sent_body['ts'];
 
-        Log::debug($this->thread_id);
+        CAHGame::create(['players' => $players[1], 'thread_id' => $thread_id]);
     }
 
     /**
