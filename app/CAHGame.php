@@ -21,7 +21,7 @@ class CAHGame extends Model
     const MAX_SUPPORTED = 10;
 
     // The default number of black cards required to win the game.
-    const POINTS_TO_WIN = 10;
+    const DEFAULT_POINTS_TO_WIN = 10;
 
     /**
      * CAHGame constructor.
@@ -50,13 +50,12 @@ class CAHGame extends Model
             return response('A weird error occurred. Check the logs to find out what\'s wrong.');
         }
 
+        // Get the thread ID to start a new game.
         $message_sent_body = json_decode($message_sent->getBody(), true);
-        Log::debug($message_sent_body);
+        $this->thread_id = $message_sent_body['ts'];
 
-        $this->thread_id = $message_sent_body['thread_id'];
-
-        // Send a dialog to the initiating user.
-
+        // Send a dialog box to the initiating user to configure the game.
+        Log::debug($this->thread_id);
 
 //        $bot->replyInThread('Asking <@' . $event['user'] . '> for number of players.');
 //
