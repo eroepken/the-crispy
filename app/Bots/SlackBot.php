@@ -125,7 +125,7 @@ class SlackBot
      */
     public function replyInThread($text, $thread_id = '', $options = []) {
         if (empty($thread_id)) {
-            $thread_id = $this->bot->getThreadId();
+            $thread_id = $this->getThreadId();
         }
 
         $options = array_merge([
