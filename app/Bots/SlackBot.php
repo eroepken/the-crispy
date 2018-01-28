@@ -14,9 +14,6 @@ class SlackBot
     protected $verification_token;
     protected $bot_token;
 
-    protected $request;
-    protected $event;
-
     /**
      * SlackBot constructor.
      */
@@ -82,16 +79,18 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function reply($text, $channel, $options = []) {
+    public function reply($text, $channel = '', $options = []) {
         $method = 'chat.postMessage';
+
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
 
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
             'text' => $text
         ], $options);
-
-        Log::debug($response);
 
         return $this->send($response, $method);
     }
@@ -104,7 +103,11 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyEphemeral($text, $user, $channel, $options = []) {
+    public function replyEphemeral($text, $user, $channel = '', $options = []) {
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
+
         $method = 'chat.postEphemeral';
 
         $response = array_merge([
@@ -124,7 +127,14 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text, $thread_id, $channel, $options = []) {
+    public function replyInThread($text, $thread_id = '', $channel = '', $options = []) {
+        if (empty($thread_id)) {
+            $thread_id = $this->getThreadId();
+        }
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
+
         $options = array_merge([
             'thread_ts' => $thread_id
         ], $options);
@@ -138,9 +148,13 @@ class SlackBot
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function respondToURL($text, $channel, $options = []) {
+    public function respondToURL($text, $channel = '', $options = []) {
         if (isset($options['attachments'])) {
             $options['attachments'] = json_encode($options['attachments']);
+        }
+
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
         }
 
         $method = 'chat.postMessage';
@@ -201,5 +215,10 @@ class SlackBot
     public function getThreadId() {
         $event = $this->getEvent();
         return (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'];
+    }
+
+    public function getChannelId() {
+        $event = $this->getEvent();
+        return $event['channel_id'];
     }
 }

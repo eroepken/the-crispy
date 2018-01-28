@@ -111,7 +111,7 @@ class CAHGame extends Model
         $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id, $this->channel);
 
 //        do {
-//            $this->playRound();
+            $this->playRound();
 //        } while(!$gameover);
     }
 
