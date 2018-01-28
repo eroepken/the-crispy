@@ -16,7 +16,7 @@ Route::post('/cah-game', function() {
 
     // Make sure there are enough players, but not more than supported.
     if ($num_players >= CAHGame::MIN_REQUIRED && $num_players <= CAHGame::MAX_SUPPORTED) {
-        $CAH = new CAHGame($players[1], $request['response_url']);
+        $CAH = new CAHGame($players[1], $request['channel'], $request['response_url']);
     } else {
         $message = '';
 

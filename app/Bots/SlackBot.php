@@ -92,9 +92,7 @@ class SlackBot
             'text' => $text
         ], $options);
 
-        $test = $this->send($response, $method);
-
-        return $test;
+        return $this->send($response, $method);
     }
 
     /**
@@ -138,17 +136,33 @@ class SlackBot
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function respondToURL($text, $response_url, $options = []) {
+//    public function respondToURL($text, $response_url, $options = []) {
+//        if (isset($options['attachments'])) {
+//            $options['attachments'] = json_encode($options['attachments']);
+//        }
+//
+//        return $this->http_client->post($response_url, [
+//            RequestOptions::JSON => array_merge([
+//                'text' => $text,
+//                'response_type' => 'in_channel'
+//            ], $options)
+//        ]);
+//    }
+
+    public function respondToURL($text, $channel, $options = []) {
         if (isset($options['attachments'])) {
             $options['attachments'] = json_encode($options['attachments']);
         }
 
-        return $this->http_client->post($response_url, [
-            RequestOptions::JSON => array_merge([
-                'text' => $text,
-                'response_type' => 'in_channel'
-            ], $options)
-        ]);
+        $method = 'chat.postMessage';
+
+        $response = array_merge([
+            'token' => $this->bot_token,
+            'channel' => $channel,
+            'text' => $text
+        ], $options);
+
+        return $this->send($response, $method);
     }
 
     /**

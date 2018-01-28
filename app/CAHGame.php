@@ -26,9 +26,10 @@ class CAHGame extends Model
     /**
      * CAHGame constructor.
      * @param $players
+     * @param $channel
      * @param $response_url
      */
-    public function __construct($players, $response_url) {
+    public function __construct($players, $channel, $response_url) {
         parent::__construct();
 
         $this->bot = app()->make(SlackBot::class);
@@ -42,7 +43,7 @@ class CAHGame extends Model
          */
         $message = 'A new Cards Against Humanity game commences for ' . $players . '. Come on in and play!';
         // TODO: After confirming that this functionality actually works, make sure all players are unique.
-        $message_sent = $this->bot->respondToURL($message, $this->response_url);
+        $message_sent = $this->bot->respondToURL($message, $channel);
 
         if ($message_sent->getStatusCode() != 200) {
             Log::debug('Error sending the CAHGame start message. ' . $message_sent->getStatusCode() . ' ' . $message_sent->getReasonPhrase());
