@@ -31,7 +31,7 @@ Route::post('/cah-game', function() {
         }
 
         $bot->respondToURL($message, $request['response_url']);
-        return response('false');
     }
 
+    return response('false');
 });
