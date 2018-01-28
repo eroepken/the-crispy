@@ -21,7 +21,8 @@ class CAHGameController extends Controller
         // Make sure there are enough players, but not more than supported.
         if ($num_players >= CAHGame::MIN_REQUIRED && $num_players <= CAHGame::MAX_SUPPORTED) {
             $CAH = new CAHGame($players[1], $request['channel_id'], $request['response_url'], $request['user_id']);
-            $CAH->save();
+            $game = $CAH->save();
+            Log::debug($game);
             $CAH->run();
         } else {
             $message = '';
