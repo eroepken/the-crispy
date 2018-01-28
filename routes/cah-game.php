@@ -8,7 +8,7 @@ Route::post('/cah-game', function() {
     $request = request()->all();
     $bot = app()->make(SlackBot::class);
 
-    if ($request['command'] != '/cah' || (isset($request['token']) && $request['token'] != config('services.slack.token'))) return false;
+    if ($request['command'] != '/cah' || (isset($request['token']) && $request['token'] != config('services.slack.token'))) return response('false');
 
     // TODO: Move the following functionality to a function inside of CAHGame.
     // Get the list of players and hand it off to the CAH game class.
@@ -30,6 +30,7 @@ Route::post('/cah-game', function() {
             $message .= 'Sorry, this implementation of Cards Against Humanity only supports up to ' . CAHGame::MAX_SUPPORTED . ' players. You need to kick ' . $num_to_kick . ' ' . $player_label . ' out of the game.';
         }
 
+        // Send the error message back.
         $bot->respondToURL($message, $request['response_url']);
     }
 
