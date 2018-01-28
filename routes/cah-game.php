@@ -15,7 +15,7 @@ Route::post('/cah-game', function() {
 
     // TODO: Move the following functionality to a function inside of CAHGame.
     // Get the list of players and hand it off to the CAH game class.
-    $num_players = preg_match_all('/(<@[A-Za-z0-9_\-]+>)+/m', $request['text'], $players);
+    $num_players = preg_match_all('/(<@[A-Za-z0-9_\-|]+>)+/m', $request['text'], $players);
 
     // Make sure there are enough players, but not more than supported.
     if ($num_players >= CAHGame::MIN_REQUIRED && $num_players <= CAHGame::MAX_SUPPORTED) {
@@ -34,7 +34,8 @@ Route::post('/cah-game', function() {
         }
 
         // Send the error message back.
-        $bot->respondToURL($message, $request['response_url']);
+//        $bot->respondToURL($message, $request['response_url']);
+        return response($message);
     }
 
     return response('false');
