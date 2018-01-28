@@ -143,9 +143,11 @@ class SlackBot
             $options['attachments'] = json_encode($options['attachments']);
         }
 
-        return $this->http_client->post($response_url, json_encode(array_merge([
-            'text' => $text
-        ], $options)));
+        return $this->http_client->post($response_url, [
+            RequestOptions::JSON => array_merge([
+                'text' => $text
+            ], $options)
+        ]);
     }
 
     /**
