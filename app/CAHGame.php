@@ -101,7 +101,9 @@ class CAHGame extends Model
     public function run() {
         $gameover = false;
 
-        $this->bot->replyInThread($this->players[0] . ' is your first card czar. Here\'s the first black card.', $this->thread_id);
+        $first_player = key(reset($this->players));
+
+        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id);
 
 //        do {
 //            $this->playRound();
