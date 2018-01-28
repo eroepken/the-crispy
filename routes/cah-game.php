@@ -1,12 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\CAHGame;
 use App\Bots\SlackBot;
 
 Route::post('/cah-game', function() {
     $request = request()->all();
     $bot = app()->make(SlackBot::class);
+
+    Log::debug($request);
 
     if ($request['command'] != '/cah' || (isset($request['token']) && $request['token'] != config('services.slack.token'))) return response('false');
 
