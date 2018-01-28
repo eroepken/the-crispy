@@ -98,8 +98,9 @@ class SlackBot
     }
 
     /**
-     * Send a basic channel reply.
+     * Send an ephemeral reply.
      * @param $text
+     * @param $user
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -132,9 +133,10 @@ class SlackBot
 
     /**
      * Reply to a response_url.
-     *
      * @param $text
      * @param $response_url
+     * @param array $options
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function respondToURL($text, $response_url, $options = []) {
         if (isset($options['attachments'])) {

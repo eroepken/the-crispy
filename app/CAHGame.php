@@ -36,13 +36,17 @@ class CAHGame extends Model
 
         $players = join(' and ', array_filter(array_merge(array(join(', ', array_slice($players, 0, -1))), array_slice($players, -1)), 'strlen'));
 
+        Log::debug($players);
+
         /**
          * Send a message to start the new game thread and get the thread ID back to store the game
          * in the database.
          */
         $message = 'A new Cards Against Humanity game commences. Come on in and play ' . $players . '!';
+        Log::debug($message);
         // TODO: After confirming that this functionality actually works, make sure all players are unique.
         $message_sent = $this->bot->respondToURL($message, $this->response_url);
+        Log::debug($message_sent);
 
         // Send a dialog to the initiating user.
 
