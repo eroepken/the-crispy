@@ -69,7 +69,7 @@ class SlackBotProvider extends ServiceProvider
 
             // Add the challenge listener.
             if ($request['type'] == 'url_verification') {
-                if ($request['token'] != config('services.slack.token')) {
+                if ($request['token'] != config('services.slack.verification_token')) {
                     return response()->json(['text' => 'An error occurred.']);
                 }
 

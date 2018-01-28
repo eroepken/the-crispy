@@ -11,7 +11,7 @@ Route::post('/cah-game', function() {
 
     Log::debug($request);
 
-    if ($request['command'] != '/cah' || (isset($request['token']) && $request['token'] != config('services.slack.token'))) return response('false');
+    if ($request['command'] != '/cah' && isset($request['token']) && $request['token'] != config('services.slack.verification_token')) return response('false');
 
     // TODO: Move the following functionality to a function inside of CAHGame.
     // Get the list of players and hand it off to the CAH game class.
