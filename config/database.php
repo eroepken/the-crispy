@@ -52,12 +52,7 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-            'options'  => [
-                PDO::MYSQL_ATTR_SSL_CA => './amazon-rds-ca-cert.pem',
-                'sslmode' => 'require',
-            ]
         ],
-
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
