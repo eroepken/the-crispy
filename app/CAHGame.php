@@ -41,7 +41,7 @@ class CAHGame extends Model
          * Send a message to start the new game thread and get the thread ID back to store the game
          * in the database.
          */
-        $message = 'A new Cards Against Humanity game commences for ' . $players . '. Come on in and play!';
+        $message = 'A new Cards Against Humanity game commences for ' . $players . '. Come on in and play! (*Important note:* The text of this game is NSFW. You have been warned.)';
         // TODO: After confirming that this functionality actually works, make sure all players are unique.
         $message_sent = $this->bot->respondToURL($message, $channel);
 
@@ -50,11 +50,10 @@ class CAHGame extends Model
             return response('A weird error occurred. Check the logs to find out what\'s wrong.');
         }
 
-        $message_sent_body = json_decode($message_sent->getBody());
+        $message_sent_body = json_decode($message_sent->getBody(), true);
+        Log::debug($message_sent_body);
 
         $this->thread_id = $message_sent_body['thread_id'];
-
-        Log::debug($message_sent->getBody());
 
         // Send a dialog to the initiating user.
 
