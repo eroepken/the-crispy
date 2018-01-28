@@ -124,11 +124,11 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text, $thread_id, $options = []) {
+    public function replyInThread($text, $thread_id, $channel, $options = []) {
         $options = array_merge([
             'thread_ts' => $thread_id
         ], $options);
-        return $this->reply($text, $options);
+        return $this->reply($text, $channel, $options);
     }
 
     /**

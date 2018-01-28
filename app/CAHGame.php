@@ -75,8 +75,6 @@ class CAHGame extends Model
         $this->response_url = $response_url;
         $this->initiating_user = $initiating_user;
 
-        Log::debug($this->channel);
-
         $players = join(' and ', array_filter(array_merge(array(join(', ', array_slice($players, 0, -1))), array_slice($players, -1)), 'strlen'));
 
         /**
@@ -108,7 +106,9 @@ class CAHGame extends Model
         reset($this->players);
         $first_player = key($this->players);
 
-        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id, ['channel' => $this->channel]);
+        Log::debug($this->channel);
+
+        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id, $this->channel);
 
 //        do {
 //            $this->playRound();
