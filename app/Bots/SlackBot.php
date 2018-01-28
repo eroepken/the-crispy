@@ -91,6 +91,8 @@ class SlackBot
             'text' => $text
         ], $options);
 
+        Log::debug($response);
+
         return $this->send($response, $method);
     }
 
