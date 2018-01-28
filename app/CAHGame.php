@@ -91,7 +91,7 @@ class CAHGame extends Model
         $message_sent_body = json_decode($message_sent->getBody(), true);
         $this->thread_id = $message_sent_body['ts'];
 
-        CAHGame::create(['players' => $players[1], 'thread_id' => $thread_id]);
+        $this->fill(['players' => $players, 'thread_id' => $message_sent_body['ts']]);
     }
 
     /**
