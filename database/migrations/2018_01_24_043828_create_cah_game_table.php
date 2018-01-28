@@ -14,7 +14,7 @@ class CreateCahGameTable extends Migration
      */
     public function up()
     {
-        Schema::create('cah_game', function (Blueprint $table) {
+        Schema::create('cah_games', function (Blueprint $table) {
             $table->increments('id');
             $table->string('thread_id', 17);
             $table->text('players');
@@ -30,6 +30,6 @@ class CreateCahGameTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cah_game');
+        Schema::dropIfExists('cah_games');
     }
 }

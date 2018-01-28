@@ -27,6 +27,13 @@ class CAHGame extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'cah_games';
+
     protected $thread_id;
     protected $bot;
     protected $players;
