@@ -145,7 +145,8 @@ class SlackBot
 
         return $this->http_client->post($response_url, [
             RequestOptions::JSON => array_merge([
-                'text' => $text
+                'text' => $text,
+                'response_type' => 'in_channel'
             ], $options)
         ]);
     }
