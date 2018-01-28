@@ -7,7 +7,6 @@ use App\Bots\SlackBot;
 
 Route::post('/cah-game', function() {
     $request = request()->all();
-    $bot = app()->make(SlackBot::class);
 
     if ($request['command'] != '/cah' && isset($request['token']) && $request['token'] != config('services.slack.verification_token')) return response('false');
 
