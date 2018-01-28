@@ -44,9 +44,12 @@ class CAHGame extends Model
         // TODO: After confirming that this functionality actually works, make sure all players are unique.
         $message_sent = $this->bot->respondToURL($message, $this->response_url);
 
-        Log::debug($message_sent->getStatusCode());
-        Log::debug($message_sent->getReasonPhrase());
-        Log::debug($message_sent->body);
+        if ($message_sent->getStatusCode() != 200) {
+            Log::debug('Error sending the CAHGame start message. ' . $message_sent->getStatusCode() . ' ' . $message_sent->getReasonPhrase());
+            return response('A weird error occurred. Check the logs to find out what\'s wrong.');
+        }
+
+        Log::debug($message_sent->getBody());
 
         // Send a dialog to the initiating user.
 
