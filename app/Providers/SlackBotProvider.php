@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -10,12 +10,58 @@ use App\Bots\SlackBot;
 
 class SlackBotProvider extends ServiceProvider
 {
+
     /**
-     * Bootstrap the application services.
+     * This namespace is applied to your controller routes.
+     *
+     * In addition, it is set as the URL generator's root namespace.
+     *
+     * @var string
+     */
+    protected $namespace = 'App\Http\Controllers';
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(SlackBot::class, function() {
+            return new SlackBot();
+        });
+    }
+
+    /**
+     * Define your route model bindings, pattern filters, etc.
      *
      * @return void
      */
     public function boot()
+    {
+        //
+
+        parent::boot();
+    }
+
+    /**
+     * Define the routes for the application.
+     *
+     * @return void
+     */
+    public function map()
+    {
+        $this->mapWebRoutes();
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapWebRoutes()
     {
         // Catch all for events.
         Route::post('/crispy', function() {
@@ -31,7 +77,9 @@ class SlackBotProvider extends ServiceProvider
             }
 
             // Also add the slack commands.
-            $this->slackBotCommands();
+            require_once base_path('routes/slackbot.php');
+
+            return false;
         });
 
         Route::post('/crispy-interactive', function() {
@@ -48,34 +96,8 @@ class SlackBotProvider extends ServiceProvider
             } else {
                 Log::error('Callback function not found.');
             }
+
+            return false;
         });
-
-        Route::post('/cah-game', function() {
-            $request = json_decode(request()->getContent(), true);
-            Log::debug($request);
-        });
-    }
-
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(SlackBot::class, function() {
-            return new SlackBot();
-        });
-    }
-
-    public function map() {
-//        $this->mapSlackBotCommands();
-    }
-
-    /**
-     * Include the routes for the Slack bot.
-     */
-    protected function slackBotCommands() {
-        require base_path('routes/slackbot.php');
     }
 }

@@ -131,17 +131,17 @@ class SlackBot
     }
 
     /**
-     * Reply to an interactive message answer.
+     * Reply to a response_url.
      *
      * @param $text
-     * @param $url
+     * @param $response_url
      */
-    public function replyToInteractive($text, $url, $options = []) {
+    public function respondToURL($text, $response_url, $options = []) {
         if (isset($options['attachments'])) {
             $options['attachments'] = json_encode($options['attachments']);
         }
 
-        return $this->http_client->post($url, array_merge([
+        return $this->http_client->post($response_url, array_merge([
             'text' => $text
         ], $options));
     }

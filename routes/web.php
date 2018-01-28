@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\BotController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

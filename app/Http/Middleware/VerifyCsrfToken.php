@@ -13,6 +13,8 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'lmgtfy',
-        'crispy'
+        'crispy',
+        'crispy-interactive',
+        'cah-game'
     ];
 }
