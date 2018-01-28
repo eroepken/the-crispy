@@ -119,12 +119,17 @@ class SlackBot
     /**
      * Send the reply in the same thread.
      * @param $text
+     * @param $thread_id
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyInThread($text, $options = []) {
+    public function replyInThread($text, $thread_id = '', $options = []) {
+        if (empty($thread_id)) {
+            $thread_id = $this->bot->getThreadId();
+        }
+
         $options = array_merge([
-            'thread_ts' => $this->getThreadId()
+            'thread_ts' => $thread_id
         ], $options);
         return $this->reply($text, $options);
     }
@@ -136,19 +141,6 @@ class SlackBot
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-//    public function respondToURL($text, $response_url, $options = []) {
-//        if (isset($options['attachments'])) {
-//            $options['attachments'] = json_encode($options['attachments']);
-//        }
-//
-//        return $this->http_client->post($response_url, [
-//            RequestOptions::JSON => array_merge([
-//                'text' => $text,
-//                'response_type' => 'in_channel'
-//            ], $options)
-//        ]);
-//    }
-
     public function respondToURL($text, $channel, $options = []) {
         if (isset($options['attachments'])) {
             $options['attachments'] = json_encode($options['attachments']);

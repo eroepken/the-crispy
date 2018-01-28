@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCahGameTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -16,8 +17,9 @@ class CreateCahGameTable extends Migration
         Schema::create('cah_game', function (Blueprint $table) {
             $table->increments('id');
             $table->string('thread_id', 17);
-            $table->json('players');
+            $table->text('players');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
