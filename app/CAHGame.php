@@ -16,6 +16,7 @@ class CAHGame extends Model
     // Properties only used by this class.
     protected $bot;
     protected $response_url;
+    protected $initiating_user;
 
     // Fields to be entered in the DB.
     public $thread_id;
@@ -91,7 +92,7 @@ class CAHGame extends Model
         $message_sent_body = json_decode($message_sent->getBody(), true);
         $this->thread_id = $message_sent_body['ts'];
 
-        $this->fill(['players' => $players, 'thread_id' => $message_sent_body['ts']]);
+        $this->fill(['players' => $players, 'thread_id' => $this->thread_id]);
     }
 
     /**
