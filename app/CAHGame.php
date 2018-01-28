@@ -50,6 +50,10 @@ class CAHGame extends Model
             return response('A weird error occurred. Check the logs to find out what\'s wrong.');
         }
 
+        $message_sent_body = json_decode($message_sent->getBody());
+
+        $this->thread_id = $message_sent_body['thread_id'];
+
         Log::debug($message_sent->getBody());
 
         // Send a dialog to the initiating user.
