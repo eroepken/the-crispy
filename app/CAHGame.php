@@ -15,6 +15,7 @@ class CAHGame extends Model
 
     // Properties only used by this class.
     protected $bot;
+    protected $channel;
     protected $response_url;
     protected $initiating_user;
 
@@ -70,6 +71,7 @@ class CAHGame extends Model
 
         $this->bot = app()->make(SlackBot::class);
         $this->players = array_fill_keys($players, 0);
+        $this->channel = $channel;
         $this->response_url = $response_url;
         $this->initiating_user = $initiating_user;
 
@@ -107,7 +109,7 @@ class CAHGame extends Model
         Log::debug($first_player);
         Log::debug($this->thread_id);
 
-        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id);
+        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id, ['channel' => $this->channel]);
 
 //        do {
 //            $this->playRound();

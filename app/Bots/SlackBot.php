@@ -82,13 +82,12 @@ class SlackBot
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function reply($text, $options = []) {
-        $event = $this->getEvent();
+    public function reply($text, $channel, $options = []) {
         $method = 'chat.postMessage';
 
         $response = array_merge([
             'token' => $this->bot_token,
-            'channel' => $event['channel'],
+            'channel' => $channel,
             'text' => $text
         ], $options);
 
@@ -99,16 +98,16 @@ class SlackBot
      * Send an ephemeral reply.
      * @param $text
      * @param $user
+     * @param $channel
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function replyEphemeral($text, $user, $options = []) {
-        $event = $this->getEvent();
+    public function replyEphemeral($text, $user, $channel, $options = []) {
         $method = 'chat.postEphemeral';
 
         $response = array_merge([
             'token' => $this->bot_token,
-            'channel' => $event['channel'],
+            'channel' => $channel,
             'text' => $text,
             'user' => $user
         ], $options);
