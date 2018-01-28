@@ -90,6 +90,8 @@ class CAHGame extends Model
         // Get the thread ID to start a new game.
         $message_sent_body = json_decode($message_sent->getBody(), true);
         $this->thread_id = $message_sent_body['ts'];
+
+        Log::debug($this->thread_id);
     }
 
     /**
