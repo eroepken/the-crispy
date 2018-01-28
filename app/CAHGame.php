@@ -27,7 +27,6 @@ class CAHGame extends Model
      */
     protected $dates = ['deleted_at'];
 
-    protected $id;
     protected $thread_id;
     protected $bot;
     protected $players;
@@ -81,11 +80,6 @@ class CAHGame extends Model
         // Get the thread ID to start a new game.
         $message_sent_body = json_decode($message_sent->getBody(), true);
         $this->thread_id = $message_sent_body['ts'];
-
-        // Save the game to the database.
-        $saved_game = $this->save();
-
-        Log::debug(serialize($saved_game));
     }
 
     /**
