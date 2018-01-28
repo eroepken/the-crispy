@@ -104,6 +104,9 @@ class CAHGame extends Model
         reset($this->players);
         $first_player = key($this->players);
 
+        Log::debug($first_player);
+        Log::debug($this->thread_id);
+
         $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id);
 
 //        do {
