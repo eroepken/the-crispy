@@ -288,8 +288,10 @@ class CAHGame extends Model
         ];
 
         // Send each player ephemeral message containing their choosable cards.
-        foreach($this->players as $player) {
+        foreach($this->players as $player => $data) {
             if ($player == $this->card_czar) continue;
+
+            $message['user'] = $player;
 
             $attachment = [
                 'text' => '',
@@ -304,7 +306,7 @@ class CAHGame extends Model
                     'name' => 'cards_chosen',
                     'text' => 'Pick a card, any card!',
                     'type' => 'select',
-                    'options' => $player['hand'],
+                    'options' => $data['hand'],
                 ];
             }
 
