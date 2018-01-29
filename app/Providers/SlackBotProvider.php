@@ -82,7 +82,7 @@ class SlackBotProvider extends ServiceProvider
             return false;
         });
 
-        Route::post('/crispy-interactive', function() {
+        Route::post('/interactive', function() {
             $payload = json_decode(request('payload'), true);
 
             $callback = $payload['callback_id'];
