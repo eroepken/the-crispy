@@ -116,9 +116,11 @@ class CAHGame extends Model
         $this->sendGameMessage($this->card_czar . ' is your first card czar. Here\'s the first black card.');
 
         $gameover = false;
-        do {
+//        do {
             $gameover = $this->playRound();
-        } while(!$gameover);
+//        } while(!$gameover);
+
+        return response('Game is complete!');
     }
 
     private function playRound() {
@@ -137,20 +139,18 @@ class CAHGame extends Model
         // Winner gets karma and a point added to their total score
         $this->savePlayerData();
 
-//        dd('test');
-
         // Check the score: if someone has reached the points required to win, end the game, give the winner more karma and thank everyone for playing.
         // If no one has won yet, draw replacement white cards for everyone and start a new round.
-        if ($winner = $this->hasWinner()) {
+        /*if ($winner = $this->hasWinner()) {
             return $this->gameOver($winner);
         } else {
             $this->replenishHands();
             $this->nextCardCzar();
             $this->sendGameMessage('No winners yet! ' . $this->card_czar . ' is your next card czar. Here\'s the next black card.');
-        }
+        }*/
 
         // TODO: Remove the next line when we want to actually test real game play.
-        return true;
+//        return true;
     }
 
     /**
