@@ -171,6 +171,26 @@ class SlackBot
     }
 
     /**
+     * Send an interactive message.
+     * @param $message
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function replyInteractive($message) {
+        $method = 'chat.postMessage';
+
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
+
+        $response = array_merge([
+            'token' => $this->bot_token,
+            'channel' => $channel,
+        ], $message);
+
+        return $this->send($response, $method);
+    }
+
+    /**
      * Send the message Guzzle request to Slack.
      * @param $response
      * @param $method

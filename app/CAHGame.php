@@ -113,7 +113,7 @@ class CAHGame extends Model
         // TODO: Fix this with multiple players.
 //        while (current($this->players) !== $this->card_czar) next($this->players);
 
-        $this->bot->replyInThread($this->card_czar . ' is your first card czar. Here\'s the first black card.', $this->thread_id, $this->channel);
+        $this->sendGameMessage($this->card_czar . ' is your first card czar. Here\'s the first black card.');
 
         $gameover = false;
         do {
@@ -127,17 +127,17 @@ class CAHGame extends Model
 
         $prompt = $black_card->text;
         $num_cards_to_play = $black_card->pick;
-        $card_label = ($num_cards_to_play == 1) ? 'card' : 'cards';
 
-        $this->sendGameMessage("`" . $prompt . "`\nPlease choose $num_cards_to_play $card_label.");
-
-        dd($black_card);
+        $this->sendGameMessage("`" . html_entity_decode($prompt) . "`");
+        $this->askForCards($num_cards_to_play);
 
         // Ask players (not the card czar) to choose a card or cards from their hands
 
         // Card czar picks their favorite (select list)
         // Winner gets karma and a point added to their total score
         $this->savePlayerData();
+
+        dd('test');
 
         // Check the score: if someone has reached the points required to win, end the game, give the winner more karma and thank everyone for playing.
         // If no one has won yet, draw replacement white cards for everyone and start a new round.
@@ -146,7 +146,7 @@ class CAHGame extends Model
         } else {
             $this->replenishHands();
             $this->nextCardCzar();
-            $this->bot->replyInThread('No winners yet! ' . $this->card_czar . ' is your next card czar. Here\'s the next black card.', $this->thread_id, $this->channel);
+            $this->sendGameMessage('No winners yet! ' . $this->card_czar . ' is your next card czar. Here\'s the next black card.');
         }
 
         // TODO: Remove the next line when we want to actually test real game play.
@@ -231,7 +231,7 @@ class CAHGame extends Model
      *
      */
     private function replenishHands() {
-        foreach($this->players as &$player) {
+        foreach ($this->players as &$player) {
             $num_cards = count($player['hand']);
             if ($num_cards < self::CARDS_IN_HAND) {
                 // Reset the array keys.
@@ -239,8 +239,11 @@ class CAHGame extends Model
 
                 // Grab new white cards.
                 $cards_to_assign = self::CARDS_IN_HAND - $num_cards;
-                for ($i = 1; $i <= $cards_to_assign; $i++) {
-                    $player['hand'][] = $this->drawWhiteCard();
+                for ($i = 0; $i < $cards_to_assign; $i++) {
+                    $player['hand'][] = [
+                        'value' => $i,
+                        'text' => $this->drawWhiteCard()
+                    ];
                 }
             }
         }
@@ -274,10 +277,44 @@ class CAHGame extends Model
 
     /**
      * Send a standard game message for the players.
-     * @param $text
+     * @param $num_cards_to_play
      */
-    private function askForCards() {
+    private function askForCards($num_cards_to_play) {
+        $card_label = ($num_cards_to_play == 1) ? 'card' : 'cards';
 
-//        $this->bot->replyEphemeralInThread($text, $this->thread_id, $this->channel);
+        $message = [
+            'text' => "Please choose $num_cards_to_play $card_label from your hand.",
+            'response_type' => 'ephemeral'
+        ];
+
+        // Send each player ephemeral message containing their choosable cards.
+        foreach($this->players as $player) {
+            $attachment = [
+                'text' => '',
+                'color' => '#3AA3E3',
+                'attachment_type' => 'default',
+                'callback_id' => 'App\CAHGame::cardSelection',
+                'actions' => []
+            ];
+
+            for ($i = 1; $i <= $num_cards_to_play; $i++) {
+                $attachment['actions'][] = [
+                    'name' => 'cards_chosen',
+                    'text' => 'Pick a card, any card!',
+                    'type' => 'select',
+                    'options' => $player['hand'],
+                ];
+            }
+
+            $message['attachments'] = $attachment;
+            $this->bot->replyInteractive($message);
+        }
+    }
+
+    /**
+     * Public callback for the user card selection.
+     */
+    public static function cardSelection() {
+        dd(request());
     }
 }
