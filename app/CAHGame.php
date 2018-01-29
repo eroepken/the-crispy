@@ -309,6 +309,9 @@ class CAHGame extends Model
             }
 
             $message['attachments'] = $attachment;
+
+            Log::debug($message);
+
             $this->bot->replyInteractive($message);
         }
     }
