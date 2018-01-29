@@ -18,10 +18,13 @@ class CAHGameController extends Controller
         // Get the list of players and hand it off to the CAH game class.
         $num_players = preg_match_all('/(<@[A-Za-z0-9_\-|]+>)+/m', $request['text'], $players);
 
+        // TODO: Uncomment these next 2 lines when ready to test with friends. This makes sure the players are unique.
+        // $players = array_unique($players[0]);
+        // $num_players = count($players);
+
         // Make sure there are enough players, but not more than supported.
         if ($num_players >= CAHGame::MIN_REQUIRED && $num_players <= CAHGame::MAX_SUPPORTED) {
-            $CAH = new CAHGame($players[1], $request['channel_id'], $request['response_url'], $request['user_id']);
-            Log::debug($request['channel_id']);
+            $CAH = new CAHGame($players[0], $request['channel_id'], $request['response_url']);
             $CAH->save();
             $CAH->run();
         } else {

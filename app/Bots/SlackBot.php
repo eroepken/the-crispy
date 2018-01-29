@@ -76,6 +76,7 @@ class SlackBot
     /**
      * Send a basic channel reply.
      * @param $text
+     * @param $channel
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -124,6 +125,7 @@ class SlackBot
      * Send the reply in the same thread.
      * @param $text
      * @param $thread_id
+     * @param $channel
      * @param $options
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -144,7 +146,7 @@ class SlackBot
     /**
      * Reply to a response_url.
      * @param $text
-     * @param $response_url
+     * @param $channel
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -217,6 +219,10 @@ class SlackBot
         return (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'];
     }
 
+    /**
+     * Get the channel ID where the bot must act.
+     * @return mixed
+     */
     public function getChannelId() {
         $event = $this->getEvent();
         return $event['channel_id'];

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Bots\SlackBot;
-use Mockery\Exception;
 
 class CAHGame extends Model
 {
@@ -17,7 +16,11 @@ class CAHGame extends Model
     protected $bot;
     protected $channel;
     protected $response_url;
-    protected $initiating_user;
+    protected $card_czar;
+
+    // Keep track of the white and black cards to make sure we don't get duplicates in the same game.
+    protected $white_cards;
+    protected $black_cards;
 
     // Fields to be entered in the DB.
     public $thread_id;
@@ -50,6 +53,9 @@ class CAHGame extends Model
     // Maximum number of players supported.
     const MAX_SUPPORTED = 10;
 
+    // Maximum number of cards in each players hand.
+    const CARDS_IN_HAND = 10;
+
     // The default number of black cards required to win the game.
     const POINTS_TO_WIN = 10;
 
@@ -57,23 +63,22 @@ class CAHGame extends Model
      * The JSON list of cards from the API website. TBH, I think the owner would prefer if we
      * weren't pinging their server all the time.
      */
-    const CARDS_FILE = 'card_files/cah_cards_official.json';
+    const CARDS_FILE = '/database/card_files/cah_cards_official.json';
 
     /**
      * CAHGame constructor.
      * @param $players
      * @param $channel
      * @param $response_url
-     * @param $initiating_user
      */
-    public function __construct($players, $channel, $response_url, $initiating_user) {
+    public function __construct($players, $channel, $response_url) {
         parent::__construct();
 
         $this->bot = app()->make(SlackBot::class);
-        $this->players = array_fill_keys($players, 0);
+        $this->players = array_fill_keys($players, ['score' => 0, 'hand' => []]);
         $this->channel = $channel;
         $this->response_url = $response_url;
-        $this->initiating_user = $initiating_user;
+        $this->resetDeck();
 
         $players = join(' and ', array_filter(array_merge(array(join(', ', array_slice($players, 0, -1))), array_slice($players, -1)), 'strlen'));
 
@@ -82,7 +87,6 @@ class CAHGame extends Model
          * in the database.
          */
         $message = 'A new Cards Against Humanity game commences for ' . $players . '. Come on in and play! (*Important note:* The text of this game is NSFW. You have been warned.)';
-        // TODO: After confirming that this functionality actually works, make sure all players are unique.
         $message_sent = $this->bot->respondToURL($message, $channel);
 
         if ($message_sent->getStatusCode() != 200) {
@@ -101,33 +105,52 @@ class CAHGame extends Model
      * Run through the game until someone gets enough black cards to win.
      */
     public function run() {
+        // Deal out the cards and randomly pick the first card czar.
+        $this->replenishHands();
+        $this->card_czar = array_rand($this->players);
+
+        // Make sure we set the pointer on the players array to the randomly chosen card czar.
+        // TODO: Fix this with multiple players.
+//        while (current($this->players) !== $this->card_czar) next($this->players);
+
+        $this->bot->replyInThread($this->card_czar . ' is your first card czar. Here\'s the first black card.', $this->thread_id, $this->channel);
+
         $gameover = false;
-
-        reset($this->players);
-        $first_player = key($this->players);
-
-        Log::debug($this->channel);
-
-        $this->bot->replyInThread($first_player . ' is your first card czar. Here\'s the first black card.', $this->thread_id, $this->channel);
-
-//        do {
-            $this->playRound();
-//        } while(!$gameover);
+        do {
+            $gameover = $this->playRound();
+        } while(!$gameover);
     }
 
     private function playRound() {
         // Set the next card czar and pull a black card
-        $this->drawBlackCard();
+        $black_card = $this->drawBlackCard();
+
+        $prompt = $black_card->text;
+        $num_cards_to_play = $black_card->pick;
+        $card_label = ($num_cards_to_play == 1) ? 'card' : 'cards';
+
+        $this->sendGameMessage('>' . $prompt . "\nPlease choose $num_cards_to_play $card_label.");
+
+        dd($black_card);
+
         // Ask players (not the card czar) to choose a card or cards from their hands
+
         // Card czar picks their favorite (select list)
         // Winner gets karma and a point added to their total score
+        $this->savePlayerData();
+
         // Check the score: if someone has reached the points required to win, end the game, give the winner more karma and thank everyone for playing.
         // If no one has won yet, draw replacement white cards for everyone and start a new round.
         if ($winner = $this->hasWinner()) {
-            $this->gameOver($winner);
+            return $this->gameOver($winner);
         } else {
-            $this->dealWhiteCards();
+            $this->replenishHands();
+            $this->nextCardCzar();
+            $this->bot->replyInThread('No winners yet! ' . $this->card_czar . ' is your next card czar. Here\'s the next black card.', $this->thread_id, $this->channel);
         }
+
+        // TODO: Remove the next line when we want to actually test real game play.
+        return true;
     }
 
     /**
@@ -135,10 +158,10 @@ class CAHGame extends Model
      * @return bool
      */
     private function hasWinner() {
-        $players = $this->getPlayers();
+        $this->refresh();
 
-        foreach($players as $player => $points) {
-            if ($points == $this->POINTS_TO_WIN) {
+        foreach($this->players as $player => $data) {
+            if ($data['points'] == $this->POINTS_TO_WIN) {
                 return $player;
             }
         }
@@ -146,9 +169,20 @@ class CAHGame extends Model
         return false;
     }
 
-    private function getPlayers() {
-        $game = self::findOrFail($this->id);
-        dd($game);
+    /**
+     * Assign the next card czar.
+     */
+    private function nextCardCzar() {
+        next($this->players);
+    }
+
+    /**
+     * Add the black and white cards to a trackable array so we can prevent duplicates in the same game.
+     */
+    private function resetDeck() {
+        $all_cards = $this->getAllCards();
+        $this->black_cards = $all_cards->blackCards;
+        $this->white_cards = $all_cards->whiteCards;
     }
 
     /**
@@ -157,7 +191,7 @@ class CAHGame extends Model
      */
     private function gameOver($winner) {
         // Give the winning user karma and thank everyone for playing.
-        $this->bot->replyInThread($winner . '++ You win! Thanks for playing, everyone!', $this->thread_id);
+        $this->sendGameMessage($winner . '++ You win! Thanks for playing, everyone!');
 
         // Delete this game.
         try {
@@ -165,20 +199,61 @@ class CAHGame extends Model
         } catch(\Exception $exception) {
             Log::debug($php_errormsg);
         }
+
+        return true;
     }
 
+    /**
+     * Grab a random new white card and remove it from the deck.
+     * @return mixed
+     */
     private function drawWhiteCard() {
-        $all_cards = $this->getAllCards();
-        dd($all_cards);
+        $key = array_rand($this->white_cards);
+        $chosen_card = $this->white_cards[$key];
+        // Remove it so we don't see it again later in the game.
+        unset($this->white_cards[$key]);
+        return $chosen_card;
     }
 
+    /**
+     * Grab a random new black card and remove it from the deck.
+     * @return mixed
+     */
     private function drawBlackCard() {
-        $all_cards = $this->getAllCards();
-        dd($all_cards);
+        $key = array_rand($this->black_cards);
+        $chosen_card = $this->black_cards[$key];
+        // Remove it so we don't see it again later in the game.
+        unset($this->black_cards[$key]);
+        return $chosen_card;
     }
 
-    private function dealWhiteCards() {
+    /**
+     *
+     */
+    private function replenishHands() {
+        foreach($this->players as &$player) {
+            $num_cards = count($player['hand']);
+            if ($num_cards < self::CARDS_IN_HAND) {
+                // Reset the array keys.
+                $player['hand'] = array_values($player['hand']);
 
+                // Grab new white cards.
+                $cards_to_assign = self::CARDS_IN_HAND - $num_cards;
+                for ($i = 1; $i <= $cards_to_assign; $i++) {
+                    $player['hand'][] = $this->drawWhiteCard();
+                }
+            }
+        }
+
+        // Update the DB with the player's new cards.
+        $this->savePlayerData();
+    }
+
+    /**
+     * Save the player's data to the database.
+     */
+    private function savePlayerData() {
+        $this->update(['players' => json_encode($this->players)]);
     }
 
     /**
@@ -186,6 +261,23 @@ class CAHGame extends Model
      * @return mixed
      */
     private function getAllCards() {
-        return json_decode(file_get_contents(dirname(__DIR__) . $this->CARDS_FILE));
+        return json_decode(file_get_contents(dirname(__DIR__) . self::CARDS_FILE));
+    }
+
+    /**
+     * Send a standard game message for the players.
+     * @param $text
+     */
+    private function sendGameMessage($text) {
+        $this->bot->replyInThread($text, $this->thread_id, $this->channel);
+    }
+
+    /**
+     * Send a standard game message for the players.
+     * @param $text
+     */
+    private function askForCards() {
+        
+//        $this->bot->replyEphemeralInThread($text, $this->thread_id, $this->channel);
     }
 }

@@ -64,7 +64,7 @@ class SlackBotProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         // Catch all for events.
-        Route::post('/crispy', function() {
+        Route::post('/challenge-verify', function() {
             $request = json_decode(request()->getContent(), true);
 
             // Add the challenge listener.
