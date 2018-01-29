@@ -9,6 +9,10 @@ use App\Bots\SlackBot;
 
 class CAHGameController extends Controller
 {
+    /**
+     * Make sure there are enough players and start the game.
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function verifyAndStart() {
         $request = request()->all();
 
@@ -43,5 +47,9 @@ class CAHGameController extends Controller
             // Send the error message back as an ephemeral message.
             return response($message);
         }
+    }
+
+    public function getPlayersCards() {
+
     }
 }

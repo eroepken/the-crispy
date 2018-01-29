@@ -177,6 +177,9 @@ class SlackBot
      */
     public function replyInteractive($message) {
         $method = 'chat.postMessage';
+        if (isset($message['response_type']) && $message['response_type'] == 'ephemeral') {
+            $method = 'chat.postEphemeral';
+        }
 
         if (empty($channel)) {
             $channel = $this->getChannelId();
@@ -190,6 +193,8 @@ class SlackBot
             'token' => $this->bot_token,
             'channel' => $channel,
         ], $message);
+
+        Log::debug($response);
 
         return $this->send($response, $method);
     }
