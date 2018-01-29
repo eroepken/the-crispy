@@ -129,7 +129,7 @@ class CAHGame extends Model
         $num_cards_to_play = $black_card->pick;
         $card_label = ($num_cards_to_play == 1) ? 'card' : 'cards';
 
-        $this->sendGameMessage('>' . $prompt . "\nPlease choose $num_cards_to_play $card_label.");
+        $this->sendGameMessage("`" . $prompt . "`\nPlease choose $num_cards_to_play $card_label.");
 
         dd($black_card);
 
@@ -277,7 +277,7 @@ class CAHGame extends Model
      * @param $text
      */
     private function askForCards() {
-        
+
 //        $this->bot->replyEphemeralInThread($text, $this->thread_id, $this->channel);
     }
 }
