@@ -177,9 +177,6 @@ class SlackBot
      */
     public function replyInteractive($message) {
         $method = 'chat.postMessage';
-        if (isset($message['response_type']) && $message['response_type'] == 'ephemeral') {
-            $method = 'chat.postEphemeral';
-        }
 
         if (empty($channel)) {
             $channel = $this->getChannelId();
@@ -193,8 +190,6 @@ class SlackBot
             'token' => $this->bot_token,
             'channel' => $channel,
         ], $message);
-
-        Log::debug($response);
 
         return $this->send($response, $method);
     }
@@ -255,5 +250,14 @@ class SlackBot
     public function getChannelId() {
         $event = $this->getEvent();
         return $event['channel_id'];
+    }
+
+    /**
+     * Extract the user ID from the user link string given from Slack.
+     * @param $user_string
+     */
+    public function extractUserId($user_string) {
+        preg_match('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
+        return $matches[0];
     }
 }

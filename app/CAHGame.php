@@ -291,9 +291,9 @@ class CAHGame extends Model
         foreach($this->players as $player => $data) {
             if ($player == $this->card_czar) continue;
 
-            $message['user'] = $player;
+            $message['user'] = $this->bot->extractUserId($player);
 
-            $attachment = [
+            $attachments = [
                 'text' => '',
                 'color' => '#3AA3E3',
                 'attachment_type' => 'default',
@@ -302,7 +302,7 @@ class CAHGame extends Model
             ];
 
             for ($i = 1; $i <= $num_cards_to_play; $i++) {
-                $attachment['actions'][] = [
+                $attachments['actions'][] = [
                     'name' => 'cards_chosen',
                     'text' => 'Pick a card, any card!',
                     'type' => 'select',
@@ -310,9 +310,14 @@ class CAHGame extends Model
                 ];
             }
 
-            $message['attachments'] = $attachment;
+            $message['attachments'] = json_encode($attachments);
 
-            $this->bot->replyInteractive($message);
+            $response = array_merge([
+                'token' => $this->bot_token,
+                'channel' => $this->channel,
+            ], $message);
+
+            return $this->bot->send($response, 'chat.postEphemeral');
         }
     }
 
