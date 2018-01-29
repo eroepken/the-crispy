@@ -137,7 +137,7 @@ class CAHGame extends Model
         // Winner gets karma and a point added to their total score
         $this->savePlayerData();
 
-        dd('test');
+//        dd('test');
 
         // Check the score: if someone has reached the points required to win, end the game, give the winner more karma and thank everyone for playing.
         // If no one has won yet, draw replacement white cards for everyone and start a new round.
@@ -310,8 +310,6 @@ class CAHGame extends Model
 
             $message['attachments'] = $attachment;
 
-            Log::debug($message);
-
             $this->bot->replyInteractive($message);
         }
     }
@@ -320,6 +318,6 @@ class CAHGame extends Model
      * Public callback for the user card selection.
      */
     public static function cardSelection() {
-        dd(request());
+//        dd(request());
     }
 }
