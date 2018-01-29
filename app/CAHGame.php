@@ -289,6 +289,8 @@ class CAHGame extends Model
 
         // Send each player ephemeral message containing their choosable cards.
         foreach($this->players as $player) {
+            if ($player == $this->card_czar) continue;
+
             $attachment = [
                 'text' => '',
                 'color' => '#3AA3E3',
