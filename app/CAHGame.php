@@ -340,13 +340,6 @@ class CAHGame extends Model
     }
 
     /**
-     *
-     */
-    public function getPlayersCards() {
-
-    }
-
-    /**
      * Public callback for the user card selection.
      */
     public static function cardSelection() {

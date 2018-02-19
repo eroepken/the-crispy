@@ -55,14 +55,15 @@ class CAHGameController extends Controller
      * Specify the data returns for various interactive fields.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getPlayersCards() {
+    public function getCardData() {
         $request = request()->json()->all();
 
+        Log::debug(print_r($request, true));
+
         if ($request['token'] != config('services.slack.verification_token')) {
+            Log::debug('Token failed to validate. Halting.');
             return response('false');
         }
-
-        Log::debug(print_r($request, true));
 
         switch($request['name']) {
             case 'choose_cah_cards':
