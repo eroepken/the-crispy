@@ -302,7 +302,7 @@ class CAHGame extends Model
 
         $message = [
             'text' => "Please choose $num_cards_to_play $card_label from your hand.",
-            'response_type' => 'in_channel',
+            'response_type' => 'ephemeral',
             'channel' => $this->channel,
             'thread_ts' => $this->thread_id,
             'attachments' => [
@@ -323,7 +323,13 @@ class CAHGame extends Model
             ]
         ];
 
-        return $this->bot->replyInteractive($message);
+        foreach($this->players as $player => $hand) {
+            if ($player == $this->card_czar) continue;
+
+            $this->bot->replyInteractiveEphemeral($message, $player);
+        }
+
+        return response('true');
     }
 
     /**

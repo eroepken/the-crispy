@@ -184,7 +184,29 @@ class SlackBot
 
         $response = array_merge([
             'token' => $this->bot_token,
+            'channel' => $channel
+        ], $message);
+
+        return $this->send($response, $method);
+    }
+
+    /**
+     * Send an interactive message.
+     * @param $message
+     * @param $user
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function replyInteractiveEphemeral($message, $user) {
+        $method = 'chat.postEphemeral';
+
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
+
+        $response = array_merge([
+            'token' => $this->bot_token,
             'channel' => $channel,
+            'user' => $user
         ], $message);
 
         return $this->send($response, $method);
