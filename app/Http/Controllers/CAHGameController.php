@@ -65,9 +65,9 @@ class CAHGameController extends Controller
             return response('false');
         }
 
-        Log::debug($request->all());
+        Log::debug(print_r($request->all(), true));
 
-        Log::debug(json_decode($request['payload']));
+        Log::debug(print_r(json_decode($request['payload']), true));
 
         switch($request['name']) {
             case 'choose_cah_cards':
