@@ -58,7 +58,7 @@ class CAHGameController extends Controller
     public function getCardData() {
         $request = request()->json()->all();
 
-        Log::debug(print_r($request, true));
+        Log::debug(print_r(request(), true));
 
         if ($request['token'] != config('services.slack.verification_token')) {
             Log::debug('Token failed to validate. Halting.');

@@ -322,21 +322,6 @@ class CAHGame extends Model
         ];
 
         return $this->bot->replyInteractive($message);
-
-        // Send each player ephemeral message containing their choosable cards.
-//        foreach($this->players as $player => $data) {
-//            if ($player == $this->card_czar) continue;
-//
-//
-//
-//            for ($i = 1; $i <= $num_cards_to_play; $i++) {
-//                $attachments['actions'][] = ;
-//            }
-//
-//
-//
-//
-//        }
     }
 
     /**
