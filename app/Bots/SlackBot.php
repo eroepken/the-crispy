@@ -200,7 +200,7 @@ class SlackBot
      * @param $method
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function send($response, $method) {
+    private function send($response, $method) {
         if (isset($response['attachments'])) {
             $response['attachments'] = json_encode($response['attachments']);
         }

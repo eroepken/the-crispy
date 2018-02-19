@@ -71,9 +71,17 @@ class CAHGame extends Model
      * @param $channel
      * @param $response_url
      */
-    public function __construct($players, $channel, $response_url) {
+    public function __construct() {
         parent::__construct();
+    }
 
+    /**
+     * @param $players
+     * @param $channel
+     * @param $response_url
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function setupGame($players, $channel, $response_url) {
         $this->bot = app()->make(SlackBot::class);
         $this->players = array_fill_keys($players, ['score' => 0, 'hand' => []]);
         $this->channel = $channel;
@@ -231,6 +239,10 @@ class CAHGame extends Model
      *
      */
     private function replenishHands() {
+        if (count($this->white_cards) < 1) {
+            return FALSE;
+        }
+
         foreach ($this->players as &$player) {
             $num_cards = count($player['hand']);
             if ($num_cards < self::CARDS_IN_HAND) {
@@ -239,6 +251,12 @@ class CAHGame extends Model
 
                 // Grab new white cards.
                 $cards_to_assign = self::CARDS_IN_HAND - $num_cards;
+
+                // Prevent overflow error. Make sure we have enough cards left over to deal to the player.
+                if (count($this->white_cards) < $cards_to_assign) {
+                    $cards_to_assign = count($this->white_cards);
+                }
+
                 for ($i = 0; $i < $cards_to_assign; $i++) {
                     $player['hand'][] = [
                         'value' => $i,
@@ -284,14 +302,12 @@ class CAHGame extends Model
 
         $message = [
             'text' => "Please choose $num_cards_to_play $card_label from your hand.",
-            'response_type' => 'ephemeral'
+            'response_type' => 'in_channel'
         ];
 
         // Send each player ephemeral message containing their choosable cards.
         foreach($this->players as $player => $data) {
             if ($player == $this->card_czar) continue;
-
-            $message['user'] = $this->bot->extractUserId($player);
 
             $attachments = [
                 'text' => '',
@@ -303,21 +319,16 @@ class CAHGame extends Model
 
             for ($i = 1; $i <= $num_cards_to_play; $i++) {
                 $attachments['actions'][] = [
-                    'name' => 'cards_chosen',
+                    'name' => 'choose_cah_cards',
                     'text' => 'Pick a card, any card!',
                     'type' => 'select',
-                    'options' => $data['hand'],
+                    'data_source' => 'external'
                 ];
             }
 
-            $message['attachments'] = json_encode($attachments);
+            Log::debug(print_r($message, true));
 
-            $response = array_merge([
-                'token' => $this->bot_token,
-                'channel' => $this->channel,
-            ], $message);
-
-            return $this->bot->send($response, 'chat.postEphemeral');
+            return $this->bot->replyInteractive($message);
         }
     }
 

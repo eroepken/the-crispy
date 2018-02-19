@@ -28,7 +28,8 @@ class CAHGameController extends Controller
 
         // Make sure there are enough players, but not more than supported.
         if ($num_players >= CAHGame::MIN_REQUIRED && $num_players <= CAHGame::MAX_SUPPORTED) {
-            $CAH = new CAHGame($players[0], $request['channel_id'], $request['response_url']);
+            $CAH = new CAHGame();
+            $CAH->setupGame($players[0], $request['channel_id'], $request['response_url']);
             $CAH->save();
             $CAH->run();
         } else {
@@ -50,6 +51,24 @@ class CAHGameController extends Controller
     }
 
     public function getPlayersCards() {
+        $request = request()->json()->all();
 
+        if ($request['token'] != config('services.slack.verification_token')) {
+            return response('false');
+        }
+
+        switch($request['name']) {
+            case 'choose_cah_cards':
+                $instance = \App\CAHGame::where('thread_id', $request['action_ts'])->get();
+                $players = $instance->players;
+
+                dd($players);
+                break;
+
+            default:
+                break;
+        }
+
+        return response('true');
     }
 }
