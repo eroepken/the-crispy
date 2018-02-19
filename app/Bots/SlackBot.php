@@ -187,7 +187,7 @@ class SlackBot
             'channel' => $channel,
         ], $message);
 
-        Log::debug($response);
+        Log::debug(print_r($response, true));
 
         return $this->send($response, $method);
     }
