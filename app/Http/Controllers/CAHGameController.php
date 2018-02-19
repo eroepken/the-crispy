@@ -76,9 +76,7 @@ class CAHGameController extends Controller
 
                 $player_key = '<@' . $action['user']['id'] . '|' . $action['user']['name'] . '>';
 
-                $options = $players[$player_key]['hand'];
-
-                Log::debug(print_r($players[$player_key], true));
+                $options = ['options' => $players[$player_key]['hand']];
 
                 return response()->json($options);
 
