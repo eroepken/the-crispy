@@ -304,6 +304,7 @@ class CAHGame extends Model
             'text' => "Please choose $num_cards_to_play $card_label from your hand.",
             'response_type' => 'in_channel',
             'channel' => $this->channel,
+            'thread_ts' => $this->thread_id,
             'attachments' => [
                 [
                     'text' => '',

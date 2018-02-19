@@ -201,8 +201,6 @@ class SlackBot
             $response['attachments'] = json_encode($response['attachments']);
         }
 
-        Log::debug(print_r($response, true));
-
         return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $response
         ]);
