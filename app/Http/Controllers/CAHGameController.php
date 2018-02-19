@@ -65,6 +65,9 @@ class CAHGameController extends Controller
             return response('false');
         }
 
+        Log::debug('hi?');
+        Log::debug($request['name']);
+
         switch($request['name']) {
             case 'choose_cah_cards':
                 $instance = \App\CAHGame::where('thread_id', $request['action_ts'])
@@ -76,7 +79,7 @@ class CAHGameController extends Controller
 
                 $options = [ 'options' => $players[$player_key]['hand'] ];
 
-                Log::debug(print_r($options, true));
+                Log::debug(print_r($instance, true));
 
                 return response()->json($options);
 
