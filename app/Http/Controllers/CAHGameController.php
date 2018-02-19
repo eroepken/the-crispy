@@ -65,18 +65,16 @@ class CAHGameController extends Controller
             return response('false');
         }
 
-        Log::debug(print_r($request->all(), true));
+        $action = json_decode($request['payload'], true);
 
-        Log::debug(print_r(json_decode($request['payload']), true));
-
-        switch($request['name']) {
+        switch($action['name']) {
             case 'choose_cah_cards':
-                $instance = \App\CAHGame::where('thread_id', $request['action_ts'])
+                $instance = \App\CAHGame::where('thread_id', $action['action_ts'])
                     ->where('deleted_at', NULL)
                     ->take(1)->first(['players'])->toArray();
                 $players = json_decode($instance['players'], true);
 
-                $player_key = '<@' . $request['user']['id'] . '|' . $request['user']['name'] . '>';
+                $player_key = '<@' . $action['user']['id'] . '|' . $action['user']['name'] . '>';
 
                 $options = $players[$player_key]['hand'];
 
