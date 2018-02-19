@@ -321,9 +321,6 @@ class CAHGame extends Model
             ]
         ];
 
-
-        Log::debug(print_r($message, true));
-
         return $this->bot->replyInteractive($message);
 
         // Send each player ephemeral message containing their choosable cards.
@@ -353,6 +350,6 @@ class CAHGame extends Model
      * Public callback for the user card selection.
      */
     public static function cardSelection() {
-//        dd(request());
+        Log::debug(print_r(request(), true));
     }
 }
