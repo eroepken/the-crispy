@@ -323,7 +323,7 @@ class CAHGame extends Model
             ]
         ];
 
-        $this->bot->replyInteractiveEphemeral($message);
+        $this->bot->replyInteractive($message);
 
 //        foreach($this->players as $player => $hand) {
 //            if ($player == $this->card_czar) continue;
