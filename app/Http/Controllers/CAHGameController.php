@@ -12,10 +12,11 @@ class CAHGameController extends Controller
 {
     /**
      * Make sure there are enough players and start the game.
+     * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function verifyAndStart() {
-        $request = request()->all();
+    public function verifyAndStart(Request $request) {
+        $request = $request->all();
 
         if ($request['command'] != '/cah' && isset($request['token']) && $request['token'] != config('services.slack.verification_token')) return response('false');
 
@@ -53,14 +54,13 @@ class CAHGameController extends Controller
 
     /**
      * Specify the data returns for various interactive fields.
+     * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getCardData() {
-        $request = request()->json()->all();
+    public function getCardData(Request $request) {
+        Log::debug('Sending cards...');
 
-        Log::debug(print_r($request, true));
-
-        if ($request['token'] != config('services.slack.verification_token')) {
+        if (isset($request['token']) && $request['token'] != config('services.slack.verification_token')) {
             Log::debug('Token failed to validate. Halting.');
             return response('false');
         }

@@ -308,7 +308,7 @@ class CAHGame extends Model
                     'text' => '',
                     'color' => '#3AA3E3',
                     'attachment_type' => 'default',
-                    'callback_id' => 'App\CAHGame::cardSelection',
+                    'callback_id' => 'App\\CAHGame::cardSelection',
                     'actions' => [
                         [
                             'name' => 'choose_cah_cards',
