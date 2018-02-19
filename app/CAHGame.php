@@ -302,34 +302,44 @@ class CAHGame extends Model
 
         $message = [
             'text' => "Please choose $num_cards_to_play $card_label from your hand.",
-            'response_type' => 'in_channel'
+            'response_type' => 'in_channel',
+            'attachments' => [
+                [
+                    'text' => '',
+                    'color' => '#3AA3E3',
+                    'attachment_type' => 'default',
+                    'callback_id' => 'App\CAHGame::cardSelection',
+                    'actions' => [
+                        [
+                            'name' => 'choose_cah_cards',
+                            'text' => 'Pick a card, any card!',
+                            'type' => 'select',
+                            'data_source' => 'external'
+                        ]
+                    ]
+                ]
+            ]
         ];
 
+
+        Log::debug(print_r($message, true));
+
+        return $this->bot->replyInteractive($message);
+
         // Send each player ephemeral message containing their choosable cards.
-        foreach($this->players as $player => $data) {
-            if ($player == $this->card_czar) continue;
-
-            $attachments = [
-                'text' => '',
-                'color' => '#3AA3E3',
-                'attachment_type' => 'default',
-                'callback_id' => 'App\CAHGame::cardSelection',
-                'actions' => []
-            ];
-
-            for ($i = 1; $i <= $num_cards_to_play; $i++) {
-                $attachments['actions'][] = [
-                    'name' => 'choose_cah_cards',
-                    'text' => 'Pick a card, any card!',
-                    'type' => 'select',
-                    'data_source' => 'external'
-                ];
-            }
-
-            Log::debug(print_r($message, true));
-
-            return $this->bot->replyInteractive($message);
-        }
+//        foreach($this->players as $player => $data) {
+//            if ($player == $this->card_czar) continue;
+//
+//
+//
+//            for ($i = 1; $i <= $num_cards_to_play; $i++) {
+//                $attachments['actions'][] = ;
+//            }
+//
+//
+//
+//
+//        }
     }
 
     /**
