@@ -350,6 +350,6 @@ class CAHGame extends Model
      * Public callback for the user card selection.
      */
     public static function cardSelection() {
-        Log::debug(print_r(request(), true));
+//        Log::debug(print_r(request(), true));
     }
 }

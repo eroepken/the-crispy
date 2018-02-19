@@ -62,7 +62,9 @@ class CAHGameController extends Controller
                 $instance = \App\CAHGame::where('thread_id', $request['action_ts'])->get();
                 $players = $instance->players;
 
-                dd($players);
+                Log::debug(print_r($instance, true));
+                Log::debug(print_r($players, true));
+
                 break;
 
             default:
