@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\CAHGame;
 use App\Bots\SlackBot;
+use Symfony\Component\HttpFoundation\Response;
 
 class CAHGameController extends Controller
 {
