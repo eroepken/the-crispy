@@ -55,10 +55,8 @@ class CAHGameController extends Controller
      * Specify the data returns for various interactive fields.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getCardData() {
-        $request = request()->json()->all();
-
-        Log::debug(print_r(request(), true));
+    public function getCardData(Request $request) {
+        Log::debug(print_r($request, true));
 
         if ($request['token'] != config('services.slack.verification_token')) {
             Log::debug('Token failed to validate. Halting.');
