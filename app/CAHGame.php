@@ -303,6 +303,7 @@ class CAHGame extends Model
         $message = [
             'text' => "Please choose $num_cards_to_play $card_label from your hand.",
             'response_type' => 'in_channel',
+            'channel' => $this->channel,
             'attachments' => [
                 [
                     'text' => '',

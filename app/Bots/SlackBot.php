@@ -178,16 +178,10 @@ class SlackBot
     public function replyInteractive($message) {
         $method = 'chat.postMessage';
 
-        if (empty($channel)) {
-            $channel = $this->getChannelId();
-        }
-
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
         ], $message);
-
-        Log::debug(print_r($response, true));
 
         return $this->send($response, $method);
     }
@@ -202,6 +196,8 @@ class SlackBot
         if (isset($response['attachments'])) {
             $response['attachments'] = json_encode($response['attachments']);
         }
+
+        Log::debug(print_r($response, true));
 
         return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $response
