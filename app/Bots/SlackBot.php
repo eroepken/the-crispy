@@ -178,6 +178,10 @@ class SlackBot
     public function replyInteractive($message) {
         $method = 'chat.postMessage';
 
+        if (empty($channel)) {
+            $channel = $this->getChannelId();
+        }
+
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
