@@ -61,7 +61,7 @@ class CAHGameController extends Controller
         Log::debug('Sending cards...');
 
         if (isset($request['token']) && $request['token'] != config('services.slack.verification_token')) {
-            Log::debug('Token failed to validate. Halting.');
+            Log::error('Token failed to validate. Halting.');
             return response('false');
         }
 

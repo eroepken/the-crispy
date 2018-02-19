@@ -182,14 +182,12 @@ class SlackBot
             $channel = $this->getChannelId();
         }
 
-        if (isset($message['attachments'])) {
-            $message['attachments'] = json_encode($message['attachments']);
-        }
-
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
         ], $message);
+
+        Log::debug($response);
 
         return $this->send($response, $method);
     }

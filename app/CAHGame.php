@@ -321,8 +321,6 @@ class CAHGame extends Model
             ]
         ];
 
-        Log::debug(print_r($message, true));
-
         return $this->bot->replyInteractive($message);
     }
 
