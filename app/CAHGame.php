@@ -106,7 +106,7 @@ class CAHGame extends Model
         $message_sent_body = json_decode($message_sent->getBody(), true);
 
         Log::debug(print_r($message_sent_body, true));
-        $this->thread_id = $message_sent_body['thread_ts'];
+        $this->thread_id = $message_sent_body['ts'];
 
         $this->fill(['players' => json_encode($this->players), 'thread_id' => $this->thread_id]);
     }
