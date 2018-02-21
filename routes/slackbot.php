@@ -8,6 +8,6 @@ $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('good morning', function(SlackBot $bot) {
+$slackbot->hears('(good morning|morning everyone|guten tag|bom dia|buenos dias)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
