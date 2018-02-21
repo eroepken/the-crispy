@@ -267,7 +267,11 @@ class SlackBot
      */
     public function getChannelId() {
         $event = $this->getEvent();
-        Log::debug(print_r($event, true));
+
+        if (isset($event['channel'])) {
+            return $event['channel'];
+        }
+
         return $event['channel_id'];
     }
 
