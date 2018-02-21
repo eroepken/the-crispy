@@ -38,8 +38,6 @@ class SlackBot
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function hearsMention($text, $callbackResponse) {
-        Log::debug(print_r($text, true));
-
         return $this->hearRoute($text, $callbackResponse, 'app_mention');
     }
 
@@ -63,6 +61,8 @@ class SlackBot
     private function hearRoute($text, $callbackResponse, $method) {
 
         $event = $this->getEvent();
+
+        Log::debug(print_r($event, true));
 
         if (preg_match_all('/' . $text . '/i', $event['text'], $matches) && in_array($method, ['messages', 'app_mention'])) {
             if (empty($matches)) {
