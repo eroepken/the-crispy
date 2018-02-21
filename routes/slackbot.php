@@ -8,9 +8,13 @@ $slackbot->hearsMention('\+\+', function(SlackBot $bot) {
     $bot->addReaction('awthanks');
 });
 
-$slackbot->hearsMention('now at \d+ points', function(SlackBot $bot) {
-    $bot->addReaction('fuckyeah');
+$slackbot->hearsMention('\-\-', function(SlackBot $bot) {
+    $bot->addReaction('disapproval');
 });
+
+//$slackbot->hearsMention('now at \d+ points', function(SlackBot $bot) {
+//    $bot->addReaction('fuckyeah');
+//});
 
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
     $bot->addReaction('wave');
