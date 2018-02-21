@@ -62,10 +62,14 @@ class SlackBot
 
         $event = $this->getEvent();
 
+        Log::debug(print_r($event, true));
+
         // Make sure we're not listening for the bot's own messages too.
-        if ((isset($event['subtype']) && $event['subtype'] != 'bot_message')
+        if (isset($event['subtype']) && $event['subtype'] != 'bot_message' && isset($event['text'])
             && ($method == 'messages' || (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text']) && $method == 'app_mention'))
             && preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
+
+            Log::debug('Heard, sending response.');
 
             if (empty($matches)) {
                 return $callbackResponse($this);
