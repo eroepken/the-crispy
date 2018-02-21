@@ -79,7 +79,7 @@ class SlackBotProvider extends ServiceProvider
             // Also add the slack commands.
             require_once base_path('routes/slackbot.php');
 
-            return false;
+            return response('false');
         });
 
         Route::post('/interactive', function() {
@@ -97,7 +97,7 @@ class SlackBotProvider extends ServiceProvider
                 Log::error('Callback function not found.');
             }
 
-            return false;
+            return response('false');
         });
     }
 }
