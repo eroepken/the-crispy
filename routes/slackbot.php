@@ -12,6 +12,7 @@ $slackbot->hearsMention('\-\-', function(SlackBot $bot) {
     $bot->addReaction('disapproval');
 });
 
+// TODO: Figure out what method to check for when hearing a mention from another app, because this message comes from @plusplus.
 //$slackbot->hearsMention('now at \d+ points', function(SlackBot $bot) {
 //    $bot->addReaction('fuckyeah');
 //});

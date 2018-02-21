@@ -62,6 +62,8 @@ class SlackBot
 
         $event = $this->getEvent();
 
+        Log::debug(print_r($event, true));
+
         if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
             return response('false');
         }
