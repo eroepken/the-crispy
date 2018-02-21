@@ -38,14 +38,7 @@ class SlackBot
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function hearsMention($text, $callbackResponse) {
-        $event = $this->getEvent();
-
-        // For some reason Slack pings the endpoint twice if the bot is listening for both general messages and specific mentions and a user mentions the bot.
-        if (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text'])) {
-            return $this->hearRoute($text, $callbackResponse, 'app_mention');
-        }
-
-        return response('false');
+        return $this->hearRoute($text, $callbackResponse, 'app_mention');
     }
 
     /**
@@ -69,9 +62,11 @@ class SlackBot
 
         $event = $this->getEvent();
 
-        Log::debug(print_r($event, true));
+        // Make sure we're not listening for the bot's own messages too.
+        if ((isset($event['subtype']) && $event['subtype'] != 'bot_message')
+            && ($method == 'messages' || (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text']) && $method == 'app_mention'))
+            && preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
 
-        if ((isset($event['subtype']) && $event['subtype'] != 'bot_message') && preg_match_all('/' . $text . '/i', $event['text'], $matches) && in_array($method, ['messages', 'app_mention'])) {
             if (empty($matches)) {
                 return $callbackResponse($this);
             } else {
