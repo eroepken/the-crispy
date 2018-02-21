@@ -221,6 +221,23 @@ class SlackBot
     }
 
     /**
+     * Send a reaction emoji to the previous message.
+     * @param $reaction
+     */
+    public function addReaction($reaction, $options = []) {
+        $method = 'reactions.add';
+
+        $response = array_merge([
+            'token' => $this->bot_token,
+            'channel' => $this->getChannelId(),
+            'name' => $reaction,
+            'timestamp' => $this->getThreadId()
+        ], $options);
+
+        return $this->send($response, $method);
+    }
+
+    /**
      * Send the message Guzzle request to Slack.
      * @param $response
      * @param $method
