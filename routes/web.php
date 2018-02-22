@@ -41,9 +41,9 @@ Route::post('/birthday', function(Request $request) {
         $response_text = 'Your birthday has been logged.';
         Log::debug($birthday->format('F j'));
         Log::debug($birthday->age);
-    } catch (InvalidDateException $dateException) {
-        Log::error($dateException->getMessage());
-        $response_text = $dateException->getMessage();
+    } catch (Exception $exception) {
+        $response_text = 'Please enter a valid date.';
+        Log::error($exception->getMessage());
     }
 
     $response = [
