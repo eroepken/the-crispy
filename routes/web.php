@@ -28,12 +28,15 @@ Route::post('/birthday', function(Request $request) {
     preg_match('/\@[\w\d\-\_]+/', $query_text, $matches);
     if (!empty($matches)) {
         $target_user = $matches[0];
-        $query_text = str_replace($target_user, '', $query_text);
+        $birthday = str_replace($target_user, '', $query_text);
     } else {
         $target_user = '@' . $request['user_name'];
+        $birthday = $query_text;
     }
 
-    Log::debug($query_text);
+    $birthday = new DateTime($birthday);
+
+    Log::debug(date('F j', $birthday));
 
     $response = [
         'response_type' => 'ephemeral',
