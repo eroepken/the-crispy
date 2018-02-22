@@ -11,6 +11,9 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    protected $dates = ['birthday'];
+    protected $dateFormat = 'F j';
+
     /**
      * The attributes that are mass assignable.
      *

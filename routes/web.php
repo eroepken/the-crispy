@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +23,29 @@ Route::get('/', function () {
 });
 
 Route::post('/birthday', function(Request $request) {
-    $user = User::firstOrNew(array('name' => Input::get('name')));
-    $user->foo = Input::get('foo');
-    $user->save();
+    if ($request->command != '/birthday' && isset($request->token) && $request->token != config('services.slack.verification_token')) return response('false');
+
+    try {
+        $birthday = new Carbon($request->text);
+        $response_text = 'Your birthday has been logged.';
+
+        $user = User::firstOrNew(array('user_id' => $request->user_id));
+        $user->user_id = $request->user_id;
+        $user->name = $request->user_name;
+        $user->birthday = $birthday;
+        $user->save();
+    } catch (Exception $exception) {
+        $response_text = 'Please enter a valid date.';
+        Log::error($exception->getMessage());
+    }
+
+    $response = [
+        'response_type' => 'ephemeral',
+        'user' => $request->user_id,
+        'text' => $response_text,
+    ];
+
+    return response()->json($response);
 });
 Route::post('/birthday/remove', 'UserController@destroy');
 
