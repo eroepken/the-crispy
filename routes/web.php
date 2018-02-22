@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -27,7 +26,7 @@ Route::post('/birthday', function(Request $request) {
 
     try {
         $birthday = new Carbon($request->text);
-        $response_text = 'Your birthday has been logged.';
+        $response_text = 'Sweet. I have added your birthday to my calendar and you\'ll get karma from me when the day comes. :wink: :birthday:';
 
         $user = User::firstOrNew(array('slack_id' => $request->user_id));
         $user->slack_id = $request->user_id;
@@ -35,7 +34,7 @@ Route::post('/birthday', function(Request $request) {
         $user->birthday = $birthday;
         $user->save();
     } catch (Exception $exception) {
-        $response_text = 'Please enter a valid date.';
+        $response_text = 'Oh no! Either you supplied an invalid date or something went wrong with the bot.';
         Log::error($exception->getMessage());
     }
 
@@ -47,7 +46,8 @@ Route::post('/birthday', function(Request $request) {
 
     return response()->json($response);
 });
-Route::post('/birthday/remove', 'UserController@destroy');
+
+//Route::post('/birthday/remove', 'UserController@destroy');
 
 // Currently disabled.
 /*Route::match(['get', 'post'], '/lmgtfy', function() {
