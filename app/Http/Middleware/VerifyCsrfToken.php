@@ -16,6 +16,7 @@ class VerifyCsrfToken extends Middleware
         'crispy',
         'crispy-interactive',
         'cah-game',
-        'cah-cards'
+        'cah-cards',
+        'birthday'
     ];
 }

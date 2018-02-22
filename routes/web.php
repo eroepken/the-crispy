@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +15,32 @@
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::post('/birthday', function(Request $request) {
+    $request = $request->all();
+
+    if ($request['command'] != '/birthday' && isset($request['token']) && $request['token'] != config('services.slack.verification_token')) return response('false');
+
+    $query_text = $request['text'];
+
+    preg_match('/\@[\w\d\-\_]+/', $query_text, $matches);
+    if (!empty($matches)) {
+        $target_user = $matches[0];
+        $query_text = str_replace($target_user, '', $query_text);
+    } else {
+        $target_user = '@' . $request['user_name'];
+    }
+
+    dd($query_text);
+
+    $response = [
+        'response_type' => 'ephemeral',
+        'user' => $target_user,
+        'text' => 'Your birthday has been logged.',
+    ];
+
+    return response()->json($response);
 });
 
 // Currently disabled.
