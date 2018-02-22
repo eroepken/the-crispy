@@ -1,9 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-
 use App\User;
 
 /*
@@ -21,31 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/birthday', function(Request $request) {
-    if ($request->command != '/birthday' && isset($request->token) && $request->token != config('services.slack.verification_token')) return response('false');
-
-    try {
-        $birthday = new Carbon($request->text);
-        $response_text = 'Sweet. I have added your birthday to my calendar and you\'ll get karma from me when the day comes. :wink: :birthday:';
-
-        $user = User::firstOrNew(array('slack_id' => $request->user_id));
-        $user->slack_id = $request->user_id;
-        $user->name = $request->user_name;
-        $user->birthday = $birthday;
-        $user->save();
-    } catch (Exception $exception) {
-        $response_text = 'Oh no! Either you supplied an invalid date or something went wrong with the bot.';
-        Log::error($exception->getMessage());
-    }
-
-    $response = [
-        'response_type' => 'ephemeral',
-        'user' => $request->user_id,
-        'text' => $response_text,
-    ];
-
-    return response()->json($response);
-});
+// Birthday endpoints.
+Route::post('/birthday', 'UserController@storeOrUpdate');
+Route::get('/birthday-alerts', 'UserController@upcomingBirthdays');
 
 //Route::post('/birthday/remove', 'UserController@destroy');
 
