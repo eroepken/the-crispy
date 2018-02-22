@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,7 @@ Route::post('/birthday', function(Request $request) {
         $response_text = 'Your birthday has been logged.';
         Log::debug($birthday->format('F j'));
         Log::debug($birthday->age);
-    } catch (\Carbon\Exceptions\InvalidDateException $dateException) {
+    } catch (InvalidDateException $dateException) {
         Log::error($dateException->getMessage());
         $response_text = $dateException->getMessage();
     }
