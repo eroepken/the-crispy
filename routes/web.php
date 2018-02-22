@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::post('/birthday', function(Request $request) {
         $target_user = '@' . $request['user_name'];
     }
 
-    dd($query_text);
+    Log::debug($query_text);
 
     $response = [
         'response_type' => 'ephemeral',
