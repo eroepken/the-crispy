@@ -36,12 +36,18 @@ Route::post('/birthday', function(Request $request) {
 
     $birthday = new DateTime($birthday);
 
-    Log::debug(date('F j', $birthday));
+    if (!$birthday) {
+        $response_text = 'Please enter a valid date.';
+    } else {
+        $response_text = 'Your birthday has been logged.';
+    }
+
+    Log::debug($birthday->format('F j'));
 
     $response = [
         'response_type' => 'ephemeral',
         'user' => $target_user,
-        'text' => 'Your birthday has been logged.',
+        'text' => $response_text,
     ];
 
     return response()->json($response);
