@@ -34,15 +34,14 @@ Route::post('/birthday', function(Request $request) {
         $birthday = $query_text;
     }
 
-    $birthday = new DateTime($birthday);
-
-    if (!$birthday) {
-        $response_text = 'Please enter a valid date.';
-    } else {
+    try {
+        $birthday = new DateTime($birthday);
         $response_text = 'Your birthday has been logged.';
+        Log::debug($birthday->format('F j'));
+    } catch (\Carbon\Exceptions\InvalidDateException $dateException) {
+        Log::error($dateException->getMessage());
+        $response_text = $dateException->getMessage();
     }
-
-    Log::debug($birthday->format('F j'));
 
     $response = [
         'response_type' => 'ephemeral',
