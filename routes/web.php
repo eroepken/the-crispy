@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-use Carbon\Exceptions\InvalidDateException;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,39 +18,11 @@ Route::get('/', function () {
 });
 
 Route::post('/birthday', function(Request $request) {
-    $request = $request->all();
-
-    if ($request['command'] != '/birthday' && isset($request['token']) && $request['token'] != config('services.slack.verification_token')) return response('false');
-
-    $query_text = $request['text'];
-
-    preg_match('/\@[\w\d\-\_]+/', $query_text, $matches);
-    if (!empty($matches)) {
-        $target_user = $matches[0];
-        $birthday = str_replace($target_user, '', $query_text);
-    } else {
-        $target_user = '@' . $request['user_name'];
-        $birthday = $query_text;
-    }
-
-    try {
-        $birthday = new Carbon($birthday);
-        $response_text = 'Your birthday has been logged.';
-        Log::debug($birthday->format('F j'));
-        Log::debug($birthday->age);
-    } catch (Exception $exception) {
-        $response_text = 'Please enter a valid date.';
-        Log::error($exception->getMessage());
-    }
-
-    $response = [
-        'response_type' => 'ephemeral',
-        'user' => $target_user,
-        'text' => $response_text,
-    ];
-
-    return response()->json($response);
+    $user = User::firstOrNew(array('name' => Input::get('name')));
+    $user->foo = Input::get('foo');
+    $user->save();
 });
+Route::post('/birthday/remove', 'UserController@destroy');
 
 // Currently disabled.
 /*Route::match(['get', 'post'], '/lmgtfy', function() {
