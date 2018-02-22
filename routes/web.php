@@ -29,8 +29,8 @@ Route::post('/birthday', function(Request $request) {
         $birthday = new Carbon($request->text);
         $response_text = 'Your birthday has been logged.';
 
-        $user = User::firstOrNew(array('id' => $request->user_id));
-        $user->user_id = $request->user_id;
+        $user = User::firstOrNew(array('slack_id' => $request->user_id));
+        $user->slack_id = $request->user_id;
         $user->name = $request->user_name;
         $user->birthday = $birthday;
         $user->save();
