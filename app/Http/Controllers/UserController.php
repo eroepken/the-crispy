@@ -82,7 +82,7 @@ class UserController extends Controller
             $birthday = new Carbon($request->text);
             // The year is irrelevant in this context, so make it consistent for querying purposes.
             $birthday->year = self::YEAR;
-            $response_text = 'Sweet. I have added your birthday to my calendar and you\'ll get karma from me when the day comes! :wink: :birthday:';
+            $response_text = 'Sweet. I will remember your birthday from this point on. Cheers! :wink: :birthday:';
 
             $user = User::firstOrNew(array('slack_id' => $request->user_id));
             $user->slack_id = $request->user_id;
