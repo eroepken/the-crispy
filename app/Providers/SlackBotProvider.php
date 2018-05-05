@@ -89,6 +89,8 @@ class SlackBotProvider extends ServiceProvider
 
             if (strpos($callback, '::') > 0) {
                 $callback_arr = explode('::', $callback);
+            } else {
+                return false;
             }
 
             if (method_exists($callback_arr[0], $callback_arr[1])) {

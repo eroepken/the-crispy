@@ -256,7 +256,7 @@ class SlackBot
      * Get the whole request object to which the bot must respond.
      * @return mixed
      */
-    public function getRequest() {
+    private function getRequest() {
         return json_decode(request()->getContent(), true);
     }
 
@@ -264,7 +264,7 @@ class SlackBot
      * Get the event information to which the bot must respond.
      * @return array
      */
-    public function getEvent() {
+    private function getEvent() {
         $request = $this->getRequest();
 
         if (request('type') == 'event_callback') {
@@ -280,7 +280,7 @@ class SlackBot
      * Get the ID for the thread where the bot must act.
      * @return string
      */
-    public function getThreadId() {
+    private function getThreadId() {
         $event = $this->getEvent();
         return (empty($event['thread_ts'])) ? $event['ts']: $event['thread_ts'];
     }
@@ -289,7 +289,7 @@ class SlackBot
      * Get the channel ID where the bot must act.
      * @return mixed
      */
-    public function getChannelId() {
+    private function getChannelId() {
         $event = $this->getEvent();
 
         if (isset($event['channel'])) {
@@ -303,7 +303,7 @@ class SlackBot
      * Extract the user ID from the user link string given from Slack.
      * @param $user_string
      */
-    public function extractUserId($user_string) {
+    private function extractUserId($user_string) {
         preg_match('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
         return $matches[0];
     }

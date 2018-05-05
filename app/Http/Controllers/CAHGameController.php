@@ -24,7 +24,7 @@ class CAHGameController extends Controller
         // Get the list of players and hand it off to the CAH game class.
         $num_players = preg_match_all('/(<@[A-Za-z0-9_\-|]+>)+/m', $request['text'], $players);
 
-        // TODO: Uncomment these next 2 lines when ready to test with friends. This makes sure the players are unique.
+        // TODO: Make sure the players are unique.
         // $players = array_unique($players[0]);
         // $num_players = count($players);
 
@@ -78,9 +78,7 @@ class CAHGameController extends Controller
                 Log::debug(print_r($instance, true));
 
                 $players = json_decode($instance['players'], true);
-
                 $player_key = '<@' . $action['user']['id'] . '|' . $action['user']['name'] . '>';
-
                 $options = ['options' => $players[$player_key]['hand']];
 
                 return response()->json($options);
