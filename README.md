@@ -1,3 +1,8 @@
-#The Crispy
+# The Crispy
 
-The Crispy, (aka "El Gato Crispios" in Spanish), is a bot built for the Southbacon Slack community.
+| Language | Repository Name |
+| - | -|
+| Portuguese | `O Crocante` |
+| Spanish | `El Gato amable de Nueva York sin pantalones que es el máximo de Crispios y le gusta mucho tomar unas copas llenas de alcol con su culo` |
+
+`The Crispy` is a bot built for the Southbacon Slack community. Wee da baws.
