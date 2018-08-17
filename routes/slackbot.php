@@ -1,7 +1,6 @@
 <?php
 
 use App\Bots\SlackBot;
-use App\Http\Controllers\KarmaController;
 
 $slackbot = app()->make(SlackBot::class);
 
