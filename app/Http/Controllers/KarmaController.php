@@ -9,7 +9,6 @@ class KarmaController extends Controller
 {
     public function parse($data) {
       Log::debug(print_r($data, true));
-      Log::debug('HI.');
     }
 
     private function add(User $user) {
