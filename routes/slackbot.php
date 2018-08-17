@@ -1,6 +1,7 @@
 <?php
 
 use App\Bots\SlackBot;
+use Illuminate\Support\Facades\Log;
 
 $slackbot = app()->make(SlackBot::class);
 
@@ -20,4 +21,6 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('\@(\w+?)\s+?(\+\+|\-\-)', 'KarmaController@parse');
+$slackbot->hears('\@(\w+?)\s+?(\+\+|\-\-)', function($data) {
+  Log::debug(print_r($data, true));
+});
