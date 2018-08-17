@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Log;
 class KarmaController extends Controller
 {
     public function parse($data) {
-      Log::notice(print_r($data, true));
-      Log::notice('HI.');
-      error_log('This is the error log.');
+      Log::debug(print_r($data, true));
+      Log::debug('HI.');
     }
 
     private function add(User $user) {
