@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class KarmaController extends Controller
 {
     public function parse($data) {
-      var_dump($data);
-      var_dump('hi!');
+      Log::notice(print_r($data, true));
     }
 
     private function add(User $user) {
