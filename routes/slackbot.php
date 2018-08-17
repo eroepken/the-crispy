@@ -1,6 +1,7 @@
 <?php
 
 use App\Bots\SlackBot;
+use App\Http\Controllers\KarmaController;
 
 $slackbot = app()->make(SlackBot::class);
 
@@ -23,10 +24,6 @@ $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
 
 $slackbot->hearsMention('(screw|fuck) you', function(SlackBot $bot) {
   $bot->addReaction('disapproval');
-});
-
-$slackbot->hears('fuck yeah', function(SlackBot $bot) {
-  $bot->addReaction('fuckyeah');
 });
 
 $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|good day|good evening|good night|goodnight)', function(SlackBot $bot) {
