@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class KarmaController extends Controller
 {
-    public function parse($data) {
+    public static function parse($data) {
       Log::debug(print_r($data, true));
     }
 

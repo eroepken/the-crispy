@@ -2,7 +2,6 @@
 
 use App\Bots\SlackBot;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\KarmaController;
 
 $slackbot = app()->make(SlackBot::class);
 
