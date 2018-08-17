@@ -25,6 +25,10 @@ $slackbot->hearsMention('(screw|fuck) you', function(SlackBot $bot) {
   $bot->addReaction('disapproval');
 });
 
+$slackbot->hears('fuck yeah', function(SlackBot $bot) {
+  $bot->addReaction('fuckyeah');
+});
+
 $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|good day|good evening|good night|goodnight)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
