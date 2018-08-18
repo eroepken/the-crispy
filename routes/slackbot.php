@@ -17,7 +17,8 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
   $event_data = $bot->getEvent();
   foreach($matches[1] as $i => $rec) {
-    $user = User::firstOrNew(['slack_id' => $rec]);
+    $user = User::firstOrCreate(['slack_id' => $rec]);
+//    $user->slack_id = $rec;
     $action = $matches[2][$i];
 
     switch($action) {
