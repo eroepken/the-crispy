@@ -21,10 +21,10 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot) {
+$slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
   $event_data = $bot->getEvent();
 //  $recipient_ids = SlackBot::extractUserIds($event_data['text']);
-  Log::debug($event_data['text']);
+  Log::debug($matches);
 //  foreach($recipient_ids as $rec) {
 //    $user = User::firstOrNew(['slack_id' => $rec]);
 //    switch($action) {
