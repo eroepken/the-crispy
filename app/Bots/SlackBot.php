@@ -336,6 +336,7 @@ class SlackBot
     }
 
     public static function pickReactionsFromList($list, $num) {
+      Log::debug($num);
       return array_rand(array_flip($list), $num);
     }
 }
