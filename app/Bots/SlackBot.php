@@ -13,8 +13,10 @@ class SlackBot
     protected $verification_token;
     protected $bot_token;
 
-//    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'];
-//    const YAY_REACTIONS = ['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
+    // Slack only allows for 23 max reactions to a post.
+    const MAX_REACTIONS = 23;
+    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'];
+    const YAY_REACTIONS = ['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
 
     /**
      * SlackBot constructor.
@@ -223,14 +225,10 @@ class SlackBot
 
     /**
      * Send a reaction emoji to the previous message.
-     * @param $reactions String or Array of reactions.
+     * @param $reaction Reaction name string.
      */
-    public function addReaction($reactions, $options = []) {
+    public function addReaction($reaction, $options = []) {
         $method = 'reactions.add';
-
-        if (is_array($reactions)) {
-          $reactions = implode(',', $reactions);
-        }
 
         $response = array_merge([
             'token' => $this->bot_token,
@@ -240,6 +238,20 @@ class SlackBot
         ], $options);
 
         return $this->send($response, $method);
+    }
+
+    /**
+     * @param $reactions  An array of reactions to add to a post.
+     * @param array $options
+     */
+    public function addReactions($reactions, $options = []) {
+      if (is_array($reactions) && count($reactions) > self::MAX_REACTIONS) {
+        $reactions = array_slice(0, self::MAX_REACTIONS);
+      }
+
+      foreach($reactions as $reaction) {
+        $this->addReaction($reaction, $options);
+      }
     }
 
     /**
