@@ -72,7 +72,8 @@ class SlackBot
         }
 
         // Make sure we're not listening for the bot's own messages too.
-        if (isset($event['text']) && ($method == 'message' || (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text']) && $method == 'app_mention'))
+        if (isset($event['text'])
+            && ($method == 'message' || (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text']) && $method == 'app_mention'))
             && preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
 
             if (empty($matches)) {
@@ -337,7 +338,6 @@ class SlackBot
     }
 
     public static function pickReactionsFromList($list, $num) {
-      Log::debug($num);
       return array_rand(array_flip($list), $num);
     }
 }

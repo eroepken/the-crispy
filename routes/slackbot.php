@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 $slackbot = app()->make(SlackBot::class);
 
 $slackbot->hearsMention('\+\+', function(SlackBot $bot) {
-  $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
+  $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
 });
 
 $slackbot->hearsMention('\-\-', function(SlackBot $bot) {
@@ -23,8 +23,8 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 
 $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot) {
   $event_data = $bot->getEvent();
-  $recipient_ids = SlackBot::extractUserIds($event_data['text']);
-  Log::debug($recipient_ids);
+//  $recipient_ids = SlackBot::extractUserIds($event_data['text']);
+  Log::debug($event_data['text']);
 //  foreach($recipient_ids as $rec) {
 //    $user = User::firstOrNew(['slack_id' => $rec]);
 //    switch($action) {
