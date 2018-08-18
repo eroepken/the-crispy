@@ -5,11 +5,11 @@ use App\Http\Controllers\UserController;
 
 $slackbot = app()->make(SlackBot::class);
 
-$slackbot->hearsMention('\+\+', function(SlackBot $bot) {
+$slackbot->hears('\<@' . env('BOT_UID') . '\>\s*\+\+', function(SlackBot $bot) {
   $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
 });
 
-$slackbot->hearsMention('\-\-', function(SlackBot $bot) {
+$slackbot->hears('\<@' . env('BOT_UID') . '\>\s*\-\-', function(SlackBot $bot) {
     $bot->addReactions(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
 });
 
@@ -23,21 +23,23 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 
 $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
   $event_data = $bot->getEvent();
-//  $recipient_ids = SlackBot::extractUserIds($event_data['text']);
-  Log::debug($matches);
-//  foreach($recipient_ids as $rec) {
-//    $user = User::firstOrNew(['slack_id' => $rec]);
-//    switch($action) {
-//      case '++':
-//        $user->addKarma();
-//        break;
-//
-//      case '--':
-//        $user->subtractKarma();
-//        break;
-//
-//      default:
-//        break;
-//    }
-//  }
+  foreach($matches[1] as $i => $rec) {
+    $user = User::firstOrNew(['slack_id' => $rec]);
+    $action = $matches[2][$i];
+
+    switch($action) {
+      case '++':
+        $user->addKarma();
+        Log::debug('Adding karma for' . $user->slack_id);
+        break;
+
+      case '--':
+        $user->subtractKarma();
+        Log::debug('Subtracting karma from' . $user->slack_id);
+        break;
+
+      default:
+        break;
+    }
+  }
 });
