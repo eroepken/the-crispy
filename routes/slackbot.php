@@ -22,7 +22,8 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
 
     switch($action) {
       case '++':
-        $user->addKarma();
+        $user->karma++;
+        $user->save();
         Log::debug('Adding karma for' . $user->slack_id);
         if ($user->slack_id === env('BOT_UID')) {
           $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
@@ -30,7 +31,8 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
         break;
 
       case '--':
-        $user->subtractKarma();
+        $user->karma--;
+        $user->save();
         Log::debug('Subtracting karma from' . $user->slack_id);
         if ($user->slack_id === env('BOT_UID')) {
           $bot->addReactions(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
