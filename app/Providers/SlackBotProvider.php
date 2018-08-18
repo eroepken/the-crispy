@@ -76,9 +76,6 @@ class SlackBotProvider extends ServiceProvider
                 return response()->json(['challenge' => $request['challenge']]);
             }
 
-            // Also add the slack commands.
-//            require_once base_path('routes/slackbot.php');
-
             Route::middleware('web')
               ->namespace($this->namespace)
               ->group(base_path('routes/slackbot.php'));

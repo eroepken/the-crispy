@@ -2,7 +2,6 @@
 
 use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Log;
 
 $slackbot = app()->make(SlackBot::class);
 
@@ -22,4 +21,7 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('(\+\+|\-\-)', 'UserController@karmaChange');
+$slackbot->hears('(\+\+|\-\-)', function(SlackBot $bot) {
+//  Log::debug($bot->getRequest());
+  Log::debug($bot->getEvent());
+});
