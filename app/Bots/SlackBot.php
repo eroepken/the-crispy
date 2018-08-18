@@ -266,7 +266,7 @@ class SlackBot
     public function getUserList($limit = 0) {
       $response = array_merge([
         'token' => $this->bot_token,
-      ], $options);
+      ]);
 
       return $this->send($response, 'users.list');
     }
@@ -281,7 +281,7 @@ class SlackBot
       $response = array_merge([
         'token' => $this->bot_token,
         'user' => $user_id
-      ], $options);
+      ]);
 
       return $this->send($response, 'users.info');
     }
