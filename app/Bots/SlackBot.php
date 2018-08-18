@@ -233,7 +233,7 @@ class SlackBot
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $this->getChannelId(),
-            'name' => $reactions,
+            'name' => $reaction,
             'timestamp' => $this->getThreadId()
         ], $options);
 
