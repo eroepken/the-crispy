@@ -27,10 +27,10 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     if (!$user->exists) {
       $user->slack_id = $rec;
       $user->karma = 0;
-      $user_info = $bot->getUserInfo($rec);
-      Log::debug($user_info);
-//      $user->name =
     }
+
+    $user_info = $bot->getUserInfo($rec);
+    Log::debug($user_info);
 
     $action = $matches[2][$i];
 
