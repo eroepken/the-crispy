@@ -22,4 +22,4 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('(\+\+|\-\-)', UserController::karmaChange);
+$slackbot->hears('(\+\+|\-\-)', 'UserController@karmaChange');
