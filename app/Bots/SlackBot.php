@@ -302,8 +302,17 @@ class SlackBot
      * Extract the user ID from the user link string given from Slack.
      * @param $user_string
      */
-    private function extractUserId($user_string) {
+    public static function extractUserId($user_string) {
         preg_match('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
         return $matches[0];
     }
+
+  /**
+   * Extract the user ID from the user link string given from Slack.
+   * @param $user_string
+   */
+  public static function extractUserIds($user_string) {
+    preg_match_all('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
+    return $matches;
+  }
 }

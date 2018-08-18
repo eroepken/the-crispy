@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\User;
-use App\Bots\SlackBot;
-
-//$slackbot = app()->make(SlackBot::class);
 
 class UserController extends Controller
 {
@@ -82,9 +79,9 @@ class UserController extends Controller
             $birthday = new Carbon($request->text);
             // The year is irrelevant in this context, so make it consistent for querying purposes.
             $birthday->year = self::YEAR;
-            $response_text = 'Sweet. I will remember your birthday from this point on. Cheers! :wink: :birthday:';
+            $response_text = 'Sweet. I will remember your birthday from this point on. :wink: :birthday:';
 
-            $user = User::firstOrNew(array('slack_id' => $request->user_id));
+            $user = User::firstOrNew(['slack_id' => $request->user_id]);
             $user->slack_id = $request->user_id;
             $user->name = $request->user_name;
             $user->birthday = $birthday;
@@ -112,13 +109,5 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-    }
-
-  /**
-   * Give or take karma to/from the user.
-   * @param $data
-   */
-    public function karmaChange() {
-        Log::debug($data);
     }
 }

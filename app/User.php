@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'birthday'
+        'user_id', 'name', 'birthday', 'karma'
     ];
 
     /**
@@ -28,4 +28,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [];
+
+    private function addKarma() {
+      $this->karma++;
+      $this->save();
+    }
+
+    private function subtractKarma() {
+      $this->karma--;
+      $this->save();
+    }
+
+    public function getKarma() {
+      return $this->karma;
+    }
 }

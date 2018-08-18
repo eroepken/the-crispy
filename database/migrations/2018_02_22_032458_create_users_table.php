@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->text('slack_id');
             $table->text('name');
             $table->date('birthday');
+            $table->integer('karma')->default(0);
         });
     }
 

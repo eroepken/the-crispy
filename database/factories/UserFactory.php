@@ -17,6 +17,7 @@ $factory->define(App\User::class, function (Faker $faker) {
     return [
         'slack_id' => 'U' . $faker->unique()->randomNumber(8),
         'name' => $faker->name,
-        'birthday' => $faker->date()
+        'birthday' => $faker->date(),
+        'karma' => $faker->randomNumber(1),
     ];
 });
