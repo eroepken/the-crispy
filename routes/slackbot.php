@@ -30,7 +30,7 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     }
 
     $user_info = $bot->getUserInfo($rec);
-    Log::debug(json_decode($user_info));
+    Log::debug(json_encode($user_info));
 
     $action = $matches[2][$i];
 
