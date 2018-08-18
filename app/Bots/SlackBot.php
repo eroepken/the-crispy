@@ -220,15 +220,15 @@ class SlackBot
 
     /**
      * Send a reaction emoji to the previous message.
-     * @param $reaction
+     * @param $reactions String or Array of reactions.
      */
-    public function addReaction($reaction, $options = []) {
+    public function addReaction($reactions, $options = []) {
         $method = 'reactions.add';
 
         $response = array_merge([
             'token' => $this->bot_token,
             'channel' => $this->getChannelId(),
-            'name' => $reaction,
+            'name' => $reactions,
             'timestamp' => $this->getThreadId()
         ], $options);
 
@@ -307,12 +307,16 @@ class SlackBot
         return $matches[0];
     }
 
-  /**
-   * Extract the user ID from the user link string given from Slack.
-   * @param $user_string
-   */
-  public static function extractUserIds($user_string) {
-    preg_match_all('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
-    return $matches;
-  }
+    /**
+     * Extract the user ID from the user link string given from Slack.
+     * @param $user_string
+     */
+    public static function extractUserIds($user_string) {
+      preg_match_all('/<@(U[0-9A-Za-z]+)\|/', $user_string, $matches);
+      return $matches;
+    }
+
+    public static function pickReactionsFromList($list, $num) {
+      return array_rand(array_flip($list), $num);
+    }
 }

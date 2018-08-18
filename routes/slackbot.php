@@ -6,13 +6,11 @@ use App\Http\Controllers\UserController;
 $slackbot = app()->make(SlackBot::class);
 
 $slackbot->hearsMention('\+\+', function(SlackBot $bot) {
-    $bot->addReaction('awthanks');
-    $bot->addReaction('heart');
+  $bot->addReaction(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
 });
 
 $slackbot->hearsMention('\-\-', function(SlackBot $bot) {
-    $bot->addReaction('disapproval');
-    $bot->addReaction('fu');
+    $bot->addReaction(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
 });
 
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
