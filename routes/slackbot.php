@@ -2,6 +2,7 @@
 
 use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
+use App\User;
 
 $slackbot = app()->make(SlackBot::class);
 
