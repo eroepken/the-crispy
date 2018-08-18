@@ -16,8 +16,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->text('slack_id');
-            $table->text('name');
-            $table->date('birthday');
+            $table->text('name')->nullable();
+            $table->date('birthday')->nullable();
             $table->integer('karma')->default(0);
         });
     }
