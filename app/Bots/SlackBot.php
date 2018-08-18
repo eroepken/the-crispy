@@ -13,6 +13,7 @@ class SlackBot
     protected $webhook_client;
     protected $verification_token;
     protected $bot_token;
+    protected $was_mentioned = false;
 
     // Slack only allows for 23 max reactions to a post.
     const MAX_REACTIONS = 23;

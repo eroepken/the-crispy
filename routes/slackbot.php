@@ -6,14 +6,6 @@ use App\User;
 
 $slackbot = app()->make(SlackBot::class);
 
-$slackbot->hears('\<@' . env('BOT_UID') . '\>\s*\+\+', function(SlackBot $bot) {
-  $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
-});
-
-$slackbot->hears('\<@' . env('BOT_UID') . '\>\s*\-\-', function(SlackBot $bot) {
-    $bot->addReactions(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
-});
-
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
@@ -32,11 +24,17 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
       case '++':
         $user->addKarma();
         Log::debug('Adding karma for' . $user->slack_id);
+        if ($user->slack_id === env('BOT_UID')) {
+          $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
+        }
         break;
 
       case '--':
         $user->subtractKarma();
         Log::debug('Subtracting karma from' . $user->slack_id);
+        if ($user->slack_id === env('BOT_UID')) {
+          $bot->addReactions(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
+        }
         break;
 
       default:
