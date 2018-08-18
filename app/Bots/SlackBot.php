@@ -263,7 +263,7 @@ class SlackBot
      * Get the event information to which the bot must respond.
      * @return array
      */
-    private function getEvent() {
+    public function getEvent() {
         $request = $this->getRequest();
 
         if (request('type') == 'event_callback') {

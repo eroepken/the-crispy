@@ -118,7 +118,7 @@ class UserController extends Controller
    * Give or take karma to/from the user.
    * @param $data
    */
-    public function karmaChange($data) {
+    public function karmaChange() {
         Log::debug($data);
     }
 }
