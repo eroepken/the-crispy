@@ -18,7 +18,7 @@ class SlackBot
     // Slack only allows for 23 max reactions to a post.
     const MAX_REACTIONS = 23;
     const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'];
-    const YAY_REACTIONS = ['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
+    const YAY_REACTIONS = ['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
 
     /**
      * SlackBot constructor.
@@ -255,6 +255,35 @@ class SlackBot
       foreach($reactions as $reaction) {
         $this->addReaction($reaction, $options);
       }
+    }
+
+  /**
+   * Get the whole detailed user list for the Slack team.
+   * @param int $limit
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   */
+    public function getUserList($limit = 0) {
+      $response = array_merge([
+        'token' => $this->bot_token,
+      ], $options);
+
+      return $this->send($response, 'users.list');
+    }
+
+  /**
+   * Get a single user's information.
+   * @param $user_id
+   *
+   * @return \Psr\Http\Message\ResponseInterface
+   */
+    public function getUserInfo($user_id) {
+      $response = array_merge([
+        'token' => $this->bot_token,
+        'user' => $user_id
+      ], $options);
+
+      return $this->send($response, 'users.info');
     }
 
     /**

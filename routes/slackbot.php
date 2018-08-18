@@ -16,29 +16,36 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 
 $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
   $event_data = $bot->getEvent();
+
+  if (count($matches[1]) > 1) {
+    $all_slack_users = $bot->getUserList();
+  }
+
   foreach($matches[1] as $i => $rec) {
     $user = User::firstOrNew(['slack_id' => $rec]);
-    $user->slack_id = $rec;
 
     if (!$user->exists) {
+      $user->slack_id = $rec;
       $user->karma = 0;
+      $user_info = $bot->getUserInfo($rec);
+      Log::debug($user_info);
+//      $user->name =
     }
 
-    Log::debug($rec);
     $action = $matches[2][$i];
 
     switch($action) {
       case '++':
         $user->karma++;
         if ($user->slack_id === env('BOT_UID')) {
-          $bot->addReactions(SlackBot::pickReactionsFromList(['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin'], 2));
+          $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
         }
         break;
 
       case '--':
         $user->karma--;
         if ($user->slack_id === env('BOT_UID')) {
-          $bot->addReactions(SlackBot::pickReactionsFromList(['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'], 2));
+          $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
         }
         break;
 
