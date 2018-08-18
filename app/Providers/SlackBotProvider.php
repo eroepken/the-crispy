@@ -77,7 +77,11 @@ class SlackBotProvider extends ServiceProvider
             }
 
             // Also add the slack commands.
-            require_once base_path('routes/slackbot.php');
+//            require_once base_path('routes/slackbot.php');
+
+            Route::middleware('web')
+              ->namespace($this->namespace)
+              ->group(base_path('routes/slackbot.php'));
 
             return response('false');
         });
