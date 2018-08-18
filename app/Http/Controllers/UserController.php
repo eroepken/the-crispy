@@ -64,7 +64,7 @@ class UserController extends Controller
                 }
                 $user_list_string .= ' and ' . $last_user;
 
-                return response('Everyone please wish a happy birthday to ' . $user_list_string . '!');
+                return response('Happy birthday to ' . $user_list_string . '!');
         }
     }
 
@@ -112,5 +112,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+  /**
+   * Give or take karma to/from the user.
+   * @param $data
+   */
+    public function karmaChange($data) {
+        Log::debug($data);
     }
 }
