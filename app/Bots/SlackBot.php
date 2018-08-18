@@ -4,6 +4,7 @@ namespace App\Bots;
 
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\RequestOptions;
+use Illuminate\Support\Facades\Log;
 
 class SlackBot
 {
