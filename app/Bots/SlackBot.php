@@ -13,6 +13,9 @@ class SlackBot
     protected $verification_token;
     protected $bot_token;
 
+    protected FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'];
+    protected YAY_REACTIONS = ['awthanks', 'heart', 'clap', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
+
     /**
      * SlackBot constructor.
      */
@@ -224,6 +227,10 @@ class SlackBot
      */
     public function addReaction($reactions, $options = []) {
         $method = 'reactions.add';
+
+        if (is_array($reactions)) {
+          $reactions = implode(',');
+        }
 
         $response = array_merge([
             'token' => $this->bot_token,
