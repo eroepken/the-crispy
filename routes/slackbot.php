@@ -23,7 +23,10 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
 
   foreach($matches[1] as $i => $rec) {
     Log::debug($event_data);
-//    if ($rec === $event_data['user'])
+    if ($rec === $event_data['user']) {
+      $bot->replyInThread('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' karma.');
+      continue;
+    }
 
     $user = User::firstOrNew(['slack_id' => $rec]);
 
@@ -61,6 +64,6 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     }
 
     $user->save();
-    $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' karma.');
+    $bot->replyInThread('<@' . $user->slack_id . '> now has ' . $user->karma . ' karma.');
   }
 });
