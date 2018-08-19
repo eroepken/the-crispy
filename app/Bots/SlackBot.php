@@ -5,6 +5,7 @@ namespace App\Bots;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Psr7\Response;
 
 class SlackBot
 {
@@ -311,9 +312,9 @@ class SlackBot
    * @return \Psr\Http\Message\ResponseInterface
    */
   private function get($params, $method) {
-    return $this->http_client->get($method, [
+    return json_decode($this->http_client->get($method, [
       RequestOptions::QUERY => $params
-    ])->getContents();
+    ])->getBody()->getContents(), true);
   }
 
     /**
