@@ -285,7 +285,7 @@ class SlackBot
         'pretty' => true,
       ]);
 
-      return $this->get($params, 'users.info')->user;
+      return $this->get($params, 'users.info');
     }
 
     /**
@@ -313,7 +313,7 @@ class SlackBot
   private function get($params, $method) {
     return $this->http_client->get($method, [
       RequestOptions::QUERY => $params
-    ])->getBody();
+    ])->getContents();
   }
 
     /**
