@@ -31,8 +31,8 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
 
     if (count($matches[1]) === 1) {
       $user_info = $bot->getUserInfo($rec);
-      $user->name = $user_info->user->name;
       Log::debug($user_info);
+      $user->name = $user_info->name;
     } else {
       Log::debug($all_slack_users);
     }
