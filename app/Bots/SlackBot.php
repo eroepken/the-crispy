@@ -266,6 +266,7 @@ class SlackBot
     public function getUserList($limit = 0) {
       $params = array_merge([
         'token' => $this->bot_token,
+        'pretty' => true,
       ]);
 
       return $this->get($params, 'users.list');
@@ -280,7 +281,8 @@ class SlackBot
     public function getUserInfo($user_id) {
       $params = array_merge([
         'token' => $this->bot_token,
-        'user' => $user_id
+        'user' => $user_id,
+        'pretty' => true,
       ]);
 
       return $this->get($params, 'users.info');
@@ -309,6 +311,7 @@ class SlackBot
    * @return \Psr\Http\Message\ResponseInterface
    */
   private function get($params, $method) {
+    Log::debug($params);
     return $this->http_client->get($method, [
       RequestOptions::FORM_PARAMS => $params
     ]);
