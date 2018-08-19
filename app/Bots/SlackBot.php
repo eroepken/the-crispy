@@ -312,8 +312,9 @@ class SlackBot
    */
   private function get($params, $method) {
     Log::debug($params);
+
     return $this->http_client->get($method, [
-      RequestOptions::FORM_PARAMS => $params
+      RequestOptions::QUERY => $params
     ]);
   }
 
