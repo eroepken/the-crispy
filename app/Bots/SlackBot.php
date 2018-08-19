@@ -285,7 +285,7 @@ class SlackBot
         'pretty' => true,
       ]);
 
-      return $this->get($params, 'users.info');
+      return $this->get($params, 'users.info')->user;
     }
 
     /**
