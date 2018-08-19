@@ -22,7 +22,7 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
   }
 
   foreach($matches[1] as $i => $rec) {
-    Log::debug($rec);
+    Log::debug($event_data);
 //    if ($rec === $event_data['user'])
 
     $user = User::firstOrNew(['slack_id' => $rec]);
