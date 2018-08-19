@@ -311,9 +311,9 @@ class SlackBot
    * @return \Psr\Http\Message\ResponseInterface
    */
   private function get($params, $method) {
-    return $this->http_client->get($method, [
+    return json_decode($this->http_client->get($method, [
       RequestOptions::QUERY => $params
-    ])->getBody()->getContents();
+    ])->getBody());
   }
 
     /**
