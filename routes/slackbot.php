@@ -18,7 +18,7 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
   $event_data = $bot->getEvent();
 
   if (count($matches[1]) > 1) {
-    $all_slack_users = $bot->getUserList();
+    $all_slack_users = $bot->getUserList(1);
   }
 
   foreach($matches[1] as $i => $rec) {
@@ -29,8 +29,13 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
       $user->karma = 0;
     }
 
-    $user_info = $bot->getUserInfo($rec);
-    Log::debug(json_encode($user_info));
+    if (count($matches[1]) === 1) {
+      $user_info = $bot->getUserInfo($rec);
+      $user->name = $user_info->user->name;
+      Log::debug($user_info);
+    } else {
+      Log::debug($all_slack_users);
+    }
 
     $action = $matches[2][$i];
 
