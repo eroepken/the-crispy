@@ -101,13 +101,13 @@ class SlackBot
             $channel = $this->getChannelId();
         }
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
             'text' => $text
         ], $options);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -125,14 +125,14 @@ class SlackBot
 
         $method = 'chat.postEphemeral';
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
             'text' => $text,
             'user' => $user
         ], $options);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -175,13 +175,13 @@ class SlackBot
 
         $method = 'chat.postMessage';
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
             'text' => $text
         ], $options);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -196,12 +196,12 @@ class SlackBot
             $channel = $this->getChannelId();
         }
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel
         ], $message);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -217,13 +217,13 @@ class SlackBot
             $channel = $this->getChannelId();
         }
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $channel,
             'user' => $user
         ], $message);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -233,14 +233,14 @@ class SlackBot
     public function addReaction($reaction, $options = []) {
         $method = 'reactions.add';
 
-        $response = array_merge([
+        $params = array_merge([
             'token' => $this->bot_token,
             'channel' => $this->getChannelId(),
             'name' => $reaction,
             'timestamp' => $this->getThreadId()
         ], $options);
 
-        return $this->send($response, $method);
+        return $this->send($params, $method);
     }
 
     /**
@@ -264,11 +264,11 @@ class SlackBot
    * @return \Psr\Http\Message\ResponseInterface
    */
     public function getUserList($limit = 0) {
-      $response = array_merge([
+      $params = array_merge([
         'token' => $this->bot_token,
       ]);
 
-      return $this->send($response, 'users.list');
+      return $this->get($params, 'users.list');
     }
 
   /**
@@ -278,29 +278,41 @@ class SlackBot
    * @return \Psr\Http\Message\ResponseInterface
    */
     public function getUserInfo($user_id) {
-      $response = array_merge([
+      $params = array_merge([
         'token' => $this->bot_token,
         'user' => $user_id
       ]);
 
-      return $this->send($response, 'users.info');
+      return $this->get($params, 'users.info');
     }
 
     /**
      * Send the message Guzzle request to Slack.
-     * @param $response
+     * @param $params
      * @param $method
      * @return \Psr\Http\Message\ResponseInterface
      */
-    private function send($response, $method) {
-        if (isset($response['attachments'])) {
-            $response['attachments'] = json_encode($response['attachments']);
+    private function send($params, $method) {
+        if (isset($params['attachments'])) {
+          $params['attachments'] = json_encode($params['attachments']);
         }
 
         return $this->http_client->post($method, [
-            RequestOptions::FORM_PARAMS => $response
+            RequestOptions::FORM_PARAMS => $params
         ]);
     }
+
+  /**
+   * Send the message Guzzle request to Slack.
+   * @param $params
+   * @param $method
+   * @return \Psr\Http\Message\ResponseInterface
+   */
+  private function get($params, $method) {
+    return $this->http_client->get($method, [
+      RequestOptions::FORM_PARAMS => $params
+    ]);
+  }
 
     /**
      * Get the whole request object to which the bot must respond.
