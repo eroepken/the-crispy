@@ -22,6 +22,9 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
   }
 
   foreach($matches[1] as $i => $rec) {
+    Log::debug($rec);
+//    if ($rec === $event_data['user'])
+
     $user = User::firstOrNew(['slack_id' => $rec]);
 
     if (!$user->exists) {
@@ -58,5 +61,6 @@ $slackbot->hears('\<\@(\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     }
 
     $user->save();
+    $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' karma.');
   }
 });
