@@ -313,7 +313,7 @@ class SlackBot
   private function get($params, $method) {
     return $this->http_client->get($method, [
       RequestOptions::QUERY => $params
-    ])->json();
+    ])->getBody()->getContents();
   }
 
     /**
