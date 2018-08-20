@@ -75,7 +75,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       if (!$record_exists) {
         DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
       } else {
-        $karma = $record_exists->karma;
+        $karma = $record_exists->get('karma');
       }
 
 //      switch($action) {
