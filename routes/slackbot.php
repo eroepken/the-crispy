@@ -66,12 +66,13 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     if (!is_array($existing_things)) {
       $existing_things = collect([$existing_things]);
     }
-    Log::debug($existing_things);
 
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
       $record_exists = $existing_things->whereStrict('name', $rec);
+      Log::debug($record_exists);
+
       if (!$record_exists) {
         DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
       }
