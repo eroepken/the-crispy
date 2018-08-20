@@ -71,11 +71,12 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       $action = $matches[2][$i];
 
       $record_exists = $existing_things->where('name', $rec)->all();
+      Log::debug($rec);
       Log::debug($record_exists);
 
-      if (!$record_exists) {
-        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
-      }
+//      if (!$record_exists) {
+//        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
+//      }
 
 //      switch($action) {
 //        case '++':
