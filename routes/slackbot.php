@@ -67,7 +67,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
-      $record_exists = $existing_things->where('name', $rec)->get();
+      $record_exists = $existing_things->where('name', $rec);
       Log::debug($record_exists);
 
       // Store karma value locally for printing purposes.
