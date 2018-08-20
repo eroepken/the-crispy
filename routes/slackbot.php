@@ -62,7 +62,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
 
     $event_data = $bot->getEvent();
-    $existing_things = DB::table('things')->whereIn('name', $matches[1])->get();
+    $existing_things = collect(DB::table('things')->whereIn('name', $matches[1])->get());
     Log::debug($existing_things);
 
     foreach($matches[1] as $i => $rec) {
