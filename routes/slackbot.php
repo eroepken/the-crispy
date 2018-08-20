@@ -72,8 +72,9 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
 
       // Store karma value locally for printing purposes.
       $karma = 0;
-      if (!$record) {
+      if (empty($record)) {
         DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
+        Log::debug('New record inserted: ' . $rec);
       } else {
         $karma = $record->get('karma');
       }
