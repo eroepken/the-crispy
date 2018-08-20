@@ -82,12 +82,10 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       switch($action) {
         case '++':
           DB::table('things')->where('name', '=', $rec)->increment('karma');
-          $karma++
           break;
 
         case '--':
           DB::table('things')->where('name', '=', $rec)->decrement('karma');
-          $karma--
           break;
 
         default:
