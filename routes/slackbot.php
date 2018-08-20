@@ -70,7 +70,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
-      $record_exists = $existing_things->whereStrict('name', $rec);
+      $record_exists = $existing_things->where('name', $rec)->all();
       Log::debug($record_exists);
 
       if (!$record_exists) {
