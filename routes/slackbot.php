@@ -64,7 +64,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     $all_things = DB::table('things')->where('name', 'IN', "'" . implode("','", $matches[1]) . "'")->get();
 
-    Log::debug($all_things);
+    Log::debug($matches);
 
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
