@@ -302,9 +302,6 @@ class SlackBot
           $params['attachments'] = json_encode($params['attachments']);
         }
 
-        // because we want the bot to seem more human...
-        sleep(5);
-
         return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $params
         ]);
