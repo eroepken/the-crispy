@@ -62,22 +62,23 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
 
     $event_data = $bot->getEvent();
-//    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
 
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
-//      $record_exists = $existing_things->where('name', $rec);
-//
-//      // Store karma value locally for printing purposes.
-//      $karma = 0;
-//      if (!$record_exists) {
-//        DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
-//      } else {
-//        $karma = $record_exists->get('karma');
-//      }
-//
-//      Log::debug($karma);
+      $record = $existing_things->where('name', $rec);
+      Log::debug($record);
+
+      // Store karma value locally for printing purposes.
+      $karma = 0;
+      if (!$record) {
+        DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
+      } else {
+        $karma = $record->get('karma');
+      }
+
+      Log::debug($karma);
 
       switch($action) {
         case '++':
