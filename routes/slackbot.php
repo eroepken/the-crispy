@@ -85,6 +85,6 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       }
 
       $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
-      $bot->replyInThread('@' . $rec . ' now has ' . $karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+      $bot->replyInThread('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
     }
 });
