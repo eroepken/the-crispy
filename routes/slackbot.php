@@ -61,36 +61,31 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 // Listening for thing karma.
 $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
-    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get()->all();
 
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
-      // Store karma value locally for printing purposes.
-      $karma = 0;
+      // Create a new record if it doesn't exist.
       if (!$existing_things->contains('name', $rec)) {
-        DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
-      } else {
-        $record = $existing_things->where('name', $rec);
-        $karma = $record->get('karma');
-        Log::debug($record);
+        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
       }
 
       switch($action) {
         case '++':
           DB::table('things')->where('name', '=', $rec)->increment('karma');
-          $karma++;
           break;
 
         case '--':
           DB::table('things')->where('name', '=', $rec)->decrement('karma');
-          $karma--;
           break;
 
         default:
           break;
       }
 
-      $bot->replyInThread('@' . $rec . ' now has ' . $karma . ' ' . (abs($karma) === 1 ? 'point' : 'points') . '.');
+      $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
+      Log::debug($updated->get('karma'));
+      $bot->replyInThread('@' . $rec . ' now has ' . $karma . ' ' . (abs($updated->get('karma')) === 1 ? 'point' : 'points') . '.');
     }
 });
