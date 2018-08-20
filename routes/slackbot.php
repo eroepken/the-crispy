@@ -61,7 +61,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 // Listening for thing karma.
 $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
-    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get()->all();
+    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
 
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
