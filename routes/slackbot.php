@@ -54,7 +54,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
         }
 
         $user->save();
-        $bot->replyInThread('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($karma) === 1 ? 'point' : 'points') . '.');
+        $bot->replyInThread('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
     }
 });
 
