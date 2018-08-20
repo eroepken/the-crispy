@@ -67,16 +67,15 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     foreach($matches[1] as $i => $rec) {
       $action = $matches[2][$i];
 
-      $record = $existing_things->where('name', $rec);
-      Log::debug($record);
-
       // Store karma value locally for printing purposes.
       $karma = 0;
-      if (empty($record)) {
+      if (!$existing_things->contains('name', $rec)) {
         DB::table('things')->insert(['name' => $rec, 'karma' => $karma]);
         Log::debug('New record inserted: ' . $rec);
       } else {
+        $record = $existing_things->where('name', $rec);
         $karma = $record->get('karma');
+        Log::debug($record);
       }
 
       Log::debug($karma);
