@@ -54,7 +54,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
         }
 
         $user->save();
-        $bot->replyInThread('<@' . $user->slack_id . '> now has ' . $user->karma . ' points.');
+        $bot->replyInThread('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($karma) === 1 ? 'point' : 'points') . '.');
     }
 });
 
@@ -73,7 +73,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       } else {
         $record = $existing_things->where('name', $rec);
         $karma = $record->get('karma');
-        Log::debug($karma);
+        Log::debug($record);
       }
 
       switch($action) {
@@ -91,6 +91,6 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
           break;
       }
 
-      $bot->replyInThread('@' . $rec . ' now has ' . $karma . ' points.');
+      $bot->replyInThread('@' . $rec . ' now has ' . $karma . ' ' . (abs($karma) === 1 ? 'point' : 'points') . '.');
     }
 });
