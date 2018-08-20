@@ -18,8 +18,8 @@ class SlackBot
 
     // Slack only allows for 23 max reactions to a post.
     const MAX_REACTIONS = 23;
-    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow'];
-    const YAY_REACTIONS = ['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign'];
+    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow', 'broken_heart'];
+    const YAY_REACTIONS = ['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign', 'heartbeat', 'revolving_hearts'];
 
     /**
      * SlackBot constructor.
@@ -258,37 +258,37 @@ class SlackBot
       }
     }
 
-  /**
-   * Get the whole detailed user list for the Slack team.
-   * @param int $limit
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   */
+    /**
+     * Get the whole detailed user list for the Slack team.
+     * @param int $limit
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function getUserList($limit = 0) {
-      $params = array_merge([
-        'token' => $this->bot_token,
-        'pretty' => true,
-      ]);
+        $params = array_merge([
+          'token' => $this->bot_token,
+          'pretty' => true,
+        ]);
 
-      return $this->get($params, 'users.list');
+        return $this->get($params, 'users.list');
     }
 
-  /**
-   * Get a single user's information.
-   * @param $user_id
-   *
-   * @return \Psr\Http\Message\ResponseInterface
-   */
+    /**
+     * Get a single user's information.
+     * @param $user_id
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function getUserInfo($user_id) {
-      $params = array_merge([
-        'token' => $this->bot_token,
-        'user' => $user_id,
-        'pretty' => true,
-      ]);
+        $params = array_merge([
+          'token' => $this->bot_token,
+          'user' => $user_id,
+          'pretty' => true,
+        ]);
 
-      $response = $this->get($params, 'users.info');
+        $response = $this->get($params, 'users.info');
 
-      return $response['user'];
+        return $response['user'];
     }
 
     /**
@@ -302,22 +302,25 @@ class SlackBot
           $params['attachments'] = json_encode($params['attachments']);
         }
 
+        // because we want the bot to seem more human...
+        sleep(5);
+
         return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $params
         ]);
     }
 
-  /**
-   * Send the message Guzzle request to Slack.
-   * @param $params
-   * @param $method
-   * @return \Psr\Http\Message\ResponseInterface
-   */
-  private function get($params, $method) {
-    return json_decode($this->http_client->get($method, [
-      RequestOptions::QUERY => $params
-    ])->getBody()->getContents(), true);
-  }
+    /**
+     * Send the message Guzzle request to Slack.
+     * @param $params
+     * @param $method
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    private function get($params, $method) {
+        return json_decode($this->http_client->get($method, [
+          RequestOptions::QUERY => $params
+        ])->getBody()->getContents(), true);
+    }
 
     /**
      * Get the whole request object to which the bot must respond.
