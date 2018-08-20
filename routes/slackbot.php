@@ -68,26 +68,24 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       $action = $matches[2][$i];
 
       $record_exists = $existing_things->where('name', $rec);
-      Log::debug($record_exists);
+      if (!$record_exists) {
+        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
+      }
 
-//      if (!$record_exists) {
-//        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
-//      }
+      switch($action) {
+        case '++':
+          $data = DB::table('things')->where('name', '=', $rec)->increment('karma');
+          break;
 
-//      switch($action) {
-//        case '++':
-//          DB::table('things')->where('name', '=', $rec)->increment('karma');
-//          break;
-//
-//        case '--':
-//          DB::table('things')->where('name', '=', $rec)->decrement('karma');
-//          break;
-//
-//        default:
-//          break;
-//      }
-//
-//      Log::debug($data);
+        case '--':
+          $data = DB::table('things')->where('name', '=', $rec)->decrement('karma');
+          break;
+
+        default:
+          break;
+      }
+
+      Log::debug($data);
 //
 //      $bot->replyInThread('@' . $rec . ' now has ' . $data->karma . ' points.');
     }
