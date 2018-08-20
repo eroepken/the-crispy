@@ -66,7 +66,7 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     if (!is_array($existing_things)) {
       $existing_things = [$existing_things];
     }
-    $existing_things = collect($existing_things);
+    $existing_things = collect($existing_things)->toArray();
 
     Log::debug($existing_things);
 
@@ -74,7 +74,6 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
       $action = $matches[2][$i];
 
       $record_exists = $existing_things->where('name', $rec)->all();
-      Log::debug($rec);
       Log::debug($record_exists);
 
 //      if (!$record_exists) {
