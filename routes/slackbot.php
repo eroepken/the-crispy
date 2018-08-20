@@ -62,7 +62,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
 
     $event_data = $bot->getEvent();
-    $all_things = DB::table('things')->where('name', 'IN', $matches[1])->get();
+    $all_things = DB::table('things')->where('name', 'IN', "'" . implode("','", $matches[1]) . "'")->get();
 
     Log::debug($all_things);
 
@@ -73,11 +73,11 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
 
 //      switch($action) {
 //        case '++':
-//          $data = DB::update('UPDATE `things` SET `karma` = `karma` + 1 WHERE `name`=?');
+//          DB::table('things')->where('name', '=', $rec)->increment('karma');
 //          break;
 //
 //        case '--':
-//          $data = DB::update('UPDATE `things` SET `karma` = `karma` - 1 WHERE `name`=?');
+//          DB::table('things')->where('name', '=', $rec)->decrement('karma');
 //          break;
 //
 //        default:
