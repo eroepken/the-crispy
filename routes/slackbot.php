@@ -64,27 +64,27 @@ $slackbot->hears('\@(\w+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
 
     foreach($matches[1] as $i => $rec) {
-      $action = $matches[2][$i];
+        $action = $matches[2][$i];
 
-      // Create a new record if it doesn't exist.
-      if (!$existing_things->contains('name', $rec)) {
-        DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
-      }
+        // Create a new record if it doesn't exist.
+        if (!$existing_things->contains('name', $rec)) {
+            DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
+        }
 
-      switch($action) {
-        case '++':
-          DB::table('things')->where('name', '=', $rec)->increment('karma');
-          break;
+        switch($action) {
+            case '++':
+                DB::table('things')->where('name', '=', $rec)->increment('karma');
+                break;
 
-        case '--':
-          DB::table('things')->where('name', '=', $rec)->decrement('karma');
-          break;
+            case '--':
+                DB::table('things')->where('name', '=', $rec)->decrement('karma');
+                break;
 
-        default:
-          break;
-      }
+            default:
+                break;
+        }
 
-      $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
-      $bot->replyInThread('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+        $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
+        $bot->replyInThread('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
     }
 });
