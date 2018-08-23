@@ -89,6 +89,10 @@ $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     }
 });
 
-$slackbot->hearsMention('leaderboard', function(SlackBot $bot) {
+$slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard page, for your reference: ' . URL::to('/leaderboard'));
+});
+
+$slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot) {
+  $bot->reply(UserController::getTopFormatted());
 });

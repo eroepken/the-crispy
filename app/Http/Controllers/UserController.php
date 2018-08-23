@@ -134,4 +134,23 @@ class UserController extends Controller
 
         return view('leaderboard', compact('users', 'things'));
     }
+
+    public static function getTop($num) {
+        return User::select('name', 'karma')->orderBy('karma', 'desc')->limit($num)->get();
+    }
+
+
+    /**
+     * Select and format the top users for display in the channel.
+     *
+     * @param int $num The number of users to grab for the "top" listing.
+     */
+    public static function getTopFormatted($num = 10) {
+        $users = static::getTop($num);
+
+        return $users->map(function($val, $key) {
+          $i = $key + 1;
+          return "$i. $val->name &mdash; $val->karma";
+        });
+    }
 }
