@@ -88,3 +88,7 @@ $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
         $bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
     }
 });
+
+$slackbot->hearsMention('leaderboard', function(SlackBot $bot) {
+  $bot->reply('Here\'s the leaderboard page, for your reference: ' . URL::to('/leaderboard'));
+});
