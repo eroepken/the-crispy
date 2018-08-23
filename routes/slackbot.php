@@ -94,5 +94,5 @@ $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
 });
 
 $slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot, $matches) {
-  $bot->reply(UserController::getTopFormatted($matches[1][0]));
+  $bot->reply(UserController::getTopFormatted($matches[1][0]) . "\nYou can see the whole leaderboard here: " . URL::to('/leaderboard'));
 });
