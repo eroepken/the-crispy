@@ -157,7 +157,7 @@ class UserController extends Controller
 
         $users = static::getTop($num);
 
-        $users[0]->name += ' :high_heel:'
+        $users[0]->name += ' :high_heel:';
 
         $formatted_list = '';
         foreach ($users as $key => $user) {
