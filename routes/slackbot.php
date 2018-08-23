@@ -93,6 +93,7 @@ $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard page, for your reference: ' . URL::to('/leaderboard'));
 });
 
-$slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot) {
-  $bot->reply(UserController::getTopFormatted());
+$slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot, $matches) {
+  Log::debug($matches);
+  $bot->reply(UserController::getTopFormatted($matches[0]));
 });
