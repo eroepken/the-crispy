@@ -162,7 +162,7 @@ class UserController extends Controller
         $formatted_list = '';
         foreach ($users as $key => $user) {
           $i = $key + 1;
-          $formatted_list .= "$i. $user->name — $user->karma" . '\n';
+          $formatted_list .= "$i. @$user->name — $user->karma\n";
         }
 
         return $formatted_list;
