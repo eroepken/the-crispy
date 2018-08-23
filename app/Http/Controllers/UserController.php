@@ -146,12 +146,15 @@ class UserController extends Controller
      * @param int $num The number of users to grab for the "top" listing.
      */
     public static function getTopFormatted($num = 10) {
-        Log::debug('Getting top formatted.');
         $users = static::getTop($num);
 
-        return $users->map(function($val, $key) {
+        $users->map(function($val, $key) {
           $i = $key + 1;
           return "$i. $val->name &mdash; $val->karma";
         });
+
+        Log::debug($users);
+
+        return $users;
     }
 }
