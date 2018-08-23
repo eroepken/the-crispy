@@ -135,10 +135,15 @@ class UserController extends Controller
         return view('leaderboard', compact('users', 'things'));
     }
 
+  /**
+   * Generic get top users function.
+   * @param $num
+   *
+   * @return mixed
+   */
     public static function getTop($num) {
         return User::select('name', 'karma')->orderBy('karma', 'desc')->limit($num)->get();
     }
-
 
     /**
      * Select and format the top users for display in the channel.
@@ -146,15 +151,18 @@ class UserController extends Controller
      * @param int $num The number of users to grab for the "top" listing.
      */
     public static function getTopFormatted($num = 10) {
+        if ($num <= 0) {
+          return 'You must supply a positive number to view the top users.';
+        }
+
         $users = static::getTop($num);
 
-        $users->map(function($val, $key) {
+        $formatted_list = '';
+        foreach ($users as $key => $user) {
           $i = $key + 1;
-          return "$i. $val->name &mdash; $val->karma";
-        });
+          $formatted_list .= "$i. $val->name &mdash; $val->karma";
+        }
 
-        Log::debug($users);
-
-        return $users;
+        return $formatted_list;
     }
 }
