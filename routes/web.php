@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/leaderboard', 'UserController@list');
+
 // Birthday endpoints.
 Route::post('/birthday', 'UserController@storeOrUpdate');
 Route::get('/birthday-alerts', 'UserController@upcomingBirthdays');

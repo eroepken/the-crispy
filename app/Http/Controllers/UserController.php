@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -109,5 +110,28 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function list() {
+        $users = User::select('name', 'karma')->orderBy('karma', 'desc')->get();
+        $things = DB::table('things')->select('name', 'karma')->orderBy('karma', 'desc')->get();
+
+        $emoji_data = collect(json_decode(file_get_contents(dirname(__DIR__, 3) . '/database/emoji/emoji-data.json')));
+
+        $things_with_emoji = $things->filter(function($val, $key) {
+            return preg_match('/:\w+?:/', $val->name);
+        });
+
+        $things_with_emoji->map(function($thing, $key) use ($emoji_data, &$things) {
+            if (preg_match('/:?\w+?:?/', $thing->name)) {
+                $name = str_replace(':', '', $thing->name);
+                if($emoji_data->contains('short_name', $name)) {
+                    $emoji = $emoji_data->firstWhere('short_name', $name);
+                    $things[$key]->name = $GLOBALS['emoji_maps']['html_to_unified'][strtolower($emoji->unified)];
+                }
+            }
+        });
+
+        return view('leaderboard', compact('users', 'things'));
     }
 }
