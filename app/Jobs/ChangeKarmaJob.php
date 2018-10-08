@@ -25,12 +25,12 @@ class ChangeKarmaJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($type, $event_data, $bot, $matches)
+    public function __construct($type, $event_data, $this->bot, $matches)
     {
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
-        $this->bot = $bot;
+        $this->bot = $this->bot;
         $this->matches = $matches;
     }
 
@@ -81,7 +81,7 @@ class ChangeKarmaJob implements ShouldQueue
 
             if ($rec === $this->event_data['user']) {
                 $user->save();
-                $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
+                $this->bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
                 continue;
             }
 
@@ -91,14 +91,14 @@ class ChangeKarmaJob implements ShouldQueue
                 case '++':
                     $user->karma++;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
                     }
                     break;
 
                 case '--':
                     $user->karma--;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
                     }
                     break;
 
@@ -107,7 +107,7 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             $user->save();
-            $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
+            $this->bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
         }
     }
 
@@ -148,7 +148,7 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             $updated = DB::table('things')->select('karma')->where('name', $this->matches[1])->get()->first();
-            $bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+            $this->bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
         }
     }
 }
