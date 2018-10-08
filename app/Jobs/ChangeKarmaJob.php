@@ -63,6 +63,7 @@ class ChangeKarmaJob implements ShouldQueue
     private function userHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
+            Log::debug('Matches:' . print_r($this->matches, true));
         }
 
         foreach($this->matches[1] as $i => $rec) {
@@ -116,6 +117,7 @@ class ChangeKarmaJob implements ShouldQueue
     private function thingHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
+            Log::debug('Matches:' . print_r($this->matches, true));
         }
 
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $this->matches[1])->get();
