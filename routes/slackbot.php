@@ -19,9 +19,15 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
 
+    if (env('DEBUG_MODE')) {
+        Log::debug('Receiving from Slack:' . var_dump($event_data, true));
+    }
+
     foreach($matches[1] as $i => $rec) {
-        $user = User::firstOrNew(['slack_id' => $rec]);
-        if (!$user->exists) {
+        $user = DB::table('users')->where('slack_id', '=', $rec)->sharedLock()->get();
+
+        if (!$user->exists || empty($user)) {
+            $user = new User();
             $user->slack_id = $rec;
             $user->karma = 0;
         }
@@ -61,7 +67,11 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 // Listening for thing karma.
 $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
-    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+    $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $matches[1])->sharedLock()->get();
+
+    if (env('DEBUG_MODE')) {
+        Log::debug('Receiving from Slack:' . var_dump($event_data, true));
+    }
 
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
