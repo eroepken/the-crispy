@@ -19,6 +19,7 @@ class ChangeKarmaJob implements ShouldQueue
     private $type = '';
     private $event_data;
     private $matches;
+    private $bot;
 
     /**
      * Create a new job instance.
