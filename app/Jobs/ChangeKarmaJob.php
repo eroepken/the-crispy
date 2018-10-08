@@ -29,7 +29,7 @@ class ChangeKarmaJob implements ShouldQueue
     {
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
-        $this->payload = $event_data;
+        $this->event_data = $event_data;
         $this->matches = $matches;
     }
 
@@ -61,7 +61,7 @@ class ChangeKarmaJob implements ShouldQueue
      */
     private function userHandler() {
         if (env('DEBUG_MODE')) {
-            Log::debug('Receiving from Slack:' . print_r($this->payload, true));
+            Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
         }
 
         foreach($this->matches[1] as $i => $rec) {
@@ -77,7 +77,7 @@ class ChangeKarmaJob implements ShouldQueue
                 $user->karma = 0;
             }
 
-            if ($rec === $this->payload['user']) {
+            if ($rec === $this->event_data['user']) {
                 $user->save();
                 $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
                 continue;
@@ -114,7 +114,7 @@ class ChangeKarmaJob implements ShouldQueue
      */
     private function thingHandler() {
         if (env('DEBUG_MODE')) {
-            Log::debug('Receiving from Slack:' . print_r($this->payload, true));
+            Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
         }
 
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $this->matches[1])->get();
