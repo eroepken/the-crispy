@@ -112,6 +112,11 @@ class UserController extends Controller
         //
     }
 
+    /**
+     * Create the list for the leaderboard page.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function list() {
         $users = User::select('name', 'karma')->orderBy('karma', 'desc')->get();
         $things = DB::table('things')->select('name', 'karma')->orderBy('karma', 'desc')->get();
@@ -135,12 +140,12 @@ class UserController extends Controller
         return view('leaderboard', compact('users', 'things'));
     }
 
-  /**
-   * Generic get top users function.
-   * @param $num
-   *
-   * @return mixed
-   */
+    /**
+     * Generic get top users function.
+     * @param $num
+     *
+     * @return mixed
+     */
     public static function getTop($num) {
         return User::select('name', 'karma')->orderBy('karma', 'desc')->limit($num)->get();
     }
