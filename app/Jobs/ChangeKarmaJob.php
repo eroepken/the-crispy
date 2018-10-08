@@ -25,12 +25,12 @@ class ChangeKarmaJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($type, $event_data, $this->bot, $matches)
+    public function __construct($type, $event_data, $bot, $matches)
     {
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
-        $this->bot = $this->bot;
+        $this->bot = $bot;
         $this->matches = $matches;
     }
 
