@@ -18,6 +18,7 @@ $slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|
 // Listening for user karma.
 $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
+    $replies = [];
 
     foreach($matches[1] as $i => $rec) {
         $user = User::firstOrNew(['slack_id' => $rec]);
@@ -54,14 +55,19 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
         }
 
         $user->save();
-        $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
+        $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . ".\n";
     }
+
+    $replies = implode("\n", $replies);
+    $bot->reply($replies);
+
 });
 
 // Listening for thing karma.
 $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+    $replies = [];
 
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
@@ -85,8 +91,11 @@ $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
         }
 
         $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
-        $bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+        $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . ".\n";
     }
+
+    $replies = implode("\n", $replies);
+    $bot->reply($replies);
 });
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
