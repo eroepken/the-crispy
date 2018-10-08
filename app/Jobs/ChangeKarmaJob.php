@@ -39,10 +39,8 @@ class ChangeKarmaJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle($test)
+    public function handle()
     {
-
-      Log::debug($test);
 
       switch ($this->type) {
         case 'user':
