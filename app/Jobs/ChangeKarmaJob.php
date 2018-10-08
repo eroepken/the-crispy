@@ -109,7 +109,7 @@ class ChangeKarmaJob implements ShouldQueue
      */
     private function thingHandler() {
         if (env('DEBUG_MODE')) {
-            Log::debug('Receiving from Slack:' . print_r($event_data, true));
+            Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
         }
 
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $matches[1])->get();
