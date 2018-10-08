@@ -18,21 +18,17 @@ class ChangeKarmaJob implements ShouldQueue
 
     private $type = '';
     private $event_data;
-    private $matches;
-    private $bot;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($type, $event_data, $bot, $matches)
+    public function __construct($type, $event_data)
     {
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
-        $this->bot = $bot;
-        $this->matches = $matches;
     }
 
     /**
@@ -64,10 +60,10 @@ class ChangeKarmaJob implements ShouldQueue
     private function userHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
-            Log::debug('Matches:' . print_r($this->matches, true));
+            Log::debug('Matches:' . print_r($matches, true));
         }
 
-        foreach($this->matches[1] as $i => $rec) {
+        foreach($matches[1] as $i => $rec) {
             $user = User::firstOrNew(['slack_id' => $rec]);
 
             if (env('DEBUG_MODE')) {
@@ -82,24 +78,24 @@ class ChangeKarmaJob implements ShouldQueue
 
             if ($rec === $this->event_data['user']) {
                 $user->save();
-                $this->bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
+                $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
                 continue;
             }
 
-            $action = $this->matches[2][$i];
+            $action = $matches[2][$i];
 
             switch($action) {
                 case '++':
                     $user->karma++;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
                     }
                     break;
 
                 case '--':
                     $user->karma--;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
                     }
                     break;
 
@@ -108,7 +104,7 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             $user->save();
-            $this->bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
+            $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
         }
     }
 
@@ -118,17 +114,17 @@ class ChangeKarmaJob implements ShouldQueue
     private function thingHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
-            Log::debug('Matches:' . print_r($this->matches, true));
+            Log::debug('Matches:' . print_r($matches, true));
         }
 
-        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $this->matches[1])->get();
+        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
 
         if (env('DEBUG_MODE')) {
             Log::debug('Things:' . print_r($existing_things, true));
         }
 
-        foreach($this->matches[1] as $i => $rec) {
-            $action = $this->matches[2][$i];
+        foreach($matches[1] as $i => $rec) {
+            $action = $matches[2][$i];
 
             // Create a new record if it doesn't exist.
             if (!$existing_things->contains('name', $rec)) {
@@ -148,8 +144,8 @@ class ChangeKarmaJob implements ShouldQueue
                     break;
             }
 
-            $updated = DB::table('things')->select('karma')->where('name', $this->matches[1])->get()->first();
-            $this->bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+            $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
+            $bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
         }
     }
 }

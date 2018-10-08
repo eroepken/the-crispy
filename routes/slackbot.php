@@ -19,13 +19,13 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 // Listening for user karma.
 $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
-    dispatch(new ChangeKarmaJob('user', $event_data, $bot, $matches));
+    dispatch(new ChangeKarmaJob('user', $event_data) use ($bot, $matches));
 });
 
 // Listening for thing karma.
 $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
-    dispatch(new ChangeKarmaJob('thing', $event_data, $bot, $matches));
+    dispatch(new ChangeKarmaJob('thing', $event_data) use ($bot, $matches));
 });
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
