@@ -120,7 +120,7 @@ class ChangeKarmaJob implements ShouldQueue
             Log::debug('Matches:' . print_r($this->matches, true));
         }
 
-        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $this->matches[1])->get();
+        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $this->matches[1])->get();
 
         if (env('DEBUG_MODE')) {
             Log::debug('Things:' . print_r($existing_things, true));
