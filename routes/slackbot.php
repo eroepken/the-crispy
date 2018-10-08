@@ -11,7 +11,7 @@ $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
 
-$slackbot->hears('^(good morning|morning everyone|guten tag|bom dia|buenos dias|good day|good evening|good night|goodnight)', function(SlackBot $bot) {
+$slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia|buenos dias|good day|good evening|good night|goodnight)', function(SlackBot $bot) {
     $bot->addReaction('wave');
 });
 
@@ -25,6 +25,10 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
     foreach($matches[1] as $i => $rec) {
         $user = DB::table('users')->where('slack_id', '=', $rec)->sharedLock()->get();
+
+        if (env('DEBUG_MODE')) {
+            Log::debug('User:' . print_r($user, true));
+        }
 
         if (!$user->exists || empty($user)) {
             $user = new User();
@@ -73,6 +77,10 @@ $slackbot->hears('\@(:?\w+?:?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     }
 
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', '=', $matches[1])->sharedLock()->get();
+
+    if (env('DEBUG_MODE')) {
+        Log::debug('Things:' . print_r($existing_things, true));
+    }
 
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
