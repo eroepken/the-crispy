@@ -16,9 +16,10 @@ class ChangeKarmaJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $type = '';
+    private $type;
     private $event_data;
     private $matches;
+    private $bot;
 
     /**
      * Create a new job instance.
