@@ -24,12 +24,13 @@ class ChangeKarmaJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($type, $event_data)
+    public function __construct($type, $event_data, $matches)
     {
         $this->bot = app()->make(SlackBot::class);
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
+        $this->matches = $matches;
     }
 
     /**
@@ -61,12 +62,12 @@ class ChangeKarmaJob implements ShouldQueue
     private function userHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
-            Log::debug('Matches:' . print_r($matches, true));
+            Log::debug('Matches:' . print_r($this->matches, true));
         }
 
         $replies = [];
 
-        foreach($matches[1] as $i => $rec) {
+        foreach($this->matches[1] as $i => $rec) {
             $user = User::firstOrNew(['slack_id' => $rec]);
 
             if (env('DEBUG_MODE')) {
@@ -85,7 +86,7 @@ class ChangeKarmaJob implements ShouldQueue
                 continue;
             }
 
-            $action = $matches[2][$i];
+            $action = $this->matches[2][$i];
 
             switch($action) {
                 case '++':
@@ -120,18 +121,18 @@ class ChangeKarmaJob implements ShouldQueue
     private function thingHandler() {
         if (env('DEBUG_MODE')) {
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
-            Log::debug('Matches:' . print_r($matches, true));
+            Log::debug('Matches:' . print_r($this->matches, true));
         }
 
-        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $this->matches[1])->get();
         $replies = [];
 
         if (env('DEBUG_MODE')) {
             Log::debug('Things:' . print_r($existing_things, true));
         }
 
-        foreach($matches[1] as $i => $rec) {
-            $action = $matches[2][$i];
+        foreach($this->matches[1] as $i => $rec) {
+            $action = $this->matches[2][$i];
 
             // Create a new record if it doesn't exist.
             if (!$existing_things->contains('name', $rec)) {
@@ -151,7 +152,7 @@ class ChangeKarmaJob implements ShouldQueue
                     break;
             }
 
-            $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
+            $updated = DB::table('things')->select('karma')->where('name', $this->matches[1])->get()->first();
             $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.';
         }
 
