@@ -4,7 +4,6 @@ use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
 use App\User;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\ChangeKarmaJob;
 
 $slackbot = app()->make(SlackBot::class);
 
@@ -17,16 +16,10 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 });
 
 // Listening for user karma.
-$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
-    $event_data = $bot->getEvent();
-    dispatch(new ChangeKarmaJob('user', $event_data, $matches, $bot));
-});
+$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', 'SlackbotController@userKarma');
 
 // Listening for thing karma.
-$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
-    $event_data = $bot->getEvent();
-    dispatch(new ChangeKarmaJob('thing', $event_data, $matches, $bot));
-});
+$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', 'SlackbotController@thingKarma');
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
