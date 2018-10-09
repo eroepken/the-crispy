@@ -26,9 +26,9 @@ class ChangeKarmaJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($type, $event_data, $matches)
+    public function __construct($type, $event_data, $matches, $bot)
     {
-        $this->bot = app()->make(SlackBot::class);
+        $this->bot = $bot;
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
