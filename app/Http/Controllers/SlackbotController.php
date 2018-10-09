@@ -9,8 +9,7 @@ use App\Jobs\ChangeKarmaJob;
 class SlackbotController extends Controller
 {
   public static function userKarma(SlackBot $bot, $matches) {
-    $event_data = $bot->getEvent();
-    dispatch(new ChangeKarmaJob('user', $event_data, $matches, $bot));
+
   }
 
   public static function thingKarma(SlackBot $bot, $matches) {

@@ -16,11 +16,21 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
     $bot->addReaction('wave');
 });
 
+function userKarmaRoute(SlackBot $bot, $matches) {
+  $event_data = $bot->getEvent();
+  dispatch(new ChangeKarmaJob('user', $event_data, $matches, $bot));
+}
+
+function thingKarmaRoute(SlackBot $bot, $matches) {
+  $event_data = $bot->getEvent();
+  dispatch(new ChangeKarmaJob('user', $event_data, $matches, $bot));
+}
+
 // Listening for user karma.
-$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', SlackbotController::userKarma() use (SlackBot $bot, $matches));
+$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', 'userKarmaRoute');
 
 // Listening for thing karma.
-$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', SlackbotController::thingKarma() use (SlackBot $bot, $matches));
+$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', 'thingKarmaRoute');
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
