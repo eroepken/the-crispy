@@ -17,10 +17,10 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 });
 
 // Listening for user karma.
-$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', SlackbotController::userKarma());
+$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', SlackbotController::userKarma() use (SlackBot $bot, $matches));
 
 // Listening for thing karma.
-$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', SlackbotController::thingKarma());
+$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', SlackbotController::thingKarma() use (SlackBot $bot, $matches));
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
