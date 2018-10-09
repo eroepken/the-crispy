@@ -81,7 +81,7 @@ class ChangeKarmaJob implements ShouldQueue
 
             if ($rec === $this->event_data['user']) {
                 $user->save();
-                $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
+                $this->bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
                 continue;
             }
 
@@ -91,14 +91,14 @@ class ChangeKarmaJob implements ShouldQueue
                 case '++':
                     $user->karma++;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
                     }
                     break;
 
                 case '--':
                     $user->karma--;
                     if ($user->slack_id === env('BOT_UID')) {
-                      $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+                      $this->bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
                     }
                     break;
 
@@ -111,7 +111,7 @@ class ChangeKarmaJob implements ShouldQueue
         }
 
         $replies = implode("\n", $replies);
-        $bot->reply($replies);
+        $this->bot->reply($replies);
     }
 
     /**
@@ -156,6 +156,6 @@ class ChangeKarmaJob implements ShouldQueue
         }
 
         $replies = implode("\n", $replies);
-        $bot->reply($replies);
+        $this->bot->reply($replies);
     }
 }
