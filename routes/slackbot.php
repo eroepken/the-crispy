@@ -5,6 +5,9 @@ use App\Http\Controllers\UserController;
 use App\User;
 use Illuminate\Support\Facades\DB;
 
+Route::controller('userKarma', 'SlackbotController');
+Route::controller('thingKarma', 'SlackbotController');
+
 $slackbot = app()->make(SlackBot::class);
 
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
