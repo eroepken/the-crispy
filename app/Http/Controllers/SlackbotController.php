@@ -8,12 +8,12 @@ use App\Jobs\ChangeKarmaJob;
 
 class SlackbotController extends Controller
 {
-  public function userKarma(SlackBot $bot, $matches) {
+  public static function userKarma(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     dispatch(new ChangeKarmaJob('user', $event_data, $matches, $bot));
   }
 
-  public function thingKarma(SlackBot $bot, $matches) {
+  public static function thingKarma(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     dispatch(new ChangeKarmaJob('thing', $event_data, $matches, $bot));
   }

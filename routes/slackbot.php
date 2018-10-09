@@ -5,9 +5,6 @@ use App\Http\Controllers\UserController;
 use App\User;
 use Illuminate\Support\Facades\DB;
 
-Route::controller('userKarma', 'SlackbotController');
-Route::controller('thingKarma', 'SlackbotController');
-
 $slackbot = app()->make(SlackBot::class);
 
 $slackbot->hearsMention('(hello|hi)', function(SlackBot $bot) {
@@ -19,10 +16,10 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 });
 
 // Listening for user karma.
-$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', 'SlackbotController@userKarma');
+$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', SlackbotController::userKarma());
 
 // Listening for thing karma.
-$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', 'SlackbotController@thingKarma');
+$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', SlackbotController::thingKarma());
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
