@@ -2,6 +2,7 @@
 
 use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SlackbotController;
 use App\User;
 use Illuminate\Support\Facades\DB;
 
