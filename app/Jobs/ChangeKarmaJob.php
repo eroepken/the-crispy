@@ -26,6 +26,7 @@ class ChangeKarmaJob implements ShouldQueue
      */
     public function __construct($type, $event_data)
     {
+        $this->bot = app()->make(SlackBot::class);
         $this->message_id = $event_data['client_msg_id'];
         $this->type = $type;
         $this->event_data = $event_data;
@@ -62,6 +63,8 @@ class ChangeKarmaJob implements ShouldQueue
             Log::debug('Receiving from Slack:' . print_r($this->event_data, true));
             Log::debug('Matches:' . print_r($matches, true));
         }
+
+        $replies = [];
 
         foreach($matches[1] as $i => $rec) {
             $user = User::firstOrNew(['slack_id' => $rec]);
@@ -104,8 +107,11 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             $user->save();
-            $bot->reply('<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.');
+            $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
         }
+
+        $replies = implode("\n", $replies);
+        $bot->reply($replies);
     }
 
     /**
@@ -118,6 +124,7 @@ class ChangeKarmaJob implements ShouldQueue
         }
 
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
+        $replies = [];
 
         if (env('DEBUG_MODE')) {
             Log::debug('Things:' . print_r($existing_things, true));
@@ -145,7 +152,10 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
-            $bot->reply('@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.');
+            $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.';
         }
+
+        $replies = implode("\n", $replies);
+        $bot->reply($replies);
     }
 }
