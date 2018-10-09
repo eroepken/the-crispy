@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SlackbotController;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\ChangeKarmaJob;
 
 $slackbot = app()->make(SlackBot::class);
 
