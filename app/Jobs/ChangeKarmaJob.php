@@ -45,10 +45,18 @@ class ChangeKarmaJob implements ShouldQueue
 
       switch ($this->type) {
         case 'user':
+          if (env('DEBUG_MODE')) {
+            Log::debug('Calling user handler.');
+          }
+
           $this->userHandler();
           break;
 
         case 'thing':
+          if (env('DEBUG_MODE')) {
+            Log::debug('Calling thing handler.');
+          }
+          
           $this->thingHandler();
           break;
 
