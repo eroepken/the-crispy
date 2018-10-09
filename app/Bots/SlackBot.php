@@ -302,6 +302,10 @@ class SlackBot
           $params['attachments'] = json_encode($params['attachments']);
         }
 
+        if (env('DEBUG_MODE')) {
+          Log::debug('Sending to Slack:' . var_dump($params, true));
+        }
+
         return $this->http_client->post($method, [
             RequestOptions::FORM_PARAMS => $params
         ]);
