@@ -56,7 +56,7 @@ class ChangeKarmaJob implements ShouldQueue
           if (env('DEBUG_MODE')) {
             Log::debug('Calling thing handler.');
           }
-          
+
           $this->thingHandler();
           break;
 
