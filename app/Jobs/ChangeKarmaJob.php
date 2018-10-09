@@ -77,7 +77,6 @@ class ChangeKarmaJob implements ShouldQueue
             }
 
             if (!$user->exists || empty($user)) {
-                $user = new User();
                 $user->slack_id = $rec;
                 $user->karma = 0;
             }
