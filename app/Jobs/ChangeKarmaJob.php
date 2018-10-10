@@ -24,6 +24,13 @@ class ChangeKarmaJob implements ShouldQueue
     protected $table = 'karma_jobs';
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -57,16 +64,10 @@ class ChangeKarmaJob implements ShouldQueue
           switch($this->action) {
             case '++':
               $user->karma++;
-//              if ($user->slack_id === env('BOT_UID')) {
-//                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
-//              }
               break;
 
             case '--':
               $user->karma--;
-//              if ($user->slack_id === env('BOT_UID')) {
-//                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
-//              }
               break;
 
             default:

@@ -65,6 +65,14 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     $bot->reply($replies);*/
 });
 
+$slackbot->hearsMention('\+\+', function(SlackBot $bot, $matches) {
+  $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+}
+
+$slackbot->hearsMention('\-\-', function(SlackBot $bot, $matches) {
+  $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+}
+
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
   $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
 });
