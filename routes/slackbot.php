@@ -31,10 +31,6 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
         $action = $matches[2][$i];
 
-        if (env('DEBUG_MODE')) {
-          Log::debug('Adding user to the dispatcher.');
-        }
-
         $return = dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
 
         if (env('DEBUG_MODE')) {
@@ -56,10 +52,6 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     if (!empty($matches[1])) {
       foreach ($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
-
-        if (env('DEBUG_MODE')) {
-          Log::debug('Adding thing to the dispatcher.');
-        }
 
         $return = dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
 

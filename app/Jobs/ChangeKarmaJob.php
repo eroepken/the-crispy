@@ -48,11 +48,6 @@ class ChangeKarmaJob implements ShouldQueue
 
       switch ($this->type) {
         case 'user':
-          if (env('DEBUG_MODE')) {
-            Log::debug('Calling user handler.');
-            Log::debug(print_r($this->job->payload(), true));
-          }
-
           $user = User::firstOrNew(['slack_id' => $this->recipient]);
           if (!$user->exists) {
             $user->slack_id = $rec;
@@ -84,11 +79,6 @@ class ChangeKarmaJob implements ShouldQueue
 
         case 'thing':
           $existing_things = DB::table('things')->select('name', 'karma')->where('name', $this->recipient)->get();
-
-          if (env('DEBUG_MODE')) {
-            Log::debug('Calling thing handler.');
-            Log::debug('Existing thing: ' . print_r($existing_things, true));
-          }
 
           // Create a new record if it doesn't exist.
           if (!$existing_things->contains('name', $this->recipient)) {
