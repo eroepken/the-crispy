@@ -63,18 +63,17 @@ class ChangeKarmaJob implements ShouldQueue
 
           switch($this->action) {
             case '++':
-              $user->karma++;
+              $user->addKarma();
               break;
 
             case '--':
-              $user->karma--;
+              $user->subtractKarma();
               break;
 
             default:
               break;
           }
 
-          $user->save();
 //          $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
           break;
 

@@ -27,12 +27,12 @@ class User extends Authenticatable
      */
     protected $hidden = [];
 
-    private function addKarma() {
+    public function addKarma() {
       $this->karma++;
       $this->save();
     }
 
-    private function subtractKarma() {
+    public function subtractKarma() {
       $this->karma--;
       $this->save();
     }
