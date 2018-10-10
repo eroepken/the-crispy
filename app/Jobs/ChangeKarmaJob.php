@@ -83,11 +83,12 @@ class ChangeKarmaJob implements ShouldQueue
           break;
 
         case 'thing':
+          $existing_things = DB::table('things')->select('name', 'karma')->where('name', $this->recipient)->get();
+
           if (env('DEBUG_MODE')) {
             Log::debug('Calling thing handler.');
-            Log::debug(print_r($this->job->payload(), true));
+            Log::debug('Existing thing: ' . print_r($existing_things, true));
           }
-          $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $this->recipient)->get();
 
           // Create a new record if it doesn't exist.
           if (!$existing_things->contains('name', $this->recipient)) {
