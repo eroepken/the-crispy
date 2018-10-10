@@ -24,7 +24,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
     foreach($matches[1] as $i => $rec) {
         if ($rec === $event_data['user']) {
-            $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
+            $bot->reply('You can\'t change your own karma!');
             continue;
         }
 
@@ -34,7 +34,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
             Log::debug('Adding user to the dispatcher.');
         }
 
-        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $user, $action));
+        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
 
         /*
         $user = User::firstOrNew(['slack_id' => $rec]);

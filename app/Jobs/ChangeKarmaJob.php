@@ -34,6 +34,8 @@ class ChangeKarmaJob implements ShouldQueue
         $this->type = $type;
         $this->recipient = $recipient;
         $this->action = $action;
+
+        $this->onQueue('karma');
     }
 
     /**
