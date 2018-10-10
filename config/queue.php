@@ -41,6 +41,13 @@ return [
             'retry_after' => 90,
         ],
 
+        'karma_db' => [
+          'driver' => 'database',
+          'table' => 'karma_jobs',
+          'queue' => 'karma',
+          'retry_after' => 90,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
