@@ -38,7 +38,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
         $return = dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
 
         if (env('DEBUG_MODE')) {
-          Log::debug(print_r($return, TRUE));
+          Log::debug('Dispatch return: ' . print_r($return, TRUE));
         }
       }
     }
@@ -64,7 +64,7 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
         $return = dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
 
         if (env('DEBUG_MODE')) {
-          Log::debug(print_r($return, TRUE));
+          Log::debug('Dispatch return: ' . print_r($return, TRUE));
         }
       }
     }

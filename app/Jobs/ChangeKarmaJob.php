@@ -94,7 +94,7 @@ class ChangeKarmaJob implements ShouldQueue
             DB::table('things')->insert(['name' => $this->recipient, 'karma' => 0]);
           }
 
-          switch($action) {
+          switch($this->action) {
             case '++':
               DB::table('things')->where('name', '=', $this->recipient)->increment('karma');
               break;
