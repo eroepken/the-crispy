@@ -42,6 +42,10 @@ class SlackBotProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        ChangeKarmaJob::after(function (JobProcessed $event) {
+            Log::debug('Event: ' . print_r($event, true));
+        });
     }
 
     /**
