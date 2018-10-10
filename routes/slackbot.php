@@ -30,7 +30,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('user', $user, $action));
+        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $user, $action));
 
         /*
         $user = User::firstOrNew(['slack_id' => $rec]);
@@ -76,7 +76,7 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('thing', $rec, $action));
+        dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
 
         /*
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
