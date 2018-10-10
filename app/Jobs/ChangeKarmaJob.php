@@ -19,6 +19,7 @@ class ChangeKarmaJob implements ShouldQueue
     private $message_id;
 
     protected $table = 'karma_jobs';
+    protected $fillable = [ 'message_id' ];
 
     /**
      * Create a new job instance.
