@@ -52,6 +52,33 @@ class ChangeKarmaJob implements ShouldQueue
             Log::debug('Calling user handler.');
             Log::debug(print_r($this->job->payload(), true));
           }
+
+          $user = User::firstOrNew(['slack_id' => $this->recipient]);
+          if (!$user->exists) {
+            $user->slack_id = $rec;
+            $user->karma = 0;
+          }
+
+          switch($this->action) {
+            case '++':
+              $user->addKarma();
+              if ($user->slack_id === env('BOT_UID')) {
+                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+              }
+              break;
+
+            case '--':
+              $user->subtractKarma();
+              if ($user->slack_id === env('BOT_UID')) {
+                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+              }
+              break;
+
+            default:
+              break;
+          }
+
+          $user->save();
           break;
 
         case 'thing':
@@ -59,6 +86,28 @@ class ChangeKarmaJob implements ShouldQueue
             Log::debug('Calling thing handler.');
             Log::debug(print_r($this->job->payload(), true));
           }
+          $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $this->recipient)->get();
+
+          // Create a new record if it doesn't exist.
+          if (!$existing_things->contains('name', $this->recipient)) {
+            DB::table('things')->insert(['name' => $this->recipient, 'karma' => 0]);
+          }
+
+          switch($action) {
+            case '++':
+              DB::table('things')->where('name', '=', $this->recipient)->increment('karma');
+              break;
+
+            case '--':
+              DB::table('things')->where('name', '=', $this->recipient)->decrement('karma');
+              break;
+
+            default:
+              break;
+          }
+
+//          $updated = DB::table('things')->select('karma')->where('name', $this->recipient)->get()->first();
+//          $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.';
           break;
 
         default:

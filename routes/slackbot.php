@@ -34,7 +34,11 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
             Log::debug('Adding user to the dispatcher.');
         }
 
-        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
+        $return = dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
+
+        if (env('DEBUG_MODE')) {
+          Log::debug(print_r($return, TRUE));
+        }
 
         /*
         $user = User::firstOrNew(['slack_id' => $rec]);
@@ -84,7 +88,11 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
           Log::debug('Adding thing to the dispatcher.');
         }
 
-        dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
+        $return = dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
+
+        if (env('DEBUG_MODE')) {
+          Log::debug(print_r($return, TRUE));
+        }
 
         /*
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
