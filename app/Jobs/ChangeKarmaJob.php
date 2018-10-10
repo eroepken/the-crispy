@@ -61,14 +61,14 @@ class ChangeKarmaJob implements ShouldQueue
 
           switch($this->action) {
             case '++':
-              $user->addKarma();
+              $user->karma++;
               if ($user->slack_id === env('BOT_UID')) {
                 $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
               }
               break;
 
             case '--':
-              $user->subtractKarma();
+              $user->karma--;
               if ($user->slack_id === env('BOT_UID')) {
                 $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
               }
@@ -79,6 +79,7 @@ class ChangeKarmaJob implements ShouldQueue
           }
 
           $user->save();
+//          $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
           break;
 
         case 'thing':
