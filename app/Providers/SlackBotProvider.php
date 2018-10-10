@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use App\Bots\SlackBot;
 use App\Jobs\ChangeKarmaJob;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 
 class SlackBotProvider extends ServiceProvider
 {
