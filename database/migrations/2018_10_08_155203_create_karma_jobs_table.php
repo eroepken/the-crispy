@@ -15,7 +15,6 @@ class CreateKarmaJobsTable extends Migration
     {
         Schema::create('karma_jobs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('message_id')->unique();
             $table->string('queue')->index();
             $table->longText('payload');
             $table->unsignedTinyInteger('attempts');

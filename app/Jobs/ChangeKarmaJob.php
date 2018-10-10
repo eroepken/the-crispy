@@ -16,10 +16,7 @@ class ChangeKarmaJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $message_id;
-
     protected $table = 'karma_jobs';
-    protected $fillable = [ 'message_id' ];
 
     /**
      * Create a new job instance.
@@ -28,8 +25,8 @@ class ChangeKarmaJob implements ShouldQueue
      */
     public function __construct($type, $message_id, $recipient, $action)
     {
-        $this->message_id = $message_id;
         $this->payload = [
+          'message_id' => $message_id,
           'type' => $type,
           'recipient' => $recipient,
           'action' => $action,
