@@ -22,16 +22,17 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
     $event_data = $bot->getEvent();
     $replies = [];
 
-    foreach($matches[1] as $i => $rec) {
+    if (!empty($matches[1])) {
+      foreach ($matches[1] as $i => $rec) {
         if ($rec === $event_data['user']) {
-            $bot->reply('You can\'t change your own karma!');
-            continue;
+          $bot->reply('You can\'t change your own karma!');
+          continue;
         }
 
         $action = $matches[2][$i];
 
         if (env('DEBUG_MODE')) {
-            Log::debug('Adding user to the dispatcher.');
+          Log::debug('Adding user to the dispatcher.');
         }
 
         $return = dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $rec, $action));
@@ -39,36 +40,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
         if (env('DEBUG_MODE')) {
           Log::debug(print_r($return, TRUE));
         }
-
-        /*
-        $user = User::firstOrNew(['slack_id' => $rec]);
-        if (!$user->exists) {
-            $user->slack_id = $rec;
-            $user->karma = 0;
-        }
-
-        switch($action) {
-            case '++':
-                $user->karma++;
-                if ($user->slack_id === env('BOT_UID')) {
-                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
-                }
-                break;
-
-            case '--':
-                $user->karma--;
-                if ($user->slack_id === env('BOT_UID')) {
-                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
-                }
-                break;
-
-            default:
-              break;
-        }
-
-        $user->save();
-        $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
-        */
+      }
     }
 
     /*$replies = implode("\n", $replies);
@@ -81,7 +53,8 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     $event_data = $bot->getEvent();
     $replies = [];
 
-    foreach($matches[1] as $i => $rec) {
+    if (!empty($matches[1])) {
+      foreach ($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
 
         if (env('DEBUG_MODE')) {
@@ -93,31 +66,7 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
         if (env('DEBUG_MODE')) {
           Log::debug(print_r($return, TRUE));
         }
-
-        /*
-        $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
-
-        // Create a new record if it doesn't exist.
-        if (!$existing_things->contains('name', $rec)) {
-            DB::table('things')->insert(['name' => $rec, 'karma' => 0]);
-        }
-
-        switch($action) {
-            case '++':
-                DB::table('things')->where('name', '=', $rec)->increment('karma');
-                break;
-
-            case '--':
-                DB::table('things')->where('name', '=', $rec)->decrement('karma');
-                break;
-
-            default:
-                break;
-        }
-
-        $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
-        $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.';
-        */
+      }
     }
 
     /*$replies = implode("\n", $replies);

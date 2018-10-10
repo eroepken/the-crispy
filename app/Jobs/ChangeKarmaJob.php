@@ -62,16 +62,16 @@ class ChangeKarmaJob implements ShouldQueue
           switch($this->action) {
             case '++':
               $user->karma++;
-              if ($user->slack_id === env('BOT_UID')) {
-                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
-              }
+//              if ($user->slack_id === env('BOT_UID')) {
+//                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+//              }
               break;
 
             case '--':
               $user->karma--;
-              if ($user->slack_id === env('BOT_UID')) {
-                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
-              }
+//              if ($user->slack_id === env('BOT_UID')) {
+//                $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+//              }
               break;
 
             default:
