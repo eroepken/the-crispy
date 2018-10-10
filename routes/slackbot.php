@@ -23,14 +23,16 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
     foreach($matches[1] as $i => $rec) {
         if ($rec === $event_data['user']) {
-            $user->save();
             $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
             continue;
         }
 
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $user, $action));
+        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $user, $action))
+          ->onConnection('karma_db')
+          ->onQueue('karma')
+          ->delay(60);
 
         /*
         $user = User::firstOrNew(['slack_id' => $rec]);
@@ -76,7 +78,10 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action));
+        dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action))
+          ->onConnection('karma_db')
+          ->onQueue('karma')
+          ->delay(60);
 
         /*
         $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();

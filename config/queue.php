@@ -45,7 +45,7 @@ return [
           'driver' => 'database',
           'table' => 'karma_jobs',
           'queue' => 'karma',
-          'retry_after' => 90,
+          'retry_after' => 60,
         ],
 
         'beanstalkd' => [
