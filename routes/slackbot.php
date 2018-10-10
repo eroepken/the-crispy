@@ -4,6 +4,7 @@ use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\ChangeKarmaJob;
 
 $slackbot = app()->make(SlackBot::class);
@@ -29,7 +30,11 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
 
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('user', $event_data['client_msg_id'], $user, $action))
+        if (env('DEBUG_MODE')) {
+          Log::debug('Sending user to dispatcher.');
+        }
+
+        ChangeKarmaJob::dispatch('user', $event_data['client_msg_id'], $user, $action)
           ->onConnection('karma_db')
           ->onQueue('karma')
           ->delay(60);
@@ -78,7 +83,11 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     foreach($matches[1] as $i => $rec) {
         $action = $matches[2][$i];
 
-        dispatch(new ChangeKarmaJob('thing', $event_data['client_msg_id'], $rec, $action))
+        if (env('DEBUG_MODE')) {
+          Log::debug('Sending thing to dispatcher.');
+        }
+
+        ChangeKarmaJob::dispatch('thing', $event_data['client_msg_id'], $rec, $action)
           ->onConnection('karma_db')
           ->onQueue('karma')
           ->delay(60);

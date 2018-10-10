@@ -47,19 +47,15 @@ class ChangeKarmaJob implements ShouldQueue
         case 'user':
           if (env('DEBUG_MODE')) {
             Log::debug('Calling user handler.');
+            Log::debug(print_r($this->job->payload(), true));
           }
-
-          Log::debug(print_r($this->job->payload(), true));
-
           break;
 
         case 'thing':
           if (env('DEBUG_MODE')) {
             Log::debug('Calling thing handler.');
+            Log::debug(print_r($this->job->payload(), true));
           }
-
-          Log::debug(print_r($this->job->payload(), true));
-
           break;
 
         default:
