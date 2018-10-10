@@ -16,6 +16,11 @@ class ChangeKarmaJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $message_id;
+    public $type;
+    public $recipient;
+    public $action;
+
     protected $table = 'karma_jobs';
 
     /**
@@ -25,12 +30,10 @@ class ChangeKarmaJob implements ShouldQueue
      */
     public function __construct($type, $message_id, $recipient, $action)
     {
-        $this->payload = [
-          'message_id' => $message_id,
-          'type' => $type,
-          'recipient' => $recipient,
-          'action' => $action,
-        ];
+        $this->message_id = $message_id;
+        $this->type = $type;
+        $this->recipient = $recipient;
+        $this->action = $action;
     }
 
     /**
