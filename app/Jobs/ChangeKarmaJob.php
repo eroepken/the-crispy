@@ -57,7 +57,7 @@ class ChangeKarmaJob implements ShouldQueue
         case 'user':
           $user = User::firstOrNew(['slack_id' => $this->recipient]);
           if (!$user->exists) {
-            $user->slack_id = $rec;
+            $user->slack_id = $this->recipient;
             $user->karma = 0;
           }
 
