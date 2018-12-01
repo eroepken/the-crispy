@@ -18,7 +18,7 @@ class SlackBot
 
     // Slack only allows for 23 max reactions to a post.
     const MAX_REACTIONS = 23;
-    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow', 'broken_heart'];
+    const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow', 'broken_heart', 'white_frowning_face', 'angry'];
     const YAY_REACTIONS = ['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign', 'heartbeat', 'revolving_hearts'];
 
     /**
