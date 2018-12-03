@@ -69,7 +69,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Southbacon
+                    <?php print env('APP_NAME'); ?>
                 </div>
 
                 <div class="links">
