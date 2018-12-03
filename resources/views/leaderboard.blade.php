@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Southbacon</title>
+        <title><?php print env('APP_NAME'); ?></title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -76,7 +76,7 @@
     <body>
         <div class="flex-center position-ref full-height">
 
-            <div class="title">Southbacon Leaderboard</div>
+            <div class="title"><?php print env('APP_NAME'); ?> Leaderboard</div>
 
             <div class="content">
 
