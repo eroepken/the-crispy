@@ -4,6 +4,7 @@ use App\Bots\SlackBot;
 use App\Http\Controllers\UserController;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 $slackbot = app()->make(SlackBot::class);
 
@@ -68,6 +69,8 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     $event_data = $bot->getEvent();
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
     $replies = [];
+
+    Log::debug(print_r($matches, true));
 
     $actions = array_combine($matches[1], $matches[2]);
 
