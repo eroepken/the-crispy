@@ -69,8 +69,9 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
     $replies = [];
 
-    foreach($matches[1] as $i => $rec) {
-        $action = $matches[2][$i];
+    $actions = array_combine($matches[1], $matches[2]);
+
+    foreach($actions as $rec => $action) {
 
         // Create a new record if it doesn't exist.
         if (!$existing_things->contains('name', $rec)) {
@@ -90,7 +91,7 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
                 break;
         }
 
-        $updated = DB::table('things')->select('karma')->where('name', $matches[1])->get()->first();
+        $updated = DB::table('things')->select('karma')->where('name', $rec)->get()->first();
         $replies[$rec] = '@' . $rec . ' now has ' . $updated->karma . ' ' . (abs($updated->karma) === 1 ? 'point' : 'points') . '.';
     }
 
