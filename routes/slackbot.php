@@ -20,7 +20,9 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
     $event_data = $bot->getEvent();
     $replies = [];
 
-    foreach($matches[1] as $i => $rec) {
+    $actions = array_combine($matches[1], $matches[2]);
+
+    foreach($actions as $rec => $action) {
         $user = User::firstOrNew(['slack_id' => $rec]);
         if (!$user->exists) {
             $user->slack_id = $rec;
@@ -32,8 +34,6 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches
             $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
             continue;
         }
-
-        $action = $matches[2][$i];
 
         switch($action) {
             case '++':
