@@ -108,6 +108,6 @@ $slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot, $matches) {
     $bot->reply(UserController::getTopFormatted($matches[1][0]) . "\nYou can see the whole leaderboard here: " . URL::to('/leaderboard'));
 });
 
-$slackbot->seesReaction(['+1','thumbsup'], function(SlackBot $bot) {
-    $bot->replyInThread('Testing reaction visibility.');
+$slackbot->seesReaction(['+1','thumbsup'], function(SlackBot $bot, $reactions) {
+    $bot->reply('Testing reaction visibility.' . print_r($reactions, true));
 });

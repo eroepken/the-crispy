@@ -82,8 +82,6 @@ class SlackBot
 
         $event = $this->getEvent();
 
-        Log::debug(print_r($event, true));
-
         if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
             return response('false');
         }
@@ -129,7 +127,7 @@ class SlackBot
         }
 
         if ($event['type'] === 'reaction_added' && isset($event['reaction']) && in_array($event['reaction'], $reaction)) {
-            return $callbackResponse($this);
+            return $callbackResponse($this, $reaction);
         }
 
         return response('false');
