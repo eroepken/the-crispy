@@ -65,9 +65,20 @@ class SlackBot
      * @param $method
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    private function hearRoute($text, $callbackResponse, $method) {
+    private function hearRoute($text, $ignoreCodeAndQuotes = TRUE, $callbackResponse, $method) {
 
         $event = $this->getEvent();
+
+        if ($ignoreCodeAndQuotes) {
+            // If it's a quote, just cancel the whole action.
+            if ($event['text'][0] === '>') {
+                return response('false');
+            }
+
+            // Filter out code blocks.
+            $event['text'] = preg_replace('/`{1,3}.+`{1,3}/i', '');
+            Log::debug(print_r($event['text'], true));
+        }
 
         if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
             return response('false');
