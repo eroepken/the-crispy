@@ -20,7 +20,7 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $actions = array_combine($matches[1], $matches[2]);
 
-    changeUserKarma($actions);
+    changeUserKarma($actions, $bot);
 });
 
 // Listening for thing karma.
