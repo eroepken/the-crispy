@@ -74,12 +74,12 @@ class SlackBot
 
         if (self::IGNORE_CODE_AND_QUOTES) {
             // If it's a quote, just cancel the whole action.
-            if ($event['text'][0] === '>') {
+            if (preg_match('/^&gt;/')) {
                 return response('false');
             }
 
             // Filter out code blocks.
-            $event['text'] = preg_replace('/`{1,3}.+`{1,3}/i', '', $event['text']);
+            $event['text'] = preg_replace('/`{1,3}\n*.*\n*`{1,3}/i', '', $event['text']);
             Log::debug(print_r($event['text'], true));
         }
 
