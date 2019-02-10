@@ -82,29 +82,33 @@ class SlackBot
 
         $event = $this->getEvent();
 
+        Log::debug(print_r($event, true));
+
         if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
             return response('false');
         }
 
-        if (self::IGNORE_CODE_AND_QUOTES) {
-            // If it's a quote, just cancel the whole action.
-            if (isset($event['text']) && preg_match('/^&gt;/', $event['text'])) {
-                return response('false');
+        if (in_array($event['type'], ['app_mention','message'])) {
+            if (self::IGNORE_CODE_AND_QUOTES) {
+                // If it's a quote, just cancel the whole action.
+                if (isset($event['text']) && preg_match('/^&gt;/', $event['text'])) {
+                    return response('false');
+                }
+
+                // Filter out code blocks.
+                $event['text'] = preg_replace('/`{1,3}\n*.*\n*`{1,3}/i', '', $event['text']);
             }
 
-            // Filter out code blocks.
-            $event['text'] = preg_replace('/`{1,3}\n*.*\n*`{1,3}/i', '', $event['text']);
-        }
-
-        // Make sure we're not listening for the bot's own messages too.
-        if (isset($event['text'])
+            // Make sure we're not listening for the bot's own messages too.
+            if (isset($event['text'])
             && ($method == 'message' || (preg_match_all('/\<@' . env('BOT_UID') . '\>/i', $event['text']) && $method == 'app_mention'))
             && preg_match_all('/' . $text . '/i', $event['text'], $matches)) {
 
-            if (empty($matches)) {
-                return $callbackResponse($this);
-            } else {
-                return $callbackResponse($this, $matches);
+                if (empty($matches)) {
+                    return $callbackResponse($this);
+                } else {
+                    return $callbackResponse($this, $matches);
+                }
             }
         }
 
