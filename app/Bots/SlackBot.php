@@ -62,6 +62,16 @@ class SlackBot
     }
 
     /**
+     * When the SlackBot sees a reaction to a post.
+     * @param $reaction
+     * @param $callbackResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function seesReaction($reaction, $callbackResponse) {
+        return $this->reactionRoute($reaction, $callbackResponse);
+    }
+
+    /**
      * Catcher for hear actions.
      * @param $text
      * @param $callbackResponse
@@ -72,20 +82,18 @@ class SlackBot
 
         $event = $this->getEvent();
 
-        Log::debug(print_r($event, true));
+        if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
+            return response('false');
+        }
 
         if (self::IGNORE_CODE_AND_QUOTES) {
             // If it's a quote, just cancel the whole action.
-            if (preg_match('/^&gt;/', $event['text'])) {
+            if (isset($event['text']) && preg_match('/^&gt;/', $event['text'])) {
                 return response('false');
             }
 
             // Filter out code blocks.
             $event['text'] = preg_replace('/`{1,3}\n*.*\n*`{1,3}/i', '', $event['text']);
-        }
-
-        if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
-            return response('false');
         }
 
         // Make sure we're not listening for the bot's own messages too.
@@ -98,6 +106,26 @@ class SlackBot
             } else {
                 return $callbackResponse($this, $matches);
             }
+        }
+
+        return response('false');
+    }
+
+    /**
+     * Reaction handler.
+     * @param $reaction
+     * @param $callbackResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    private function reactionRoute($reaction, $callbackResponse) {
+        $event = $this->getEvent();
+
+        if (!is_array($reaction)) {
+            $reaction = [$reaction];
+        }
+
+        if ($event['type'] === 'reaction_added' && isset($event['reaction']) && in_array($event['reaction'], $reaction)) {
+            return $callbackResponse($this);
         }
 
         return response('false');
