@@ -407,6 +407,9 @@ class SlackBot
         if (isset($event['channel'])) {
             return $event['channel'];
         }
+        if (isset($event['item']['channel'])) {
+            return $event['item']['channel'];
+        }
 
         return $event['channel_id'];
     }
