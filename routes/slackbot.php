@@ -18,50 +18,9 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 
 // Listening for user karma.
 $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
-    $event_data = $bot->getEvent();
-    $replies = [];
-
     $actions = array_combine($matches[1], $matches[2]);
 
-    foreach($actions as $rec => $action) {
-        $user = User::firstOrNew(['slack_id' => $rec]);
-        if (!$user->exists) {
-            $user->slack_id = $rec;
-            $user->karma = 0;
-        }
-
-        if ($rec === $event_data['user']) {
-            $user->save();
-            $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
-            continue;
-        }
-
-        switch($action) {
-            case '++':
-                $user->karma++;
-                if ($user->slack_id === env('BOT_UID')) {
-                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
-                }
-                break;
-
-            case '--':
-                $user->karma--;
-                if ($user->slack_id === env('BOT_UID')) {
-                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
-                }
-                break;
-
-            default:
-              break;
-        }
-
-        $user->save();
-        $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
-    }
-
-    $replies = implode("\n", $replies);
-    $bot->reply($replies);
-
+    changeUserKarma($actions);
 });
 
 // Listening for thing karma.
@@ -108,6 +67,62 @@ $slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot, $matches) {
     $bot->reply(UserController::getTopFormatted($matches[1][0]) . "\nYou can see the whole leaderboard here: " . URL::to('/leaderboard'));
 });
 
-$slackbot->seesReaction(['+1','thumbsup'], function(SlackBot $bot, $reactions) {
-    $bot->reply('Testing reaction visibility.' . print_r($reactions, true));
+$slackbot->seesReaction(['+1','thumbsup', 'plusplus'], function(SlackBot $bot, $added, $event) {
+    if ($added) {
+        changeUserKarma([$event['user'] => '++'], $bot);
+    } else {
+        changeUserKarma([$event['user'] => '--'], $bot);
+    }
 });
+
+$slackbot->seesReaction(['-1','thumbsdown'], function(SlackBot $bot, $added, $event) {
+    if ($added) {
+        changeUserKarma([$event['user'] => '--'], $bot);
+    } else {
+        changeUserKarma([$event['user'] => '++'], $bot);
+    }
+});
+
+function changeUserKarma($actions, $bot) {
+    $event_data = $bot->getEvent();
+
+    $replies = [];
+    foreach($actions as $rec => $action) {
+        $user = User::firstOrNew(['slack_id' => $rec]);
+        if (!$user->exists) {
+            $user->slack_id = $rec;
+            $user->karma = 0;
+        }
+
+        if ($rec === $event_data['user']) {
+            $user->save();
+            $bot->reply('You can\'t change your own karma! <@' . $user->slack_id . '> still at ' . $user->karma . ' points.');
+            continue;
+        }
+
+        switch($action) {
+            case '++':
+                $user->karma++;
+                if ($user->slack_id === env('BOT_UID')) {
+                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::YAY_REACTIONS, 2));
+                }
+                break;
+
+            case '--':
+                $user->karma--;
+                if ($user->slack_id === env('BOT_UID')) {
+                    $bot->addReactions(SlackBot::pickReactionsFromList(SlackBot::FU_REACTIONS, 2));
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        $user->save();
+        $replies[$user->slack_id] = '<@' . $user->slack_id . '> now has ' . $user->karma . ' ' . (abs($user->karma) === 1 ? 'point' : 'points') . '.';
+    }
+
+    $replies = implode("\n", $replies);
+    $bot->reply($replies);
+}

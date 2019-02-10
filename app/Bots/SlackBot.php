@@ -122,12 +122,15 @@ class SlackBot
     private function reactionRoute($reaction, $callbackResponse) {
         $event = $this->getEvent();
 
+        Log::debug(print_r($event, true));
+
         if (!is_array($reaction)) {
             $reaction = [$reaction];
         }
 
-        if ($event['type'] === 'reaction_added' && isset($event['reaction']) && in_array($event['reaction'], $reaction)) {
-            return $callbackResponse($this, $reaction);
+        if (in_array($event['type'], ['reaction_added', 'reaction_removed']) && isset($event['reaction']) && in_array($event['reaction'], $reaction)) {
+            $added = ($event['type'] === 'reaction_added');
+            return $callbackResponse($this, $added, $event);
         }
 
         return response('false');
