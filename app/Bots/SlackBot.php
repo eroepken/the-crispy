@@ -72,6 +72,8 @@ class SlackBot
 
         $event = $this->getEvent();
 
+        Log::debug(print_r($event, true));
+
         if (self::IGNORE_CODE_AND_QUOTES) {
             // If it's a quote, just cancel the whole action.
             if (preg_match('/^&gt;/', $event['text'])) {
@@ -80,7 +82,6 @@ class SlackBot
 
             // Filter out code blocks.
             $event['text'] = preg_replace('/`{1,3}\n*.*\n*`{1,3}/i', '', $event['text']);
-            Log::debug(print_r($event['text'], true));
         }
 
         if (isset($event['subtype']) && in_array($event['subtype'], ['bot_message', 'message_deleted'])) {
@@ -389,6 +390,13 @@ class SlackBot
         return $matches[0];
     }
 
+    /**
+     * Choose and return random reactions from a list of reactions.
+     *
+     * @param $list
+     * @param $num
+     * @return mixed
+     */
     public static function pickReactionsFromList($list, $num) {
       return array_rand(array_flip($list), $num);
     }

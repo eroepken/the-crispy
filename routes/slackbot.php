@@ -70,8 +70,6 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
     $replies = [];
 
-    Log::debug(print_r($bot->getEvent(), true));
-
     $actions = array_combine($matches[1], $matches[2]);
 
     foreach($actions as $rec => $action) {
@@ -103,9 +101,13 @@ $slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches)
 });
 
 $slackbot->hearsMention('leaderboard$', function(SlackBot $bot) {
-  $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
+    $bot->reply('Here\'s the leaderboard, for your reference: ' . URL::to('/leaderboard'));
 });
 
 $slackbot->hearsMention('top\s?(\d+)$', function(SlackBot $bot, $matches) {
-  $bot->reply(UserController::getTopFormatted($matches[1][0]) . "\nYou can see the whole leaderboard here: " . URL::to('/leaderboard'));
+    $bot->reply(UserController::getTopFormatted($matches[1][0]) . "\nYou can see the whole leaderboard here: " . URL::to('/leaderboard'));
 });
+
+/*$slackbot->seesReaction([':+1',':thumbsup:'], function(SlackBot $bot) {
+
+});*/
