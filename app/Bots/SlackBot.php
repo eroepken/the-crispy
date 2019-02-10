@@ -74,7 +74,7 @@ class SlackBot
 
         if (self::IGNORE_CODE_AND_QUOTES) {
             // If it's a quote, just cancel the whole action.
-            if (preg_match('/^&gt;/')) {
+            if (preg_match('/^&gt;/', $event['text'])) {
                 return response('false');
             }
 
