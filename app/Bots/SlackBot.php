@@ -79,7 +79,7 @@ class SlackBot
             }
 
             // Filter out code blocks.
-            $event['text'] = preg_replace('/`{1,3}.+`{1,3}/i', '');
+            $event['text'] = preg_replace('/`{1,3}.+`{1,3}/i', '', $event['text']);
             Log::debug(print_r($event['text'], true));
         }
 
