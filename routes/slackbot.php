@@ -17,7 +17,7 @@ $slackbot->hears('^(good morning|morning everyone|guten morgen|guten tag|bom dia
 });
 
 // Listening for user karma.
-$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', TRUE, function(SlackBot $bot, $matches) {
+$slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     $replies = [];
 
@@ -65,7 +65,7 @@ $slackbot->hears('\<\@(U\w+?)\>\s*(\+\+|\-\-)', TRUE, function(SlackBot $bot, $m
 });
 
 // Listening for thing karma.
-$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', TRUE, function(SlackBot $bot, $matches) {
+$slackbot->hears('\@([\w:-]+?)\s*(\+\+|\-\-)', function(SlackBot $bot, $matches) {
     $event_data = $bot->getEvent();
     $existing_things = DB::table('things')->select('name', 'karma')->whereIn('name', $matches[1])->get();
     $replies = [];

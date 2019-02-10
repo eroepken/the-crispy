@@ -21,6 +21,9 @@ class SlackBot
     const FU_REACTIONS = ['disapproval', 'fu', 'mooning', 'middle_finger', 'wtf', 'disappointed', 'face_with_raised_eyebrow', 'broken_heart', 'white_frowning_face', 'angry'];
     const YAY_REACTIONS = ['awthanks', 'heart', 'boom2', 'kissing_heart', 'kiss', 'grin', 'raised_hands', 'i_love_you_hand_sign', 'heartbeat', 'revolving_hearts'];
 
+    // Ignore code and quotes for incoming messages.
+    const IGNORE_CODE_AND_QUOTES = true;
+
     /**
      * SlackBot constructor.
      */
@@ -65,11 +68,11 @@ class SlackBot
      * @param $method
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    private function hearRoute($text, $ignoreCodeAndQuotes = TRUE, $callbackResponse, $method) {
+    private function hearRoute($text, $callbackResponse, $method) {
 
         $event = $this->getEvent();
 
-        if ($ignoreCodeAndQuotes) {
+        if (self::IGNORE_CODE_AND_QUOTES) {
             // If it's a quote, just cancel the whole action.
             if ($event['text'][0] === '>') {
                 return response('false');
